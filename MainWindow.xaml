@@ -1,0 +1,76 @@
+﻿<Window x:Class="ComputerGraphicsIProject.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ComputerGraphicsIProject"
+        WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d"
+        Width="1400" Height="750"
+        Title="ComputerGraphicsIProject">
+    <Window.Resources>
+        <local:BitmapToBitmapImageConverter x:Key="BitmapToBitmapImageConverter" />
+    </Window.Resources>
+    <DockPanel LastChildFill="True">
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="File">
+                <MenuItem Header="Open"/>
+                <MenuItem Header="Save"/>
+                <Separator />
+                <MenuItem Header="Exit"/>
+            </MenuItem>
+            <MenuItem Header="Edit">
+                <MenuItem Header="Function Filtering">
+                    <MenuItem Header="Inversion"/>
+                    <MenuItem Header="Brightness Correction"/>
+                    <MenuItem Header="Contrast Enhancement"/>
+                    <MenuItem Header="Gamma Correction"/>
+                </MenuItem>
+                <MenuItem Header="Convolutional Filtering">
+                    <MenuItem Header="Blur"/>
+                    <MenuItem Header="Gaussian Blur"/>
+                    <MenuItem Header="Sharpen"/>
+                    <MenuItem Header="Edge Detection"/>
+                    <MenuItem Header="Emboss"/>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="Help">
+                <MenuItem Header="About"/>
+            </MenuItem>
+        </Menu>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="3*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TabControl Grid.Row="0" Grid.Column="0" >
+                <TabItem Header="Filters" />
+                <TabItem Header="Edit" />
+            </TabControl>
+
+            <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="True">
+                <WrapPanel DockPanel.Dock="Bottom" HorizontalAlignment="Center" Margin="0 5">
+                    <Button Margin="10 0" Content="Open" Click="Button_Click"/>
+                    <Button Margin="10 0" Content="Revert All"/>
+                    <Button Margin="10 0" Content="Save" Click="Button_Click_1"/>
+                </WrapPanel>
+                <UniformGrid Rows="1" Columns="2" DockPanel.Dock="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Margin="5">
+                        <Image Name="RefImage"/>
+                    </Border>
+                    <Border BorderBrush="Black" BorderThickness="1" Margin="5">
+                        <Image Source="{Binding ImageSource, Converter={StaticResource BitmapToBitmapImageConverter}}" />
+                    </Border>
+                </UniformGrid>
+            </DockPanel>
+
+            <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+            </StackPanel>
+        </Grid>
+    </DockPanel>
+</Window>
