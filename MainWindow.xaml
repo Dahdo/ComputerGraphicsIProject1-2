@@ -7,10 +7,6 @@
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
         Width="1400" Height="750"
-<<<<<<< HEAD
-        Background="#333332"
-=======
->>>>>>> 4b80527c27921ec1c3db39864b62853e9d9ef074
         Title="ComputerGraphicsIProject">
     <Window.Resources>
         <local:BitmapToBitmapImageConverter x:Key="BitmapToBitmapImageConverter" />
