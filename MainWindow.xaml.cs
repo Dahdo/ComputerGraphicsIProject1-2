@@ -14,6 +14,7 @@ namespace ComputerGraphicsIProject
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         private Bitmap? _imageSource;
+        Bitmap tmpBitmap;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -46,7 +47,7 @@ namespace ComputerGraphicsIProject
         }
 
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Open_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
@@ -76,9 +77,19 @@ namespace ComputerGraphicsIProject
             }
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void Save_Click(object sender, RoutedEventArgs e)
         {
-            ImageSource = ImageProcessor.ApplyInversionFilter(ImageSource);
+            FunctionalFilters.ApplyInversionFilter(ImageSource);
+
+            // Update the bitmap to trigger changes in the view
+            Bitmap? tmpBitmap = ImageSource;
+            ImageSource = null;
+            ImageSource = tmpBitmap;
+
+        }
+
+        private void RevertAll_Click(object sender, RoutedEventArgs e)
+        {
         }
     }
 }

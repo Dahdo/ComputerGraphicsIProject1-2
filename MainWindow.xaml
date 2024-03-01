@@ -55,9 +55,9 @@
 
             <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="True">
                 <WrapPanel DockPanel.Dock="Bottom" HorizontalAlignment="Center" Margin="0 5">
-                    <Button Margin="10 0" Content="Open" Click="Button_Click"/>
-                    <Button Margin="10 0" Content="Revert All"/>
-                    <Button Margin="10 0" Content="Save" Click="Button_Click_1"/>
+                    <Button Name="Open" Margin="10 0" Content="Open" Click="Open_Click"/>
+                    <Button Name="RevertAll" Margin="10 0" Content="Revert All" Click="RevertAll_Click"/>
+                    <Button Name="Save" Margin="10 0" Content="Save" Click="Save_Click"/>
                 </WrapPanel>
                 <UniformGrid Rows="1" Columns="2" DockPanel.Dock="Top">
                     <Border BorderBrush="Black" BorderThickness="1" Margin="5">
