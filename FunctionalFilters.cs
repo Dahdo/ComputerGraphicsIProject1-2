@@ -8,7 +8,7 @@ namespace ComputerGraphicsIProject
 
     public static class FunctionalFilters
     {
-        public static void ApplyInversionFilter(Bitmap? inputBitmap)
+        public static void ApplyFilter(Bitmap? inputBitmap, Func<byte, byte> FilterFunction)
         {
             /*
              * This implementation makes use these 2 resources to create an improved version
@@ -36,9 +36,9 @@ namespace ComputerGraphicsIProject
                     {
                         for (int x = 0; x < stride; x += 3)
                         {
-                            bitmapDataPtr[0] = (byte)(255 - bitmapDataPtr[0]); // Red channel
-                            bitmapDataPtr[1] = (byte)(255 - bitmapDataPtr[1]); // Green channel
-                            bitmapDataPtr[2] = (byte)(255 - bitmapDataPtr[2]); // Blue channel
+                            bitmapDataPtr[0] = FilterFunction(bitmapDataPtr[0]); // Red channel
+                            bitmapDataPtr[1] = FilterFunction(bitmapDataPtr[1]); // Green channel
+                            bitmapDataPtr[2] = FilterFunction(bitmapDataPtr[2]); // Blue channel
 
                             bitmapDataPtr += 3; // Jump to the next pixel
                         }
@@ -51,8 +51,17 @@ namespace ComputerGraphicsIProject
             }
         }
 
+        public static byte Inversion(byte channelValue)
+        {
+            return (byte)(255 - channelValue);
+        }
+
+        public static byte BrightnessCorrection(byte channelValue, short adjustment)
+        {
+            int adjustedValue = channelValue + adjustment;
+            return (byte)Math.Min(255, Math.Max(0, adjustedValue));
+        }
+
     }
-
-
-
+    
 }

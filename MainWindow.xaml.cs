@@ -13,6 +13,10 @@ namespace ComputerGraphicsIProject
 
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+
+        // Constants
+        const short BRIGHTNESS_ADJUSTMENT = -5;
+
         private Bitmap? _imageSourceBitmap;
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -43,6 +47,14 @@ namespace ComputerGraphicsIProject
             InitializeComponent();
             DataContext = this;
             refImage = FindName("RefImage") as System.Windows.Controls.Image;
+        }
+
+        private void ReflectBitmapMemoryChanges()
+        {
+            // Update the bitmap to trigger changes in the view
+            Bitmap? tmpBitmap = ImageSourceBitmap;
+            ImageSourceBitmap = null;
+            ImageSourceBitmap = tmpBitmap;
         }
 
 
@@ -110,12 +122,26 @@ namespace ComputerGraphicsIProject
                 return;
             }
 
-            FunctionalFilters.ApplyInversionFilter(ImageSourceBitmap);
+            // Call ApplyFilter function with appropriate filter delegate
+            FunctionalFilters.ApplyFilter(ImageSourceBitmap, FunctionalFilters.Inversion);
+            
+            // To simulate bitmap changes notification
+            ReflectBitmapMemoryChanges();
+        }
 
-            // Update the bitmap to trigger changes in the view
-            Bitmap? tmpBitmap = ImageSourceBitmap;
-            ImageSourceBitmap = null;
-            ImageSourceBitmap = tmpBitmap;
+        private void BrightnessCorrection_Click(object sender, RoutedEventArgs e)
+        {
+            if (ImageSourceBitmap == null)
+            {
+                Util.ShowMessageBoxError("Image needs to be loaded first!");
+                return;
+            }
+
+            // Call ApplyFilter function with appropriate filter delegate
+            FunctionalFilters.ApplyFilter(ImageSourceBitmap, (byte channelValue) => FunctionalFilters.BrightnessCorrection(channelValue, BRIGHTNESS_ADJUSTMENT));
+
+            // To simulate bitmap changes notification
+            ReflectBitmapMemoryChanges();
         }
     }
 }
