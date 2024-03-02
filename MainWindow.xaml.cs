@@ -13,25 +13,24 @@ namespace ComputerGraphicsIProject
 
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        private Bitmap? _imageSource;
-        Bitmap tmpBitmap;
+        private Bitmap? _imageSourceBitmap;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public Bitmap? ImageSource
+        public Bitmap? ImageSourceBitmap
         {
-            get { return _imageSource; }
+            get { return _imageSourceBitmap; }
             set
             {
-                if (_imageSource != value)
+                if (_imageSourceBitmap != value)
                 {
-                    _imageSource = value;
-                    OnPropertyChanged(nameof(ImageSource));
+                    _imageSourceBitmap = value;
+                    OnPropertyChanged(nameof(ImageSourceBitmap));
                 }
             }
         }
-
-        private System.Windows.Controls.Image? refImage;
+        private Bitmap? originalImageSourceBitmap; // Original state of ImageSourceBitmap
+        private System.Windows.Controls.Image? refImage; // Reference to reference image control
 
         private void OnPropertyChanged(string propertyName)
         {
@@ -52,8 +51,8 @@ namespace ComputerGraphicsIProject
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 Title = "Open Image File",
-                Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.bmp|All Files|*.*"
-            };
+                Filter = "PNG Image (*.png)|*.png|JPEG Image (*.jpg)|*.jpg|BMP Image (*.bmp)|*.bmp"
+        };
 
             if (openFileDialog.ShowDialog() == true)
             {
@@ -61,8 +60,8 @@ namespace ComputerGraphicsIProject
 
                 try
                 {
-                    Bitmap? bitmap = new Bitmap(selectedFilePath);
-                    ImageSource = bitmap;
+                    originalImageSourceBitmap = new Bitmap(selectedFilePath); // The initial state of the bitmap
+                    ImageSourceBitmap = originalImageSourceBitmap.Clone() as Bitmap; // The bitmap to apply filters on
 
                     if (refImage != null)
                     {
@@ -77,19 +76,46 @@ namespace ComputerGraphicsIProject
             }
         }
 
-        private void Save_Click(object sender, RoutedEventArgs e)
-        {
-            FunctionalFilters.ApplyInversionFilter(ImageSource);
-
-            // Update the bitmap to trigger changes in the view
-            Bitmap? tmpBitmap = ImageSource;
-            ImageSource = null;
-            ImageSource = tmpBitmap;
-
-        }
-
         private void RevertAll_Click(object sender, RoutedEventArgs e)
         {
+            ImageSourceBitmap = originalImageSourceBitmap!.Clone() as Bitmap;
+                
+        }
+
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+            if(ImageSourceBitmap == null)
+            {
+                Util.ShowMessageBoxError("No image loaded!");
+                return;
+            }
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "PNG Image (*.png)|*.png|JPEG Image (*.jpg)|*.jpg|BMP Image (*.bmp)|*.bmp|All files (*.*)|*.*";
+            saveFileDialog.Title = "Save Image";
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                string fileName = saveFileDialog.FileName;
+                // Call the function defined in Util class
+                Util.SaveBitmapToFile(ImageSourceBitmap, fileName);
+            }
+        }
+
+
+        private void Inversion_Click(object sender, RoutedEventArgs e)
+        {
+            if (ImageSourceBitmap == null)
+            {
+                Util.ShowMessageBoxError("Image needs to be loaded first!");
+                return;
+            }
+
+            FunctionalFilters.ApplyInversionFilter(ImageSourceBitmap);
+
+            // Update the bitmap to trigger changes in the view
+            Bitmap? tmpBitmap = ImageSourceBitmap;
+            ImageSourceBitmap = null;
+            ImageSourceBitmap = tmpBitmap;
         }
     }
 }
