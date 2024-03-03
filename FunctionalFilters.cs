@@ -36,9 +36,9 @@ namespace ComputerGraphicsIProject
                     {
                         for (int x = 0; x < stride; x += 3)
                         {
-                            bitmapDataPtr[0] = FilterFunction(bitmapDataPtr[0]); // Red channel
+                            bitmapDataPtr[0] = FilterFunction(bitmapDataPtr[0]); // Blue channel
                             bitmapDataPtr[1] = FilterFunction(bitmapDataPtr[1]); // Green channel
-                            bitmapDataPtr[2] = FilterFunction(bitmapDataPtr[2]); // Blue channel
+                            bitmapDataPtr[2] = FilterFunction(bitmapDataPtr[2]); // Red channel
 
                             bitmapDataPtr += 3; // Jump to the next pixel
                         }
@@ -58,8 +58,23 @@ namespace ComputerGraphicsIProject
 
         public static byte BrightnessCorrection(byte channelValue, short adjustment)
         {
-            int adjustedValue = channelValue + adjustment;
-            return (byte)Math.Min(255, Math.Max(0, adjustedValue));
+            int channelValueAdjusted = channelValue + adjustment;
+            return (byte)Math.Min(255, Math.Max(0, channelValueAdjusted));
+        }
+
+        public static byte ConstrastEnhancement(byte channelValue, float adjustment)
+        {
+            // Source: stackoverflow answer https://stackoverflow.com/a/3115178
+
+            // Adjust the adjustment in range 0.0 - 0.04
+            float adjustmentNormalized = (adjustment + 100.0f) / 100.0f;
+            adjustmentNormalized *= adjustmentNormalized;
+
+            // Normalize the channel value in range 0.0 - 1.0
+            float channelValueNormalized = channelValue / 255.0f;
+            // Apply the filter: Darken the values below 0.5 and lighten values above 0.5
+            channelValueNormalized = (((channelValueNormalized - 0.5f) * adjustmentNormalized) + 0.5f) * 255.0f;
+            return (byte)Math.Min(255, Math.Max(0, channelValueNormalized));
         }
 
     }

@@ -16,6 +16,7 @@ namespace ComputerGraphicsIProject
 
         // Constants
         const short BRIGHTNESS_ADJUSTMENT = -5;
+        const float CONTRAST_ENHANCEMENT_PERCENTAGE = 10;
 
         private Bitmap? _imageSourceBitmap;
 
@@ -122,7 +123,7 @@ namespace ComputerGraphicsIProject
                 return;
             }
 
-            // Call ApplyFilter function with appropriate filter delegate
+            // Call inverstion filter with Inversion delegate
             FunctionalFilters.ApplyFilter(ImageSourceBitmap, FunctionalFilters.Inversion);
             
             // To simulate bitmap changes notification
@@ -137,8 +138,23 @@ namespace ComputerGraphicsIProject
                 return;
             }
 
-            // Call ApplyFilter function with appropriate filter delegate
+            // Call brightness correction filter with BrightnessCorrection delegate
             FunctionalFilters.ApplyFilter(ImageSourceBitmap, (byte channelValue) => FunctionalFilters.BrightnessCorrection(channelValue, BRIGHTNESS_ADJUSTMENT));
+
+            // To simulate bitmap changes notification
+            ReflectBitmapMemoryChanges();
+        }
+
+        private void ContrastEnhancement_Click(object sender, RoutedEventArgs e)
+        {
+            if (ImageSourceBitmap == null)
+            {
+                Util.ShowMessageBoxError("Image needs to be loaded first!");
+                return;
+            }
+
+            // Call contrast enhancement filter with ConstrastEnhancement delegate
+            FunctionalFilters.ApplyFilter(ImageSourceBitmap, (byte channelValue) => FunctionalFilters.ConstrastEnhancement(channelValue, CONTRAST_ENHANCEMENT_PERCENTAGE));
 
             // To simulate bitmap changes notification
             ReflectBitmapMemoryChanges();
