@@ -59,6 +59,10 @@ namespace ComputerGraphicsIProject
             ImageSourceBitmap = tmpBitmap;
         }
 
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
 
         private void Open_Click(object sender, RoutedEventArgs e)
         {

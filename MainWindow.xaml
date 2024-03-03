@@ -24,19 +24,19 @@
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File">
-                <MenuItem Header="Open"/>
-                <MenuItem Header="Save"/>
+                <MenuItem Name="OpenMenuItem" Header="Open" Click="Open_Click"/>
+                <MenuItem Name="SaveMenuItem" Header="Save" Click="Save_Click"/>
                 <Separator />
-                <MenuItem Header="Exit"/>
+                <MenuItem Name="ExitMenuItem" Header="Exit" Click="Exit_Click"/>
             </MenuItem>
             <MenuItem Header="Edit">
-                <MenuItem Header="Function Filtering">
-                    <MenuItem Header="Inversion"/>
-                    <MenuItem Header="Brightness Correction"/>
-                    <MenuItem Header="Contrast Enhancement"/>
-                    <MenuItem Header="Gamma Correction"/>
+                <MenuItem Header="Function Filters">
+                    <MenuItem Name="InversionMenuItem" Header="Inversion" Click="Inversion_Click"/>
+                    <MenuItem Name="BrightnessCorrectionMenuItem" Header="Brightness Correction" Click="BrightnessCorrection_Click"/>
+                    <MenuItem Name="ContrastEnhancementnMenuItem" Header="Contrast Enhancement" Click="ContrastEnhancement_Click"/>
+                    <MenuItem Name="GammaCorrectionMenuItem" Header="Gamma Correction" Click="GammaCorrection_Click"/>
                 </MenuItem>
-                <MenuItem Header="Convolutional Filtering">
+                <MenuItem Header="Convolutional Filters">
                     <MenuItem Header="Blur"/>
                     <MenuItem Header="Gaussian Blur"/>
                     <MenuItem Header="Sharpen"/>
