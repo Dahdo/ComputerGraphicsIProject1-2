@@ -16,7 +16,8 @@ namespace ComputerGraphicsIProject
 
         // Constants
         const short BRIGHTNESS_ADJUSTMENT = -5;
-        const float CONTRAST_ENHANCEMENT_PERCENTAGE = 10;
+        const float CONTRAST_ENHANCEMENT_PERCENTAGE = 10.0f;
+        const float GAMMA_VALUE = 0.9f;
 
         private Bitmap? _imageSourceBitmap;
 
@@ -155,6 +156,21 @@ namespace ComputerGraphicsIProject
 
             // Call contrast enhancement filter with ConstrastEnhancement delegate
             FunctionalFilters.ApplyFilter(ImageSourceBitmap, (byte channelValue) => FunctionalFilters.ConstrastEnhancement(channelValue, CONTRAST_ENHANCEMENT_PERCENTAGE));
+
+            // To simulate bitmap changes notification
+            ReflectBitmapMemoryChanges();
+        }
+
+        private void GammaCorrection_Click(object sender, RoutedEventArgs e)
+        {
+            if (ImageSourceBitmap == null)
+            {
+                Util.ShowMessageBoxError("Image needs to be loaded first!");
+                return;
+            }
+
+            // Call gamma correction filter with GammaCorrection delegate
+            FunctionalFilters.ApplyFilter(ImageSourceBitmap, (byte channelValue) => FunctionalFilters.GammaCorrection(channelValue, GAMMA_VALUE));
 
             // To simulate bitmap changes notification
             ReflectBitmapMemoryChanges();

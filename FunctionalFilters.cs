@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Reflection.Metadata;
 using System.Windows.Documents;
 
 namespace ComputerGraphicsIProject
@@ -77,6 +78,12 @@ namespace ComputerGraphicsIProject
             return (byte)Math.Min(255, Math.Max(0, channelValueNormalized));
         }
 
+        public static byte GammaCorrection(byte channelValue, float gamma, float c = 1.0f)
+        {
+            // Source: https://epochabuse.com/csharp-gamma-correction/
+
+            return (byte)(c * Math.Pow(channelValue / 255.0f, gamma) * 255.0f);
+        }
     }
     
 }

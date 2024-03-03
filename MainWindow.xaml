@@ -64,7 +64,7 @@
                         <Button Name="Inversion" Content="Inversion" Style="{StaticResource ButtonsUnderTabs}" Click="Inversion_Click" />
                         <Button Name="BrightnessCorrection" Content="Brightness Correction" Style="{StaticResource ButtonsUnderTabs}" Click="BrightnessCorrection_Click" />
                         <Button Name="ContrastEnhancement" Content="Contrast Enhancement" Style="{StaticResource ButtonsUnderTabs}" Click="ContrastEnhancement_Click"/>
-                        <Button Name="GammaCorrection" Content="Gamma Correction" Style="{StaticResource ButtonsUnderTabs}"/>
+                        <Button Name="GammaCorrection" Content="Gamma Correction" Style="{StaticResource ButtonsUnderTabs}" Click="GammaCorrection_Click"/>
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Convolutional Filters">
