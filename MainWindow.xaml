@@ -72,7 +72,7 @@
                         <Button Name="Blur" Content="Blur" Style="{StaticResource ButtonsUnderTabs}" Click="Blur_Click" />
                         <Button Name="GaussianBlur" Content="Gaussian Blur" Style="{StaticResource ButtonsUnderTabs}" Click="GaussianBlur_Click" />
                         <Button Name="Sharpen" Content="Sharpen" Style="{StaticResource ButtonsUnderTabs}" Click="Sharpen_Click"/>
-                        <Button Name="EdgeDetection" Content="Edge Detection" Style="{StaticResource ButtonsUnderTabs}"/>
+                        <Button Name="EdgeDetection" Content="Edge Detection" Style="{StaticResource ButtonsUnderTabs}" Click="EdgeDetection_Click"/>
                         <Button Name="Emboss" Content="Emboss" Style="{StaticResource ButtonsUnderTabs}"/>
                     </StackPanel>
                 </TabItem>
