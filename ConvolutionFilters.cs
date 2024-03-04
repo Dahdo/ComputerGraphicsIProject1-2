@@ -132,9 +132,9 @@ namespace ComputerGraphicsIProject
             }
 
             // Write values to the current pixel
-            outputPtr[0] = (byte)Math.Min(255, Math.Max(0, sumBlues / filter.Divisor));    // Blue channel
-            outputPtr[1] = (byte)Math.Min(255, Math.Max(0, sumGreens / filter.Divisor));  // Green channel
-            outputPtr[2] = (byte)Math.Min(255, Math.Max(0, sumReds / filter.Divisor));  // Red channel
+            outputPtr[0] = (byte)Math.Min(255, Math.Max(0, filter.Offset + sumBlues / filter.Divisor));    // Blue channel
+            outputPtr[1] = (byte)Math.Min(255, Math.Max(0, filter.Offset + sumGreens / filter.Divisor));  // Green channel
+            outputPtr[2] = (byte)Math.Min(255, Math.Max(0, filter.Offset + sumReds / filter.Divisor));  // Red channel
         }
     }
 
