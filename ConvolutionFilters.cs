@@ -1,8 +1,7 @@
 ﻿using ComputerGraphicsIProject;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Windows.Media.Effects;
 
 
 namespace ComputerGraphicsIProject
@@ -13,21 +12,58 @@ namespace ComputerGraphicsIProject
 
     public abstract class ConvolutionFilterBase
     {
-        public abstract float Offset
+
+        protected float[,] kernel = new float[,]
+                     { { 1.0f, 1.0f, 1.0f, },
+                        { 1.0f, 1.0f, 1.0f, },
+                        {1.0f, 1.0f, 1.0f}, };
+        protected float offset;
+        protected float divisor;
+        protected int anchorX;
+        protected int anchorY;
+
+        public virtual int SizeX
         {
-            get;
+            get => kernel.GetLength(1);
+        }
+        public virtual int SizeY
+        {
+            get => kernel.GetLength(0);
         }
 
-
-        public abstract float Divisor
+        public virtual int AnchorX
         {
-            get;
+            get => anchorX;
+            set => anchorX = value;
+        }
+        public virtual int AnchorY
+        {
+            get => anchorY;
+            set => anchorY = value;
         }
 
-
-        public abstract float[,] Kernel
+        public virtual float Offset
         {
-            get;
+            get => offset;
+            set => offset = value;
+        }
+
+        public virtual float Divisor
+        {
+            get => divisor;
+            set => divisor = value;
+        }
+
+        public virtual float[,] Kernel
+        {
+            get => kernel;
+            set
+            {
+                kernel = value;
+                divisor = SizeX * SizeY;
+                anchorX = SizeX / 2;
+                anchorY = SizeY / 2;
+            }
         }
     }
 
@@ -57,7 +93,7 @@ namespace ComputerGraphicsIProject
                     for (int x = 0; x < inputBitmapData.Width; x++)
                     {
                         // Apply the convolution filter to the pixel
-                        ApplyKernel(inputPtr, outputPtr, x, y, inputBitmapData.Stride, inputBitmapData.Width, inputBitmapData.Height, ConvolutionalFilter.Kernel);
+                        ApplyKernel(inputPtr, outputPtr, x, y, inputBitmapData.Stride, inputBitmapData.Height, ConvolutionalFilter);
                     }
                 }
 
@@ -67,35 +103,35 @@ namespace ComputerGraphicsIProject
             }
         }
 
-        private static unsafe void ApplyKernel(byte* inputPtr, byte* outputPtr, int x, int y, int stride, int width, int height, float[,] kernel)
+        private static unsafe void ApplyKernel<T>(byte* inputPtr, byte* outputPtr, int x, int y, int stride, int height, T filter)
+            where T: ConvolutionFilterBase
         {
             float sumReds = 0, sumGreens = 0, sumBlues = 0;
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < filter.SizeY; i++)
             {
-                for (int j = 0; j < 3; j++)
+                for (int j = 0; j < filter.SizeX; j++)
                 {
-                    int offsetX = x + j - 1;
-                    int offsetY = y + i - 1;
+                    int offsetX = x + j - filter.AnchorX;
+                    int offsetY = y + i - filter.AnchorY;
 
                     // Check if the current position is within the image bounds
-                    if (offsetX >= 0 && offsetX < width && offsetY >= 0 && offsetY < height)
+                    if (offsetX >= 0 && offsetX < stride && offsetY >= 0 && offsetY < height)
                     {
                         // Get the color of the current pixel
                         byte* currentPixel = inputPtr + offsetY * stride + offsetX * 3;
-                        sumReds += currentPixel[2] * kernel[i, j];
-                        sumGreens += currentPixel[1] * kernel[i, j];
-                        sumBlues += currentPixel[0] * kernel[i, j];
+                        sumReds += currentPixel[0] * filter.Kernel[i, j];
+                        sumGreens += currentPixel[1] * filter.Kernel[i, j];
+                        sumBlues += currentPixel[2] * filter.Kernel[i, j];
                     }
                 }
             }
 
             // Update the output pixel
             byte* outputPixel = outputPtr + y * stride + x * 3;
-            outputPixel[2] = (byte)Math.Min(255, Math.Max(0, sumReds / 9)); // Red channel
-            outputPixel[1] = (byte)Math.Min(255, Math.Max(0, sumGreens / 9)); // Green channel
-            outputPixel[0] = (byte)Math.Min(255, Math.Max(0, sumBlues / 9)); // Blue channel
-            outputPixel[3] = 255; // Alpha channel
+            outputPixel[0] = (byte)Math.Min(255, Math.Max(0, sumReds / filter.Divisor));    // Blue channel
+            outputPixel[1] = (byte)Math.Min(255, Math.Max(0, sumGreens / filter.Divisor));  // Green channel
+            outputPixel[2] = (byte)Math.Min(255, Math.Max(0, sumBlues / filter.Divisor));  // Red channel
         }
     }
 }
@@ -103,18 +139,11 @@ namespace ComputerGraphicsIProject
 
 public class BlurFilter : ConvolutionFilterBase
 {
-    private float[,] kernel = new float[,]
-                     { { 1.0f, 1.0f, 1.0f, },
-                        { 1.0f, 1.0f, 1.0f, },
-                        {1.0f, 1.0f, 1.0f}, };
-
-    public override float Offset => throw new NotImplementedException();
-
-    public override float Divisor => throw new NotImplementedException();
-
-
-    public override float[,] Kernel
+    public BlurFilter()
     {
-        get { return kernel; }
+        divisor = this.SizeX * this.SizeY;
+        anchorX = this.SizeX / 2;
+        anchorY = this.SizeY / 2;
+        offset = 1.0f;
     }
 }

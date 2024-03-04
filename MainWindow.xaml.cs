@@ -193,7 +193,21 @@ namespace ComputerGraphicsIProject
             }
 
             ConvolutionFilterBase blur = new BlurFilter();
-            // Call inverstion filter with Inversion delegate
+
+            float[,] kernel = new float[9,9];
+
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    kernel[i, j] = 1.0f;
+                }
+            }
+            //blur.Divisor = 81;
+
+            blur.Kernel = kernel;
+
+            // Call ApplyFilter
             ConvolutionFilters.ApplyFilter(ImageSourceBitmap, blur);
 
             // To simulate bitmap changes notification
