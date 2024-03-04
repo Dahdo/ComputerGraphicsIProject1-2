@@ -68,7 +68,7 @@ namespace ComputerGraphicsIProject
     }
 
     public static class ConvolutionFilters
-    {// my proposals: passing the kernel(we will be able to get size here) and anchor position (using variables like k)
+    {
         public static void ApplyFilter<T>(Bitmap? bitmap, T ConvolutionalFilter)
             where T : ConvolutionFilterBase
         {
@@ -88,12 +88,14 @@ namespace ComputerGraphicsIProject
                 byte* inputPtr = (byte*)inputBitmapData.Scan0;
                 byte* outputPtr = (byte*)outputBitmapData.Scan0;
 
-                for (int y = 0; y < inputBitmapData.Height; y++)
+                for (int y = 0; y < inputBitmap.Height; y++)
                 {
-                    for (int x = 0; x < inputBitmapData.Width; x++)
+                    for (int x = 0; x < inputBitmapData.Stride / 3; x++)
                     {
                         // Apply the convolution filter to the pixel
                         ApplyKernel(inputPtr, outputPtr, x, y, inputBitmapData.Stride, inputBitmapData.Height, ConvolutionalFilter);
+
+                        outputPtr += 3; // Jump to the next pixel
                     }
                 }
 
@@ -112,26 +114,22 @@ namespace ComputerGraphicsIProject
             {
                 for (int j = 0; j < filter.SizeX; j++)
                 {
-                    int offsetX = x + j - filter.AnchorX;
-                    int offsetY = y + i - filter.AnchorY;
+                    // Wrap around in case the offset extends beyond the raster
+                    int offsetX = (x + j - filter.AnchorX + (stride / 3)) % (stride / 3);
+                    int offsetY = (y + i - filter.AnchorY + height) % height;
 
-                    // Check if the current position is within the image bounds
-                    if (offsetX >= 0 && offsetX < stride && offsetY >= 0 && offsetY < height)
-                    {
-                        // Get the color of the current pixel
-                        byte* currentPixel = inputPtr + offsetY * stride + offsetX * 3;
-                        sumReds += currentPixel[0] * filter.Kernel[i, j];
-                        sumGreens += currentPixel[1] * filter.Kernel[i, j];
-                        sumBlues += currentPixel[2] * filter.Kernel[i, j];
-                    }
+                    // Get the color of the current pixel
+                    byte* currentPixel = inputPtr + offsetY * stride + offsetX * 3;
+                    sumBlues += currentPixel[0] * filter.Kernel[i, j];
+                    sumGreens += currentPixel[1] * filter.Kernel[i, j];
+                    sumReds += currentPixel[2] * filter.Kernel[i, j];
                 }
             }
 
-            // Update the output pixel
-            byte* outputPixel = outputPtr + y * stride + x * 3;
-            outputPixel[0] = (byte)Math.Min(255, Math.Max(0, sumReds / filter.Divisor));    // Blue channel
-            outputPixel[1] = (byte)Math.Min(255, Math.Max(0, sumGreens / filter.Divisor));  // Green channel
-            outputPixel[2] = (byte)Math.Min(255, Math.Max(0, sumBlues / filter.Divisor));  // Red channel
+            // Write values to the current pixel
+            outputPtr[0] = (byte)Math.Min(255, Math.Max(0, sumBlues / filter.Divisor));    // Blue channel
+            outputPtr[1] = (byte)Math.Min(255, Math.Max(0, sumGreens / filter.Divisor));  // Green channel
+            outputPtr[2] = (byte)Math.Min(255, Math.Max(0, sumReds / filter.Divisor));  // Red channel
         }
     }
 }
