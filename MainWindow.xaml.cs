@@ -238,6 +238,23 @@ namespace ComputerGraphicsIProject
             // To simulate bitmap changes notification
             ReflectBitmapMemoryChanges();
         }
+
+        private void Sharpen_Click(object sender, RoutedEventArgs e)
+        {
+            if (ImageSourceBitmap == null)
+            {
+                Util.ShowMessageBoxError("Image needs to be loaded first!");
+                return;
+            }
+
+            ConvolutionFilterBase sharpen = new SharpenFilter();
+
+            // Call ApplyFilter
+            ConvolutionFilters.ApplyFilter(ImageSourceBitmap, sharpen);
+
+            // To simulate bitmap changes notification
+            ReflectBitmapMemoryChanges();
+        }
         #endregion
     }
 }

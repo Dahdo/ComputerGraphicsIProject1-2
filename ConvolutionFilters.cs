@@ -151,7 +151,7 @@ namespace ComputerGraphicsIProject
             divisor = this.SizeX * this.SizeY;
             anchorX = this.SizeX / 2;
             anchorY = this.SizeY / 2;
-            offset = 1.0f;
+            offset = 0.0f;
         }
     }
 
@@ -167,7 +167,7 @@ namespace ComputerGraphicsIProject
             divisor = 1;
             anchorX = this.SizeX / 2;
             anchorY = this.SizeY / 2;
-            offset = 1.0f;
+            offset = 0.0f;
         }
         private void GenerateKernel()
         {
@@ -196,6 +196,36 @@ namespace ComputerGraphicsIProject
 
         }
 
+        public override float[,] Kernel
+        {
+            get => kernel!;
+            set
+            {
+                kernel = value;
+                divisor = 1;
+                anchorX = SizeX / 2;
+                anchorY = SizeY / 2;
+            }
+        }
+    }
+
+
+    public class SharpenFilter : ConvolutionFilterBase
+    {
+        private int size;
+        public SharpenFilter()
+        {
+            kernel = new float[,]
+            {
+                {0, -1, 0 },
+                {-1, 5, -1 },
+                {0, -1, 0 }
+            };
+            divisor = 1;
+            anchorX = this.SizeX / 2;
+            anchorY = this.SizeY / 2;
+            offset = 0.0f;
+        }
         public override float[,] Kernel
         {
             get => kernel!;
