@@ -246,9 +246,38 @@ namespace ComputerGraphicsIProject
         {
             kernel = new float[,]
             {
-                { -1,  0, 1 },
-                { -1,  0, 1 },
-                { -1,  0, 1 }
+                { -1,  -1, -1 },
+                { -1,  8, -1},
+                { -1,  -1, -1 }
+            };
+            divisor = 1;
+            anchorX = this.SizeX / 2;
+            anchorY = this.SizeY / 2;
+            offset = 0.0f;
+        }
+        public override float[,] Kernel
+        {
+            get => kernel!;
+            set
+            {
+                kernel = value;
+                divisor = 1;
+                anchorX = SizeX / 2;
+                anchorY = SizeY / 2;
+            }
+        }
+    }
+
+    public class EmbossFilter : ConvolutionFilterBase
+    {
+        private int size;
+        public EmbossFilter()
+        {
+            kernel = new float[,]
+            {
+                { -1,  -1, 0 },
+                { -1,  1, 1},
+                { 0,  1, 1 }
             };
             divisor = 1;
             anchorX = this.SizeX / 2;

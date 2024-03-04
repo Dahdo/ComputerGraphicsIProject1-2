@@ -273,6 +273,23 @@ namespace ComputerGraphicsIProject
             // To simulate bitmap changes notification
             ReflectBitmapMemoryChanges();
         }
+
+        private void Emboss_Click(object sender, RoutedEventArgs e)
+        {
+            if (ImageSourceBitmap == null)
+            {
+                Util.ShowMessageBoxError("Image needs to be loaded first!");
+                return;
+            }
+
+            ConvolutionFilterBase emboss = new EmbossFilter();
+
+            // Call ApplyFilter
+            ConvolutionFilters.ApplyFilter(ImageSourceBitmap, emboss);
+
+            // To simulate bitmap changes notification
+            ReflectBitmapMemoryChanges();
+        }
         #endregion
     }
 }
