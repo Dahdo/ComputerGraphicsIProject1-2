@@ -33,7 +33,7 @@ namespace ComputerGraphicsIProject
                     // Pointer to the first byte of the pixel data
                     byte* bitmapDataPtr = (byte*)bitmapData.Scan0;
 
-                    for (int y = 0; y < bitmap.Height; ++y)
+                    for (int y = 0; y < bitmap.Height; y++)
                     {
                         for (int x = 0; x < stride; x += 3)
                         {

@@ -1,7 +1,9 @@
 ﻿using ComputerGraphicsIProject;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Windows.Media.Effects;
+using System.Text;
+using System.Windows;
+using System.Linq;
 
 
 namespace ComputerGraphicsIProject
@@ -13,22 +15,20 @@ namespace ComputerGraphicsIProject
     public abstract class ConvolutionFilterBase
     {
 
-        protected float[,] kernel = new float[,]
-                     { { 1.0f, 1.0f, 1.0f, },
-                        { 1.0f, 1.0f, 1.0f, },
-                        {1.0f, 1.0f, 1.0f}, };
+        protected float[,]? kernel;
         protected float offset;
         protected float divisor;
         protected int anchorX;
         protected int anchorY;
+        protected float sigma;
 
         public virtual int SizeX
         {
-            get => kernel.GetLength(1);
+            get => kernel!.GetLength(1);
         }
         public virtual int SizeY
         {
-            get => kernel.GetLength(0);
+            get => kernel!.GetLength(0);
         }
 
         public virtual int AnchorX
@@ -56,7 +56,7 @@ namespace ComputerGraphicsIProject
 
         public virtual float[,] Kernel
         {
-            get => kernel;
+            get => kernel!;
             set
             {
                 kernel = value;
@@ -64,6 +64,11 @@ namespace ComputerGraphicsIProject
                 anchorX = SizeX / 2;
                 anchorY = SizeY / 2;
             }
+        }
+
+        public virtual float Sigma
+        {
+            set => sigma = value;
         }
     }
 
@@ -132,16 +137,79 @@ namespace ComputerGraphicsIProject
             outputPtr[2] = (byte)Math.Min(255, Math.Max(0, sumReds / filter.Divisor));  // Red channel
         }
     }
-}
 
 
-public class BlurFilter : ConvolutionFilterBase
-{
-    public BlurFilter()
+    public class BlurFilter : ConvolutionFilterBase
     {
-        divisor = this.SizeX * this.SizeY;
-        anchorX = this.SizeX / 2;
-        anchorY = this.SizeY / 2;
-        offset = 1.0f;
+        public BlurFilter()
+        {
+            kernel = new float[,]
+                         { { 1.0f, 1.0f, 1.0f, },
+                        { 1.0f, 1.0f, 1.0f, },
+                        {1.0f, 1.0f, 1.0f}, };
+
+            divisor = this.SizeX * this.SizeY;
+            anchorX = this.SizeX / 2;
+            anchorY = this.SizeY / 2;
+            offset = 1.0f;
+        }
+    }
+
+    public class GaussianBlurFilter : ConvolutionFilterBase
+    {
+        // Source: https://hackernoon.com/how-to-implement-gaussian-blur-zw28312m
+        private int size;
+        public GaussianBlurFilter(int _size = 3, float _sigma = 1.5f)
+        {
+            this.size = _size;
+            sigma = _sigma;
+            this.GenerateKernel();
+            divisor = 1;
+            anchorX = this.SizeX / 2;
+            anchorY = this.SizeY / 2;
+            offset = 1.0f;
+        }
+        private void GenerateKernel()
+        {
+            kernel = new float[size, size];
+            float sum = 0.0f;
+            int halfSize = size / 2;
+
+            for (int y = -halfSize; y <= halfSize; y++)
+            {
+                for (int x = -halfSize; x <= halfSize; x++)
+                {
+                    float exponent = -(x * x + y * y) / (2.0f * sigma * sigma);
+                    kernel[y + halfSize, x + halfSize] = (float)(Math.Exp(exponent) / (2.0f * Math.PI * sigma * sigma));
+                    sum += kernel[y + halfSize, x + halfSize];
+                }
+            }
+
+            // Normalize Kernel
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size; j++)
+                {
+                    kernel[i, j] /= sum;
+                }
+            }
+
+        }
+
+        public override float[,] Kernel
+        {
+            get => kernel!;
+            set
+            {
+                kernel = value;
+                divisor = 1;
+                anchorX = SizeX / 2;
+                anchorY = SizeY / 2;
+            }
+        }
     }
 }
+
+
+
+

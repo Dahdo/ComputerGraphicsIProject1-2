@@ -203,7 +203,6 @@ namespace ComputerGraphicsIProject
                     kernel[i, j] = 1.0f;
                 }
             }
-            //blur.Divisor = 81;
 
             blur.Kernel = kernel;
 
@@ -213,7 +212,32 @@ namespace ComputerGraphicsIProject
             // To simulate bitmap changes notification
             ReflectBitmapMemoryChanges();
         }
-        #endregion
 
+        private void GaussianBlur_Click(object sender, RoutedEventArgs e)
+        {
+            if (ImageSourceBitmap == null)
+            {
+                Util.ShowMessageBoxError("Image needs to be loaded first!");
+                return;
+            }
+
+            ConvolutionFilterBase gaussianBlur = new GaussianBlurFilter();
+
+            gaussianBlur.Kernel = Util.NormalizeKernel(new float[,] 
+                                                        {
+                                                            {0, 1, 2, 1, 0},
+                                                            {1, 4, 8, 4, 1},
+                                                            {2, 8, 16, 8, 2},
+                                                            {1, 4, 8, 4, 1},
+                                                            {0, 1, 2, 1, 0}
+                                                        });
+
+            // Call ApplyFilter
+            ConvolutionFilters.ApplyFilter(ImageSourceBitmap, gaussianBlur);
+
+            // To simulate bitmap changes notification
+            ReflectBitmapMemoryChanges();
+        }
+        #endregion
     }
 }

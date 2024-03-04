@@ -2,6 +2,9 @@
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 using System.Windows;
+using System.Text;
+using System.Security.Policy;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ComputerGraphicsIProject
 {
@@ -48,5 +51,39 @@ namespace ComputerGraphicsIProject
         {
             MessageBox.Show(message);
         }
+
+        public static string MatrixToString(float[,] matrix)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < matrix.GetLength(1); j++)
+                {
+                    sb.Append(matrix[i, j]);
+                    sb.Append("\t"); // Add tab for formatting
+                }
+
+                sb.AppendLine(); // Move to the next row
+            }
+
+            return sb.ToString();
+        }
+
+        public static float[,] NormalizeKernel(float[,] kernel)
+        {
+            float sum = kernel.Cast<float>().Sum();
+
+            for (int i = 0; i < kernel.GetLength(0); i++)
+            {
+                for (int j = 0; j < kernel.GetLength(1); j++)
+                {
+                    kernel[i, j] /= sum;
+                }
+            }
+
+            return kernel;
+        }
     }
+
 }
