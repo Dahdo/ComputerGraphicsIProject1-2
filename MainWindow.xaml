@@ -69,7 +69,7 @@
                 </TabItem>
                 <TabItem Header="Convolutional Filters">
                     <StackPanel>
-                        <Button Name="Blur" Content="Blur" Style="{StaticResource ButtonsUnderTabs}" />
+                        <Button Name="Blur" Content="Blur" Style="{StaticResource ButtonsUnderTabs}" Click="Blur_Click" />
                         <Button Name="GaussianBlur" Content="Gaussian Blur" Style="{StaticResource ButtonsUnderTabs}" />
                         <Button Name="Sharpen" Content="Sharpen" Style="{StaticResource ButtonsUnderTabs}"/>
                         <Button Name="EdgeDetection" Content="Edge Detection" Style="{StaticResource ButtonsUnderTabs}"/>

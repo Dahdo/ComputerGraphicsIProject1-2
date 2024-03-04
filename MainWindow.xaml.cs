@@ -58,6 +58,7 @@ namespace ComputerGraphicsIProject
             ImageSourceBitmap = null;
             ImageSourceBitmap = tmpBitmap;
         }
+        #region NonFunction eventhandlers
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
@@ -118,8 +119,9 @@ namespace ComputerGraphicsIProject
                 Util.SaveBitmapToFile(ImageSourceBitmap, fileName);
             }
         }
+        #endregion
 
-
+        #region FunctionFilters eventhandlers
         private void Inversion_Click(object sender, RoutedEventArgs e)
         {
             if (ImageSourceBitmap == null)
@@ -179,5 +181,25 @@ namespace ComputerGraphicsIProject
             // To simulate bitmap changes notification
             ReflectBitmapMemoryChanges();
         }
+        #endregion
+
+        #region ConvolutionalFilters
+        private void Blur_Click(object sender, RoutedEventArgs e)
+        {
+            if (ImageSourceBitmap == null)
+            {
+                Util.ShowMessageBoxError("Image needs to be loaded first!");
+                return;
+            }
+
+            ConvolutionFilterBase blur = new BlurFilter();
+            // Call inverstion filter with Inversion delegate
+            ConvolutionFilters.ApplyFilter(ImageSourceBitmap, blur);
+
+            // To simulate bitmap changes notification
+            ReflectBitmapMemoryChanges();
+        }
+        #endregion
+
     }
 }

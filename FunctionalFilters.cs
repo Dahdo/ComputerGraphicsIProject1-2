@@ -9,18 +9,18 @@ namespace ComputerGraphicsIProject
 
     public static class FunctionalFilters
     {
-        public static void ApplyFilter(Bitmap? inputBitmap, Func<byte, byte> FilterFunction)
+        public static void ApplyFilter(Bitmap? bitmap, Func<byte, byte> FilterFunction)
         {
             /*
              * This implementation makes use these 2 resources to create an improved version
              * https://www.codeproject.com/Articles/1989/Image-Processing-for-Dummies-with-C-and-GDI-Part-1
              * https://learn.microsoft.com/en-us/dotnet/api/system.drawing.imaging.bitmapdata.scan0?view=dotnet-plat-ext-8.0#system-drawing-imaging-bitmapdata-scan0
              */
-            if (inputBitmap == null)
+            if (bitmap == null)
                 throw new ArgumentNullException("input");
 
-            BitmapData bitmapData = inputBitmap.LockBits(new Rectangle(0, 0, inputBitmap.Width, 
-                inputBitmap.Height), ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
+            BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width,
+                bitmap.Height), ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
 
             // Get the number of bytes in a stride
             int stride = bitmapData.Stride;
@@ -29,11 +29,11 @@ namespace ComputerGraphicsIProject
             {
                 unsafe
                 {
-                    
+
                     // Pointer to the first byte of the pixel data
                     byte* bitmapDataPtr = (byte*)bitmapData.Scan0;
 
-                    for (int y = 0; y < inputBitmap.Height; ++y)
+                    for (int y = 0; y < bitmap.Height; ++y)
                     {
                         for (int x = 0; x < stride; x += 3)
                         {
@@ -48,7 +48,7 @@ namespace ComputerGraphicsIProject
             }
             finally
             {
-                inputBitmap.UnlockBits(bitmapData);
+                bitmap.UnlockBits(bitmapData);
             }
         }
 
@@ -85,5 +85,5 @@ namespace ComputerGraphicsIProject
             return (byte)(c * Math.Pow(channelValue / 255.0f, gamma) * 255.0f);
         }
     }
-    
+
 }
