@@ -44,7 +44,7 @@
                     <MenuItem Name="EmbossMenuItem" Header="Emboss" Click="Emboss_Click"/>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="Help" HorizontalAlignment="Right">
+            <MenuItem Header="Help">
                 <MenuItem Header="About"/>
             </MenuItem>
         </Menu>
