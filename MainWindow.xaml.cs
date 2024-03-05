@@ -46,7 +46,7 @@ namespace ComputerGraphicsIProject
         
         public MainWindow()
         {
-            InitializeComponent();
+            //InitializeComponent();
             DataContext = this;
             refImage = FindName("RefImage") as System.Windows.Controls.Image;
         }
@@ -282,7 +282,7 @@ namespace ComputerGraphicsIProject
                 return;
             }
 
-            ConvolutionFilterBase emboss = new EmbossFilter();
+            ConvolutionFilterBase emboss = new GenericFilter();
 
             // Call ApplyFilter
             ConvolutionFilters.ApplyFilter(ImageSourceBitmap, emboss);
