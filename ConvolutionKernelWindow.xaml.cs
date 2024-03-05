@@ -14,14 +14,54 @@ using System.Windows.Shapes;
 
 namespace ComputerGraphicsIProject
 {
-    /// <summary>
-    /// Interaction logic for ConvolutionKernelWindow.xaml
-    /// </summary>
     public partial class ConvolutionKernelWindow : Window
     {
+        MainWindow? mainWindow;
+        public GenericFilter? GenericConvolutioFilter;
+
         public ConvolutionKernelWindow()
         {
+            mainWindow = Application.Current.MainWindow as MainWindow;
+            InitGenericConvolutionFilter();
+            DataContext = GenericConvolutioFilter;
             InitializeComponent();
+        }
+
+        private void InitGenericConvolutionFilter()
+        {
+            GenericConvolutioFilter = new GenericFilter();
+        }
+
+        private void ApplyConvolutionFilter()
+        {
+            if (GenericConvolutioFilter == null)
+                return;
+
+            // Call ApplyFilter
+            ConvolutionFilters.ApplyFilter(mainWindow!.ImageSourceBitmap, GenericConvolutioFilter);
+            // To simulate bitmap changes notification
+            mainWindow!.ReflectBitmapMemoryChanges();
+        }
+
+        private void RestoreBitmap()
+        {
+            // To implement soon
+        }
+
+        private void OKButton_Click(object sender, RoutedEventArgs e)
+        {
+            ApplyConvolutionFilter(); // To be modified to just close the window since changes will real time
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            RestoreBitmap();
+            this.Close();
+        }
+
+        private void ResetButton_Click(object sender, RoutedEventArgs e)
+        {
+            RestoreBitmap();
         }
     }
 }

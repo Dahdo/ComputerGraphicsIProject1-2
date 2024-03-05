@@ -46,12 +46,12 @@ namespace ComputerGraphicsIProject
         
         public MainWindow()
         {
-            //InitializeComponent();
+            InitializeComponent();
             DataContext = this;
             refImage = FindName("RefImage") as System.Windows.Controls.Image;
         }
 
-        private void ReflectBitmapMemoryChanges()
+        public void ReflectBitmapMemoryChanges()
         {
             // Update the bitmap to trigger changes in the view
             Bitmap? tmpBitmap = ImageSourceBitmap;
@@ -282,7 +282,7 @@ namespace ComputerGraphicsIProject
                 return;
             }
 
-            ConvolutionFilterBase emboss = new GenericFilter();
+            ConvolutionFilterBase emboss = new EmbossFilter();
 
             // Call ApplyFilter
             ConvolutionFilters.ApplyFilter(ImageSourceBitmap, emboss);
@@ -294,6 +294,12 @@ namespace ComputerGraphicsIProject
 
         private void ConvolutionKernel_Click(object sender, RoutedEventArgs e)
         {
+            if (ImageSourceBitmap == null)
+            {
+                Util.ShowMessageBoxError("Image needs to be loaded first!");
+                return;
+            }
+
             ConvolutionKernelWindow convolutionKernelWindow = new ConvolutionKernelWindow();
             convolutionKernelWindow.Owner = this;
 

@@ -6,12 +6,27 @@
         xmlns:local="clr-namespace:ComputerGraphicsIProject"
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
-        Title="Convolution Kernel Edit" Height="400" Width="500">
+        Title="Convolution Kernel Edit" Height="450" Width="500">
     <Window.Resources>
+        <local:Kernel2DArrayConverter x:Key="Kernel2DArrayConverterKey"/>
         <Style TargetType="Label">
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
+
+        <DataTemplate x:Key="KernelGridItemsTemplate">
+            <TextBox Text="{Binding Path=.}" Width="50" Height="25" Margin="0.5"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="KernelGridItemsControlTemplate">
+            <ItemsControl ItemsSource="{Binding}" ItemTemplate="{DynamicResource KernelGridItemsTemplate}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </DataTemplate>
     </Window.Resources>
     <DockPanel LastChildFill="True">
         <Grid DockPanel.Dock="Top" Margin="15 10">
@@ -46,21 +61,24 @@
             </Grid.RowDefinitions>
             <Label Name="DivisorLabel" Grid.Column="0" Content="Divisor"/>
             <WrapPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" >
-                <TextBox Name="DivisorTextBox" Width="40" Margin="2.5"/>
+                <TextBox Name="DivisorTextBox" Width="40" Margin="2.5" Text="{Binding Divisor}"/>
                 <Button Name="ComputeDivisorButton" Content="Compute" Width="60" Margin="2.5"/>
             </WrapPanel>
             <Label Name="OffsetLabel" Content="Offset" Grid.Column="2"/>
-            <TextBox Name="OffsetTextBox" Grid.Column="3"/>
+            <TextBox Name="OffsetTextBox" Grid.Column="3" Text="{Binding Offset}"/>
             <Label Name="AnchorLabel" Grid.Row="1" Grid.Column="1" Content="Anchor(x,y)"/>
             <WrapPanel Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBox Name="AnchorX" Width="50" Margin="2.5"/>
-                <TextBox Name="AnchorY" Width="50" Margin="2.5"/>
+                <TextBox Name="AnchorX" Width="50" Margin="2.5" Text="{Binding AnchorX}"/>
+                <TextBox Name="AnchorY" Width="50" Margin="2.5" Text="{Binding AnchorY}"/>
             </WrapPanel>
             <Button Name="SaveFilterButton" Content="Save Filter" Grid.Row="2" Grid.Column="0" Width="70" HorizontalAlignment="Left"  Margin="0 10 0 0"/>
-            <Button Name="ResetButton" Content="Reset" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" Margin="0 10 2.5 0" Width="70"/>
-            <Button Name="ApplyButton" Content="Apply" Grid.Row="2" Grid.Column="2" Margin="0 10 0 0"/>
-            <Button Name="CancelButton" Content="Cancel" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Right" Margin="2.5 10 0 0" Width="70"/>
+            <Button Name="ResetButton" Content="Reset" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" Margin="0 10 2.5 0" Width="70" Click="ResetButton_Click"/>
+            <Button Name="OK" Content="OK" Grid.Row="2" Grid.Column="2" Margin="0 10 0 0" Click="OKButton_Click"/>
+            <Button Name="CancelButton" Content="Cancel" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Left" Margin="48,10,0,0" Width="70" Height="20" VerticalAlignment="Top" Click="CancelButton_Click"/>
         </Grid>
-        <DataGrid Name="KernelDataGrid" ItemsSource="{Binding }" AutoGenerateColumns="True" Margin="15 0"/>
+        <Grid Height="250">
+            <ItemsControl Name="KernelGridItemsControl" ItemsSource="{Binding Kernel, Converter={StaticResource Kernel2DArrayConverterKey}, Mode=TwoWay}" ItemTemplate="{DynamicResource KernelGridItemsControlTemplate}" />
+        </Grid>
     </DockPanel>
 </Window>
+    

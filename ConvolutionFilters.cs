@@ -4,6 +4,7 @@ using System.Drawing.Imaging;
 using System.Text;
 using System.Windows;
 using System.Linq;
+using System.ComponentModel;
 
 
 namespace ComputerGraphicsIProject
@@ -212,7 +213,6 @@ namespace ComputerGraphicsIProject
 
     public class SharpenFilter : ConvolutionFilterBase
     {
-        private int size;
         public SharpenFilter()
         {
             kernel = new float[,]
@@ -297,16 +297,25 @@ namespace ComputerGraphicsIProject
         }
     }
 
-    public class GenericFilter : ConvolutionFilterBase
+    public class GenericFilter : ConvolutionFilterBase, INotifyPropertyChanged
     {
         private int size;
         public GenericFilter()
         {
             kernel = new float[,]
             {
-                {0, 0, 0},
-                {0, 1, 0},
-                {0, 0, 0}
+                { -1, 0, 1},
+                { -1, 1, 1},
+                { -1, 0, 1}
+                //{0, 0, 0, 0, 0, 0, 0, 0, 0},
+                //{0, 0, 0, 0, 0, 0, 0, 0, 0},
+                //{0, 0, 0, 0, 0, 0, 0, 0, 0},
+                //{0, 0, 0, 0, 0, 0, 0, 0, 0},
+                //{0, 0, 0, 0, 1, 0, 0, 0, 0},
+                //{0, 0, 0, 0, 0, 0, 0, 0, 0},
+                //{0, 0, 0, 0, 0, 0, 0, 0, 0},
+                //{0, 0, 0, 0, 0, 0, 0, 0, 0},
+                //{0, 0, 0, 0, 0, 0, 0, 0, 0}
             };
             divisor = 1;
             anchorX = this.SizeX / 2;
@@ -322,8 +331,18 @@ namespace ComputerGraphicsIProject
                 divisor = 1;
                 anchorX = SizeX / 2;
                 anchorY = SizeY / 2;
+
+                OnPropertyChanged(nameof(Kernel));
             }
         }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        public virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+
     }
 }
 
