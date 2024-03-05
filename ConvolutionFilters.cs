@@ -144,9 +144,9 @@ namespace ComputerGraphicsIProject
         public BlurFilter()
         {
             kernel = new float[,]
-                         { { 1.0f, 1.0f, 1.0f, },
-                        { 1.0f, 1.0f, 1.0f, },
-                        {1.0f, 1.0f, 1.0f}, };
+                         {{1, 1, 1},
+                           {1, 1, 1},
+                           {1, 1, 1}};
 
             divisor = this.SizeX * this.SizeY;
             anchorX = this.SizeX / 2;
@@ -218,7 +218,7 @@ namespace ComputerGraphicsIProject
             kernel = new float[,]
             {
                 {0, -1, 0 },
-                {-1, 5, -1 },
+                {-1, 5, -1},
                 {0, -1, 0 }
             };
             divisor = 1;
@@ -275,9 +275,9 @@ namespace ComputerGraphicsIProject
         {
             kernel = new float[,]
             {
-                { -1,  -1, 0 },
-                { -1,  1, 1},
-                { 0,  1, 1 }
+                {-1, -1, 0},
+                {-1, 1, 1},
+                {0, 1, 1 }
             };
             divisor = 1;
             anchorX = this.SizeX / 2;

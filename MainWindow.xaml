@@ -7,7 +7,7 @@
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
         Width="1400" Height="750"
-        Title="ComputerGraphicsIProject">
+        Title="Computer Graphics I Project">
     <Window.Resources>
         <local:BitmapToBitmapImageConverter x:Key="BitmapToBitmapImageConverter" />
         <Style x:Key="NonFunctionalButtons" TargetType="Button">
@@ -74,6 +74,18 @@
                         <Button Name="Sharpen" Content="Sharpen" Style="{StaticResource ButtonsUnderTabs}" Click="Sharpen_Click"/>
                         <Button Name="EdgeDetection" Content="Edge Detection" Style="{StaticResource ButtonsUnderTabs}" Click="EdgeDetection_Click"/>
                         <Button Name="Emboss" Content="Emboss" Style="{StaticResource ButtonsUnderTabs}" Click="Emboss_Click"/>
+                        <Button Name="ConvolutionKernel" Content="Edit Convolution Kernel" Click="ConvolutionKernel_Click">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background" Value="LightBlue"/>
+                                    <Setter Property="FontSize" Value="20"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="Width" Value="250"/>
+                                    <Setter Property="Height" Value="30"/>
+                                    <Setter Property="Margin" Value="40"/>
+                                </Style>
+                            </Button.Style>
+                        </Button>
                     </StackPanel>
                 </TabItem>
             </TabControl>

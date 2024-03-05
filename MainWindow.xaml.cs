@@ -291,5 +291,13 @@ namespace ComputerGraphicsIProject
             ReflectBitmapMemoryChanges();
         }
         #endregion
+
+        private void ConvolutionKernel_Click(object sender, RoutedEventArgs e)
+        {
+            ConvolutionKernelWindow convolutionKernelWindow = new ConvolutionKernelWindow();
+            convolutionKernelWindow.Owner = this;
+
+            convolutionKernelWindow.ShowDialog();
+        }
     }
 }
