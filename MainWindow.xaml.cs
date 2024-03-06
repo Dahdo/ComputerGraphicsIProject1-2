@@ -13,7 +13,6 @@ namespace ComputerGraphicsIProject
 
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-
         // Constants
         const short BRIGHTNESS_ADJUSTMENT = -5;
         const float CONTRAST_ENHANCEMENT_PERCENTAGE = 10.0f;
@@ -302,7 +301,6 @@ namespace ComputerGraphicsIProject
 
             ConvolutionKernelWindow convolutionKernelWindow = new ConvolutionKernelWindow();
             convolutionKernelWindow.Owner = this;
-
             convolutionKernelWindow.ShowDialog();
         }
     }

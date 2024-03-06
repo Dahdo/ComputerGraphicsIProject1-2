@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace ComputerGraphicsIProject
 {
     public partial class ConvolutionKernelWindow : Window
     {
+        private bool isInitializing = false; 
         MainWindow? mainWindow;
         public GenericFilter? genericConvolutioFilter;
 
@@ -24,13 +26,21 @@ namespace ComputerGraphicsIProject
         ComboBox? nRowsComboBox;
         ComboBox? nColsComboBox;
 
+        // Image bitmap
+        Bitmap? initialImageSourceBitmap;
+
+
         public ConvolutionKernelWindow()
         {
+            isInitializing = true;
             mainWindow = Application.Current.MainWindow as MainWindow;
             InitGenericConvolutionFilter();
             DataContext = genericConvolutioFilter;
+            // Keep snapshot of the initial image bitmap
+            initialImageSourceBitmap = mainWindow!.ImageSourceBitmap!.Clone() as Bitmap;
             InitializeComponent();
             InitControlHandles();
+            isInitializing = false;
         }
 
         private void InitControlHandles()
@@ -65,7 +75,8 @@ namespace ComputerGraphicsIProject
 
         private void RestoreBitmap()
         {
-            // To implement soon
+            // Restore the image bitmap to its initial state
+            mainWindow!.ImageSourceBitmap = initialImageSourceBitmap!.Clone() as Bitmap;
         }
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
@@ -86,32 +97,45 @@ namespace ComputerGraphicsIProject
 
         private void OffsetTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (isInitializing) // To prevent firing handling event during initialization
+                return;
+            //RestoreBitmap();
             //ApplyConvolutionFilter();
         }
 
         private void AnchorX_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (isInitializing) // To prevent firing handling event during initialization
+                return;
             //ApplyConvolutionFilter();
         }
 
         private void AnchorY_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (isInitializing) // To prevent firing handling event during initialization
+                return;
             //ApplyConvolutionFilter();
         }
 
         private void DivisorTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (isInitializing) // To prevent firing handling event during initialization
+                return;
             //ApplyConvolutionFilter();
         }
 
         private void KernelCoefficientTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (isInitializing) // To prevent firing handling event during initialization
+                return;
             //ApplyConvolutionFilter();
         }
 
         private void NRowsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(nRowsComboBox!.SelectedItem == null) 
+            if (isInitializing) // To prevent firing handling event during initialization
+                return;
+            if (nRowsComboBox!.SelectedItem == null) 
                 return;
             int selectedRowSize = (int)nRowsComboBox.SelectedItem;
             genericConvolutioFilter!.SizeY = selectedRowSize;
@@ -119,10 +143,18 @@ namespace ComputerGraphicsIProject
 
         private void NColsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (isInitializing) // To prevent firing handling event during initialization
+                return;
             if (nColsComboBox!.SelectedItem == null)
                 return;
             int selectedColSize = (int)nColsComboBox.SelectedItem;
             genericConvolutioFilter!.SizeX = selectedColSize;
+        }
+
+        private void CalculateDivisorButton_Click(object sender, RoutedEventArgs e)
+        {
+            genericConvolutioFilter!.CalculateDivisor();
+            
         }
     }
 }

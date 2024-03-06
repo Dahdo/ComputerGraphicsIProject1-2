@@ -9,6 +9,8 @@
         Title="Convolution Kernel Edit" Height="450" Width="500">
     <Window.Resources>
         <local:Kernel2DArrayConverter x:Key="Kernel2DArrayConverterKey"/>
+        <local:ElementConverter x:Key="ElementConverterKey"/>
+        
         <Style TargetType="Label">
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -23,7 +25,7 @@
         </Style>
 
         <DataTemplate x:Key="KernelGridItemsTemplate">
-            <TextBox Text="{Binding Path=.}" Width="50" Height="25" Margin="0.5" TextChanged="KernelCoefficientTextBox_TextChanged"/>
+            <TextBox Text="{Binding Path=., Mode=TwoWay, Converter={StaticResource ElementConverterKey}}" Width="50" Height="25" Margin="0.5" TextChanged="KernelCoefficientTextBox_TextChanged"/>
         </DataTemplate>
 
         <DataTemplate x:Key="KernelGridItemsControlTemplate">
@@ -70,7 +72,7 @@
             <Label Name="DivisorLabel" Grid.Column="0" Content="Divisor" HorizontalAlignment="Left"/>
             <WrapPanel Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" >
                 <TextBox Name="DivisorTextBox" Width="40" Margin="2.5" Text="{Binding Divisor}" TextChanged="DivisorTextBox_TextChanged"/>
-                <Button Name="ComputeDivisorButton" Content="Compute" Width="60" Margin="2.5"/>
+                <Button Name="CalculateDivisorButton" Content="Calculate" Width="60" Margin="2.5" Click="CalculateDivisorButton_Click"/>
             </WrapPanel>
             <Label Name="OffsetLabel" Content="Offset" Grid.Column="2"/>
             <TextBox Name="OffsetTextBox" Grid.Column="2" Text="{Binding Offset}" Grid.ColumnSpan="2" Height="26" Margin="117,0,0,0" Grid.RowSpan="2" VerticalAlignment="Top" TextChanged="OffsetTextBox_TextChanged"/>
