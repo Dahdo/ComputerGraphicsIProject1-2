@@ -13,9 +13,17 @@
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
 
         <DataTemplate x:Key="KernelGridItemsTemplate">
-            <TextBox Text="{Binding Path=.}" Width="50" Height="25" Margin="0.5"/>
+            <TextBox Text="{Binding Path=.}" Width="50" Height="25" Margin="0.5" TextChanged="KernelCoefficientTextBox_TextChanged"/>
         </DataTemplate>
 
         <DataTemplate x:Key="KernelGridItemsControlTemplate">
@@ -40,12 +48,12 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Label Name="PredifinedFilterLabel" Grid.Column="0" Content="Predefined" Margin="0 0 0 5"/>
+            <Label Name="PredifinedFilterLabel" Grid.Column="0" Content="Predefined" Margin="0 0 0 5" HorizontalAlignment="Left"/>
             <ComboBox Name="PredifinedFilterComboBox"  Grid.Column="1" Grid.ColumnSpan="3" Margin="0 0 0 5"/>
-            <Label Name="NRowsLabel" Content="Num. Rows" Grid.Row="1" Grid.Column="0"/>
-            <TextBox Name="NRowsTextBox" Grid.Row="1" Grid.Column="1"/>
+            <Label Name="NRowsLabel" Content="Num. Rows" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left"/>
+            <ComboBox Name="NRowsComboBox" Grid.Row="1" Grid.Column="1" SelectionChanged="NRowsComboBox_SelectionChanged"/>
             <Label Name="NColsLabel" Content="Num. Columns" Grid.Row="1" Grid.Column="2"/>
-            <TextBox Name="NColsTextBox" Grid.Row="1" Grid.Column="3"/>
+            <ComboBox Name="NColsComboBox" Grid.Row="1" Grid.Column="3" SelectionChanged="NColsComboBox_SelectionChanged"/>
         </Grid>
         <Grid DockPanel.Dock="Bottom" Margin="15 10">
             <Grid.ColumnDefinitions>
@@ -59,22 +67,22 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Label Name="DivisorLabel" Grid.Column="0" Content="Divisor"/>
-            <WrapPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" >
-                <TextBox Name="DivisorTextBox" Width="40" Margin="2.5" Text="{Binding Divisor}"/>
+            <Label Name="DivisorLabel" Grid.Column="0" Content="Divisor" HorizontalAlignment="Left"/>
+            <WrapPanel Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" >
+                <TextBox Name="DivisorTextBox" Width="40" Margin="2.5" Text="{Binding Divisor}" TextChanged="DivisorTextBox_TextChanged"/>
                 <Button Name="ComputeDivisorButton" Content="Compute" Width="60" Margin="2.5"/>
             </WrapPanel>
             <Label Name="OffsetLabel" Content="Offset" Grid.Column="2"/>
-            <TextBox Name="OffsetTextBox" Grid.Column="3" Text="{Binding Offset}"/>
+            <TextBox Name="OffsetTextBox" Grid.Column="2" Text="{Binding Offset}" Grid.ColumnSpan="2" Height="26" Margin="117,0,0,0" Grid.RowSpan="2" VerticalAlignment="Top" TextChanged="OffsetTextBox_TextChanged"/>
             <Label Name="AnchorLabel" Grid.Row="1" Grid.Column="1" Content="Anchor(x,y)"/>
             <WrapPanel Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBox Name="AnchorX" Width="50" Margin="2.5" Text="{Binding AnchorX}"/>
-                <TextBox Name="AnchorY" Width="50" Margin="2.5" Text="{Binding AnchorY}"/>
+                <TextBox Name="AnchorX" Width="50" Margin="2.5" Text="{Binding AnchorX}" TextChanged="AnchorX_TextChanged"/>
+                <TextBox Name="AnchorY" Width="50" Margin="2.5" Text="{Binding AnchorY}" TextChanged="AnchorY_TextChanged"/>
             </WrapPanel>
             <Button Name="SaveFilterButton" Content="Save Filter" Grid.Row="2" Grid.Column="0" Width="70" HorizontalAlignment="Left"  Margin="0 10 0 0"/>
             <Button Name="ResetButton" Content="Reset" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" Margin="0 10 2.5 0" Width="70" Click="ResetButton_Click"/>
             <Button Name="OK" Content="OK" Grid.Row="2" Grid.Column="2" Margin="0 10 0 0" Click="OKButton_Click"/>
-            <Button Name="CancelButton" Content="Cancel" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Left" Margin="48,10,0,0" Width="70" Height="20" VerticalAlignment="Top" Click="CancelButton_Click"/>
+            <Button Name="CancelButton" Content="Cancel" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Right" Margin="0 10 0 0" Width="70" Height="20" VerticalAlignment="Top" Click="CancelButton_Click"/>
         </Grid>
         <Grid Height="250">
             <ItemsControl Name="KernelGridItemsControl" ItemsSource="{Binding Kernel, Converter={StaticResource Kernel2DArrayConverterKey}, Mode=TwoWay}" ItemTemplate="{DynamicResource KernelGridItemsControlTemplate}" />

@@ -17,28 +17,48 @@ namespace ComputerGraphicsIProject
     public partial class ConvolutionKernelWindow : Window
     {
         MainWindow? mainWindow;
-        public GenericFilter? GenericConvolutioFilter;
+        public GenericFilter? genericConvolutioFilter;
+
+        // Controls
+        ComboBox? predifinedFilterComboBox;
+        ComboBox? nRowsComboBox;
+        ComboBox? nColsComboBox;
 
         public ConvolutionKernelWindow()
         {
             mainWindow = Application.Current.MainWindow as MainWindow;
             InitGenericConvolutionFilter();
-            DataContext = GenericConvolutioFilter;
+            DataContext = genericConvolutioFilter;
             InitializeComponent();
+            InitControlHandles();
+        }
+
+        private void InitControlHandles()
+        {
+            predifinedFilterComboBox = FindName("PredifinedFilterComboBox") as ComboBox;
+            nRowsComboBox = FindName("NRowsComboBox") as ComboBox;
+            nColsComboBox = FindName("NColsComboBox") as ComboBox;
+
+            int[] kernelDims = new[] { 1, 3, 5, 7, 9 };
+            nRowsComboBox!.ItemsSource = kernelDims;
+            nColsComboBox!.ItemsSource = kernelDims;
+            
+            nRowsComboBox.SelectedIndex = 1;
+            nColsComboBox.SelectedIndex = 1;
         }
 
         private void InitGenericConvolutionFilter()
         {
-            GenericConvolutioFilter = new GenericFilter();
+            genericConvolutioFilter = new GenericFilter();
         }
 
         private void ApplyConvolutionFilter()
         {
-            if (GenericConvolutioFilter == null)
+            if (genericConvolutioFilter == null)
                 return;
 
             // Call ApplyFilter
-            ConvolutionFilters.ApplyFilter(mainWindow!.ImageSourceBitmap, GenericConvolutioFilter);
+            ConvolutionFilters.ApplyFilter(mainWindow!.ImageSourceBitmap, genericConvolutioFilter);
             // To simulate bitmap changes notification
             mainWindow!.ReflectBitmapMemoryChanges();
         }
@@ -62,6 +82,47 @@ namespace ComputerGraphicsIProject
         private void ResetButton_Click(object sender, RoutedEventArgs e)
         {
             RestoreBitmap();
+        }
+
+        private void OffsetTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            //ApplyConvolutionFilter();
+        }
+
+        private void AnchorX_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            //ApplyConvolutionFilter();
+        }
+
+        private void AnchorY_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            //ApplyConvolutionFilter();
+        }
+
+        private void DivisorTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            //ApplyConvolutionFilter();
+        }
+
+        private void KernelCoefficientTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            //ApplyConvolutionFilter();
+        }
+
+        private void NRowsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(nRowsComboBox!.SelectedItem == null) 
+                return;
+            int selectedRowSize = (int)nRowsComboBox.SelectedItem;
+            genericConvolutioFilter!.SizeY = selectedRowSize;
+        }
+
+        private void NColsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (nColsComboBox!.SelectedItem == null)
+                return;
+            int selectedColSize = (int)nColsComboBox.SelectedItem;
+            genericConvolutioFilter!.SizeX = selectedColSize;
         }
     }
 }
