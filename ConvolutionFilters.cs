@@ -26,10 +26,12 @@ namespace ComputerGraphicsIProject
         public virtual int SizeX
         {
             get => kernel!.GetLength(1);
+            set { }
         }
         public virtual int SizeY
         {
             get => kernel!.GetLength(0);
+            set { }
         }
 
         public virtual int AnchorX
@@ -304,18 +306,9 @@ namespace ComputerGraphicsIProject
         {
             kernel = new float[,]
             {
-                { -1, 0, 1},
-                { -1, 1, 1},
-                { -1, 0, 1}
-                //{0, 0, 0, 0, 0, 0, 0, 0, 0},
-                //{0, 0, 0, 0, 0, 0, 0, 0, 0},
-                //{0, 0, 0, 0, 0, 0, 0, 0, 0},
-                //{0, 0, 0, 0, 0, 0, 0, 0, 0},
-                //{0, 0, 0, 0, 1, 0, 0, 0, 0},
-                //{0, 0, 0, 0, 0, 0, 0, 0, 0},
-                //{0, 0, 0, 0, 0, 0, 0, 0, 0},
-                //{0, 0, 0, 0, 0, 0, 0, 0, 0},
-                //{0, 0, 0, 0, 0, 0, 0, 0, 0}
+                { 0, 0, 0},
+                { 0, 1, 0},
+                { 0, 0, 0}
             };
             divisor = 1;
             anchorX = this.SizeX / 2;
@@ -336,13 +329,44 @@ namespace ComputerGraphicsIProject
             }
         }
 
+        public override int SizeX
+        {
+            get => kernel!.GetLength(1);
+            set
+            {
+                Kernel = GenerateNeutralKernel(SizeY, value);
+            }
+        }
+        public override int SizeY
+        {
+            get => kernel!.GetLength(0);
+            set
+            {
+                Kernel = GenerateNeutralKernel(value, SizeX);
+            }
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
         public virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-
+        public float[,] GenerateNeutralKernel(int _sizeY, int _sizeX)
+        {
+            float[,] newKernel = new float[_sizeY, _sizeX];
+            for(int i = 0; i < newKernel.GetLength(0); i++)
+            {
+                for(int j = 0; j < newKernel.GetLength(1); j++)
+                {
+                    if (i == newKernel.GetLength(0) / 2 && j == newKernel.GetLength(1) / 2)
+                        newKernel[i, j] = 1;
+                    else
+                        newKernel[i, j] = 0;
+                }
+            }
+            return newKernel;
+        }
     }
 }
 
