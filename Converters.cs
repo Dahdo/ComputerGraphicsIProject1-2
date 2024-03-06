@@ -82,11 +82,35 @@ namespace ComputerGraphicsIProject
                         twoDArray[i, j] = collection[i][j];
                     }
                 }
-
                 return twoDArray;
             }
 
             return Binding.DoNothing;
         }
     }
+
+    public class ElementConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is float floatValue)
+            {
+                return floatValue.ToString();
+            }
+
+            return Binding.DoNothing;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is string stringValue && float.TryParse(stringValue, out float result))
+            {
+                return result;
+            }
+
+            return Binding.DoNothing;
+        }
+    }
+
+
 }
