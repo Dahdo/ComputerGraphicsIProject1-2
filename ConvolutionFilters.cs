@@ -306,9 +306,12 @@ namespace ComputerGraphicsIProject
         {
             kernel = new float[,]
             {
-                { 0, 0, 0},
-                { 0, 1, 0},
-                { 0, 0, 0}
+                {0, -1, 0 },
+                {-1, 5, -1},
+                {0, -1, 0 }
+                //{ 0, 0, 0},
+                //{ 0, 1, 0},
+                //{ 0, 0, 0}
             };
             divisor = 1;
             anchorX = this.SizeX / 2;
@@ -329,6 +332,34 @@ namespace ComputerGraphicsIProject
             }
         }
 
+        public override int AnchorX 
+        { 
+            get => base.AnchorX;
+            set
+            {
+                base.AnchorX = value;
+                OnPropertyChanged(nameof(AnchorX));
+            }
+        }
+        public override int AnchorY
+        {
+            get => base.AnchorY;
+            set
+            {
+                base.AnchorY = value;
+                OnPropertyChanged(nameof(AnchorY));
+            }
+        }
+        public override float Offset
+        {
+            get => offset;
+            set
+            {
+                offset = value;
+                OnPropertyChanged(nameof(Offset));
+            }
+        }
+
         public override int SizeX
         {
             get => kernel!.GetLength(1);
@@ -346,13 +377,23 @@ namespace ComputerGraphicsIProject
             }
         }
 
+        public override float Divisor
+        {
+            get => divisor;
+            set
+            {
+                divisor = value;
+                OnPropertyChanged(nameof(Divisor));
+            }
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
         public virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public float[,] GenerateNeutralKernel(int _sizeY, int _sizeX)
+        private float[,] GenerateNeutralKernel(int _sizeY, int _sizeX)
         {
             float[,] newKernel = new float[_sizeY, _sizeX];
             for(int i = 0; i < newKernel.GetLength(0); i++)
@@ -367,6 +408,12 @@ namespace ComputerGraphicsIProject
             }
             return newKernel;
         }
+
+        public void CalculateDivisor()
+        {
+            Divisor = SizeX * SizeY;
+        }
+
     }
 }
 
