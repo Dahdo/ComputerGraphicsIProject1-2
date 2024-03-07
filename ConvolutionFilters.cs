@@ -13,7 +13,7 @@ namespace ComputerGraphicsIProject
     // Source: https://softwarebydefault.com/2013/05/01/image-convolution-filters/
 
 
-    public abstract class ConvolutionFilterBase
+    public abstract class ConvolutionFilterBase : INotifyPropertyChanged
     {
 
         protected float[,]? kernel;
@@ -23,38 +23,65 @@ namespace ComputerGraphicsIProject
         protected int anchorY;
         protected float sigma;
 
+        public event PropertyChangedEventHandler? PropertyChanged;
+        public virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public virtual int SizeX
         {
             get => kernel!.GetLength(1);
-            set { }
+            set
+            {
+                Kernel = GenerateNeutralKernel(SizeY, value);
+            }
         }
         public virtual int SizeY
         {
             get => kernel!.GetLength(0);
-            set { }
+            set
+            {
+                Kernel = GenerateNeutralKernel(value, SizeX);
+            }
         }
 
         public virtual int AnchorX
         {
             get => anchorX;
-            set => anchorX = value;
+            set
+            {
+                anchorX = value;
+                OnPropertyChanged(nameof(AnchorX));
+            }
         }
         public virtual int AnchorY
         {
             get => anchorY;
-            set => anchorY = value;
+            set
+            {
+                anchorY = value;
+                OnPropertyChanged(nameof(AnchorY));
+            }
         }
 
         public virtual float Offset
         {
             get => offset;
-            set => offset = value;
+            set
+            {
+                offset = value;
+                OnPropertyChanged(nameof(Offset));
+            }
         }
 
         public virtual float Divisor
         {
             get => divisor;
-            set => divisor = value;
+            set {
+                divisor = value;
+                OnPropertyChanged(nameof(Divisor));
+            }
         }
 
         public virtual float[,] Kernel
@@ -66,12 +93,34 @@ namespace ComputerGraphicsIProject
                 divisor = SizeX * SizeY;
                 anchorX = SizeX / 2;
                 anchorY = SizeY / 2;
+                OnPropertyChanged(nameof(Kernel));
             }
         }
 
         public virtual float Sigma
         {
             set => sigma = value;
+        }
+
+        public void CalculateDivisor()
+        {
+            Divisor = SizeX * SizeY;
+        }
+
+        private float[,] GenerateNeutralKernel(int _sizeY, int _sizeX)
+        {
+            float[,] newKernel = new float[_sizeY, _sizeX];
+            for (int i = 0; i < newKernel.GetLength(0); i++)
+            {
+                for (int j = 0; j < newKernel.GetLength(1); j++)
+                {
+                    if (i == newKernel.GetLength(0) / 2 && j == newKernel.GetLength(1) / 2)
+                        newKernel[i, j] = 1;
+                    else
+                        newKernel[i, j] = 0;
+                }
+            }
+            return newKernel;
         }
     }
 
@@ -208,6 +257,7 @@ namespace ComputerGraphicsIProject
                 divisor = 1;
                 anchorX = SizeX / 2;
                 anchorY = SizeY / 2;
+                OnPropertyChanged(nameof(Kernel));
             }
         }
     }
@@ -238,6 +288,7 @@ namespace ComputerGraphicsIProject
                 divisor = 1;
                 anchorX = SizeX / 2;
                 anchorY = SizeY / 2;
+                OnPropertyChanged(nameof(Kernel));
             }
         }
     }
@@ -267,6 +318,7 @@ namespace ComputerGraphicsIProject
                 divisor = 1;
                 anchorX = SizeX / 2;
                 anchorY = SizeY / 2;
+                OnPropertyChanged(nameof(Kernel));
             }
         }
     }
@@ -296,11 +348,12 @@ namespace ComputerGraphicsIProject
                 divisor = 1;
                 anchorX = SizeX / 2;
                 anchorY = SizeY / 2;
+                OnPropertyChanged(nameof(Kernel));
             }
         }
     }
 
-    public class GenericFilter : ConvolutionFilterBase, INotifyPropertyChanged
+    public class GenericFilter : ConvolutionFilterBase /*INotifyPropertyChanged*/
     {
         private int size;
         public GenericFilter()
@@ -331,87 +384,82 @@ namespace ComputerGraphicsIProject
             }
         }
 
-        public override int AnchorX 
-        { 
-            get => base.AnchorX;
-            set
-            {
-                base.AnchorX = value;
-                OnPropertyChanged(nameof(AnchorX));
-            }
-        }
-        public override int AnchorY
-        {
-            get => base.AnchorY;
-            set
-            {
-                base.AnchorY = value;
-                OnPropertyChanged(nameof(AnchorY));
-            }
-        }
-        public override float Offset
-        {
-            get => offset;
-            set
-            {
-                offset = value;
-                OnPropertyChanged(nameof(Offset));
-            }
-        }
+        //public override int AnchorX 
+        //{ 
+        //    get => base.AnchorX;
+        //    set
+        //    {
+        //        base.AnchorX = value;
+        //        OnPropertyChanged(nameof(AnchorX));
+        //    }
+        //}
+        //public override int AnchorY
+        //{
+        //    get => base.AnchorY;
+        //    set
+        //    {
+        //        base.AnchorY = value;
+        //        OnPropertyChanged(nameof(AnchorY));
+        //    }
+        //}
+        //public override float Offset
+        //{
+        //    get => offset;
+        //    set
+        //    {
+        //        offset = value;
+        //        OnPropertyChanged(nameof(Offset));
+        //    }
+        //}
 
-        public override int SizeX
-        {
-            get => kernel!.GetLength(1);
-            set
-            {
-                Kernel = GenerateNeutralKernel(SizeY, value);
-            }
-        }
-        public override int SizeY
-        {
-            get => kernel!.GetLength(0);
-            set
-            {
-                Kernel = GenerateNeutralKernel(value, SizeX);
-            }
-        }
+        //public override int SizeX
+        //{
+        //    get => kernel!.GetLength(1);
+        //    set
+        //    {
+        //        Kernel = GenerateNeutralKernel(SizeY, value);
+        //    }
+        //}
+        //public override int SizeY
+        //{
+        //    get => kernel!.GetLength(0);
+        //    set
+        //    {
+        //        Kernel = GenerateNeutralKernel(value, SizeX);
+        //    }
+        //}
 
-        public override float Divisor
-        {
-            get => divisor;
-            set
-            {
-                divisor = value;
-                OnPropertyChanged(nameof(Divisor));
-            }
-        }
+        //public override float Divisor
+        //{
+        //    get => divisor;
+        //    set
+        //    {
+        //        divisor = value;
+        //        OnPropertyChanged(nameof(Divisor));
+        //    }
+        //}
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-        public virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        //public event PropertyChangedEventHandler? PropertyChanged;
+        //public virtual void OnPropertyChanged(string propertyName)
+        //{
+        //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        //}
 
-        private float[,] GenerateNeutralKernel(int _sizeY, int _sizeX)
-        {
-            float[,] newKernel = new float[_sizeY, _sizeX];
-            for(int i = 0; i < newKernel.GetLength(0); i++)
-            {
-                for(int j = 0; j < newKernel.GetLength(1); j++)
-                {
-                    if (i == newKernel.GetLength(0) / 2 && j == newKernel.GetLength(1) / 2)
-                        newKernel[i, j] = 1;
-                    else
-                        newKernel[i, j] = 0;
-                }
-            }
-            return newKernel;
-        }
-
-        public void CalculateDivisor()
-        {
-            Divisor = SizeX * SizeY;
-        }
+        //private float[,] GenerateNeutralKernel(int _sizeY, int _sizeX)
+        //{
+        //    float[,] newKernel = new float[_sizeY, _sizeX];
+        //    for(int i = 0; i < newKernel.GetLength(0); i++)
+        //    {
+        //        for(int j = 0; j < newKernel.GetLength(1); j++)
+        //        {
+        //            if (i == newKernel.GetLength(0) / 2 && j == newKernel.GetLength(1) / 2)
+        //                newKernel[i, j] = 1;
+        //            else
+        //                newKernel[i, j] = 0;
+        //        }
+        //    }
+        //    return newKernel;
+        //}
 
     }
 }
