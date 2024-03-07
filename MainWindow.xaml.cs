@@ -18,6 +18,8 @@ namespace ComputerGraphicsIProject
         const float CONTRAST_ENHANCEMENT_PERCENTAGE = 10.0f;
         const float GAMMA_VALUE = 0.9f;
 
+        private int selectedChannel = -1;
+
         private Bitmap? _imageSourceBitmap;
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -130,7 +132,7 @@ namespace ComputerGraphicsIProject
             }
 
             // Call inverstion filter with Inversion delegate
-            FunctionalFilters.ApplyFilter(ImageSourceBitmap, FunctionalFilters.Inversion);
+            FunctionalFilters.ApplyFilter(ImageSourceBitmap, FunctionalFilters.Inversion, selectedChannel);
             
             // To simulate bitmap changes notification
             ReflectBitmapMemoryChanges();
@@ -145,7 +147,7 @@ namespace ComputerGraphicsIProject
             }
 
             // Call brightness correction filter with BrightnessCorrection delegate
-            FunctionalFilters.ApplyFilter(ImageSourceBitmap, (byte channelValue) => FunctionalFilters.BrightnessCorrection(channelValue, BRIGHTNESS_ADJUSTMENT));
+            FunctionalFilters.ApplyFilter(ImageSourceBitmap, (byte channelValue) => FunctionalFilters.BrightnessCorrection(channelValue, BRIGHTNESS_ADJUSTMENT), selectedChannel);
 
             // To simulate bitmap changes notification
             ReflectBitmapMemoryChanges();
@@ -160,7 +162,7 @@ namespace ComputerGraphicsIProject
             }
 
             // Call contrast enhancement filter with ConstrastEnhancement delegate
-            FunctionalFilters.ApplyFilter(ImageSourceBitmap, (byte channelValue) => FunctionalFilters.ConstrastEnhancement(channelValue, CONTRAST_ENHANCEMENT_PERCENTAGE));
+            FunctionalFilters.ApplyFilter(ImageSourceBitmap, (byte channelValue) => FunctionalFilters.ConstrastEnhancement(channelValue, CONTRAST_ENHANCEMENT_PERCENTAGE), selectedChannel);
 
             // To simulate bitmap changes notification
             ReflectBitmapMemoryChanges();
@@ -175,7 +177,7 @@ namespace ComputerGraphicsIProject
             }
 
             // Call gamma correction filter with GammaCorrection delegate
-            FunctionalFilters.ApplyFilter(ImageSourceBitmap, (byte channelValue) => FunctionalFilters.GammaCorrection(channelValue, GAMMA_VALUE));
+            FunctionalFilters.ApplyFilter(ImageSourceBitmap, (byte channelValue) => FunctionalFilters.GammaCorrection(channelValue, GAMMA_VALUE), selectedChannel);
 
             // To simulate bitmap changes notification
             ReflectBitmapMemoryChanges();
@@ -302,6 +304,32 @@ namespace ComputerGraphicsIProject
             FunctionalFilters.ApplyFilterLabToRGB(ImageSourceBitmap);
             // To simulate bitmap changes notification
             ReflectBitmapMemoryChanges();
+        }
+
+        
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            // Retrieve the selected radio button
+            if (sender is RadioButton radioButton && radioButton.IsChecked == true)
+            {
+                string selectedOption = radioButton.Content.ToString();
+                switch(selectedOption)
+                {
+                    case "red":
+                        selectedChannel = 2;
+                        break;
+                    case "green":
+                        selectedChannel = 1;
+                        break;
+                    case "blue":
+                        selectedChannel = 0;
+                        break;
+                    default:
+                        selectedChannel = 0;
+                        break;
+
+                }
+            }
         }
     }
 }

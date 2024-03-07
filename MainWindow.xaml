@@ -109,6 +109,9 @@
             <WrapPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
                 <Button Content="RGB To HSV" Click="Button_Click"/>
                 <Button Content="HSV To RGB" Click="Button_Click_1"/>
+                <RadioButton Content="red" GroupName="Options" Checked="RadioButton_Checked"/>
+                <RadioButton Content="green" GroupName="Options" Checked="RadioButton_Checked"/>
+                <RadioButton Content="blue" GroupName="Options" Checked="RadioButton_Checked"/>
             </WrapPanel>
         </Grid>
     </DockPanel>

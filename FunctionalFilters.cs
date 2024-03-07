@@ -9,7 +9,7 @@ namespace ComputerGraphicsIProject
 
     public static class FunctionalFilters
     {
-        public static void ApplyFilter(Bitmap? bitmap, Func<byte, byte> FilterFunction)
+        public static void ApplyFilter(Bitmap? bitmap, Func<byte, byte> FilterFunction, int selectedChannel)
         {
             /*
              * This implementation makes use these 2 resources to create an improved version
@@ -37,9 +37,17 @@ namespace ComputerGraphicsIProject
                     {
                         for (int x = 0; x < stride; x += 3)
                         {
-                            bitmapDataPtr[0] = FilterFunction(bitmapDataPtr[0]); // Blue channel
-                            bitmapDataPtr[1] = FilterFunction(bitmapDataPtr[1]); // Green channel
-                            bitmapDataPtr[2] = FilterFunction(bitmapDataPtr[2]); // Red channel
+                            if(selectedChannel == -1)
+                            {
+                                bitmapDataPtr[0] = FilterFunction(bitmapDataPtr[0]); // Blue channel
+                                bitmapDataPtr[1] = FilterFunction(bitmapDataPtr[1]); // Green channel
+                                bitmapDataPtr[2] = FilterFunction(bitmapDataPtr[2]); // Red channel
+                            }
+                            else
+                            {
+                                bitmapDataPtr[selectedChannel] = FilterFunction(bitmapDataPtr[selectedChannel]); // Any selected channel
+                            }
+                            
 
                             bitmapDataPtr += 3; // Jump to the next pixel
                         }
