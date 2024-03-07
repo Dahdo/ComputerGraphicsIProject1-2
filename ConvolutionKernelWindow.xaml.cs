@@ -80,7 +80,7 @@ namespace ComputerGraphicsIProject
             mainWindow!.ImageSourceBitmap = initialImageSourceBitmap!.Clone() as Bitmap;
         }
 
-        private void OKButton_Click(object sender, RoutedEventArgs e)
+        private void ApplyButton_Click(object sender, RoutedEventArgs e)
         {
             ApplyConvolutionFilter(); // To be modified to just close the window since changes will real time
         }
@@ -98,6 +98,8 @@ namespace ComputerGraphicsIProject
 
         private void OffsetTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            // Offset is already bound to the object. This method would only be useful during real-time modification
+            // which will be added later on.
             if (isInitializing) // To prevent firing handling event during initialization
                 return;
             //RestoreBitmap();
@@ -106,6 +108,8 @@ namespace ComputerGraphicsIProject
 
         private void AnchorX_TextChanged(object sender, TextChangedEventArgs e)
         {
+            // AnchorX is already bound to the object. This method would only be useful during real-time modification
+            // which will be added later on.
             if (isInitializing) // To prevent firing handling event during initialization
                 return;
             //ApplyConvolutionFilter();
@@ -113,6 +117,8 @@ namespace ComputerGraphicsIProject
 
         private void AnchorY_TextChanged(object sender, TextChangedEventArgs e)
         {
+            // AnchorY is already bound to the object. This method would only be useful during real-time modification
+            // which will be added later on.
             if (isInitializing) // To prevent firing handling event during initialization
                 return;
             //ApplyConvolutionFilter();
@@ -120,6 +126,8 @@ namespace ComputerGraphicsIProject
 
         private void DivisorTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            // Divisor is already bound to the object. This method would only be useful during real-time modification
+            // which will be added later on.
             if (isInitializing) // To prevent firing handling event during initialization
                 return;
             //ApplyConvolutionFilter();
