@@ -215,7 +215,10 @@ namespace ComputerGraphicsIProject
         public override string Name
         {
             get => "Blur";
-            set => name = value;
+            set
+            {
+                name = value;
+            }
         }
     }
 
@@ -263,7 +266,10 @@ namespace ComputerGraphicsIProject
         public override string Name
         {
             get => "Gaussian Blur";
-            set => name = value;
+            set
+            {
+                name = value;
+            }
         }
 
         public override float[,] Kernel
@@ -312,7 +318,10 @@ namespace ComputerGraphicsIProject
         public override string Name
         {
             get => "Sharpen";
-            set => name = value;
+            set
+            {
+                name = value;
+            }
         }
     }
 
@@ -347,7 +356,10 @@ namespace ComputerGraphicsIProject
         public override string Name
         {
             get => "Edge Detection";
-            set => name = value;
+            set
+            {
+                name = value;
+            }
         }
     }
 
@@ -382,7 +394,10 @@ namespace ComputerGraphicsIProject
         public override string Name
         {
             get => "Emboss";
-            set => name = value;
+            set
+            {
+                name = value;
+            }
         }
     }
 
@@ -420,7 +435,10 @@ namespace ComputerGraphicsIProject
         public override string Name
         {
             get => "Generic (Netraul by default)";
-            set => name = value;
+            set
+            {
+                name = value;
+            }
         }
 
         //public override int AnchorX 
