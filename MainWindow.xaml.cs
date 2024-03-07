@@ -331,5 +331,17 @@ namespace ComputerGraphicsIProject
                 }
             }
         }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            selectedChannel = -1;
+            RadioButton? radio1 =  FindName("radioButton1") as RadioButton;
+            RadioButton? radio2 = FindName("radioButton2") as RadioButton;
+            RadioButton? radio3 = FindName("radioButton3") as RadioButton;
+
+            radio1.IsChecked = false;
+            radio2.IsChecked = false;
+            radio3.IsChecked = false;
+        }
     }
 }

@@ -106,13 +106,19 @@
                 </UniformGrid>
             </DockPanel>
 
-            <WrapPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
-                <Button Content="RGB To HSV" Click="Button_Click"/>
-                <Button Content="HSV To RGB" Click="Button_Click_1"/>
-                <RadioButton Content="red" GroupName="Options" Checked="RadioButton_Checked"/>
-                <RadioButton Content="green" GroupName="Options" Checked="RadioButton_Checked"/>
-                <RadioButton Content="blue" GroupName="Options" Checked="RadioButton_Checked"/>
+            <WrapPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="10">
+                <Button Content="RGB To HSV" Click="Button_Click" Margin="0,0,5,0"/>
+                <Button Content="HSV To RGB" Click="Button_Click_1" Margin="0,0,5,0"/>
+
+                <StackPanel Orientation="Horizontal" Margin="0,0,5,0">
+                    <RadioButton Name="radioButton1" Content="red" GroupName="Options" Checked="RadioButton_Checked"/>
+                    <RadioButton Name="radioButton2" Content="green" GroupName="Options" Checked="RadioButton_Checked"/>
+                    <RadioButton Name="radioButton3" Content="blue" GroupName="Options" Checked="RadioButton_Checked"/>
+                </StackPanel>
+
+                <Button Content="Reset Selection" Click="Button_Click_2" Margin="0,0,0,0"/>
             </WrapPanel>
+
         </Grid>
     </DockPanel>
 </Window>
