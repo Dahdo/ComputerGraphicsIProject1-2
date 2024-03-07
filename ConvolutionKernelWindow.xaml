@@ -51,7 +51,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Label Name="PredifinedFilterLabel" Grid.Column="0" Content="Predefined" Margin="0 0 0 5" HorizontalAlignment="Left"/>
-            <ComboBox Name="PredifinedFilterComboBox"  Grid.Column="1" Grid.ColumnSpan="3" Margin="0 0 0 5"/>
+            <ComboBox Name="PredifinedFilterComboBox"  Grid.Column="1" Grid.ColumnSpan="3" Margin="0 0 0 5" SelectionChanged="PredifinedFilterComboBox_SelectionChanged"/>
             <Label Name="NRowsLabel" Content="Num. Rows" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left"/>
             <ComboBox Name="NRowsComboBox" Grid.Row="1" Grid.Column="1" SelectionChanged="NRowsComboBox_SelectionChanged"/>
             <Label Name="NColsLabel" Content="Num. Columns" Grid.Row="1" Grid.Column="2"/>
@@ -81,7 +81,7 @@
                 <TextBox Name="AnchorX" Width="50" Margin="2.5" Text="{Binding AnchorX}" TextChanged="AnchorX_TextChanged"/>
                 <TextBox Name="AnchorY" Width="50" Margin="2.5" Text="{Binding AnchorY}" TextChanged="AnchorY_TextChanged"/>
             </WrapPanel>
-            <Button Name="SaveFilterButton" Content="Save Filter" Grid.Row="2" Grid.Column="0" Width="70" HorizontalAlignment="Left"  Margin="0 10 0 0"/>
+            <Button Name="SaveFilterButton" Content="Save Filter" Grid.Row="2" Grid.Column="0" Width="70" HorizontalAlignment="Left"  Margin="0 10 0 0" Height="20" VerticalAlignment="Top" Click="SaveFilterButton_Click"/>
             <Button Name="ResetButton" Content="Reset" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" Margin="0 10 2.5 0" Width="70" Click="ResetButton_Click"/>
             <Button Name="ApplyButton" Content="Apply" Grid.Row="2" Grid.Column="2" Margin="0 10 0 0" Click="ApplyButton_Click"/>
             <Button Name="CancelButton" Content="Cancel" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Right" Margin="0 10 0 0" Width="70" Height="20" VerticalAlignment="Top" Click="CancelButton_Click"/>

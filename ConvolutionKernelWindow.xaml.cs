@@ -19,8 +19,9 @@ namespace ComputerGraphicsIProject
     {
         private bool isInitializing = false; 
         MainWindow? mainWindow;
-        public GenericFilter? genericConvolutioFilter;
+        public ConvolutionFilterBase? currentConvolutioFilter;
         private int kernelCoeffTextBoxIndex = 0;
+        private List<ConvolutionFilterBase>? convolutionFilterList;
 
         // Controls
         ComboBox? predifinedFilterComboBox;
@@ -35,8 +36,8 @@ namespace ComputerGraphicsIProject
         {
             isInitializing = true;
             mainWindow = Application.Current.MainWindow as MainWindow;
-            InitGenericConvolutionFilter();
-            DataContext = genericConvolutioFilter;
+            InitConvolutionFilters();
+            DataContext = currentConvolutioFilter;
             // Keep snapshot of the initial image bitmap
             initialImageSourceBitmap = mainWindow!.ImageSourceBitmap!.Clone() as Bitmap;
             InitializeComponent();
@@ -56,20 +57,44 @@ namespace ComputerGraphicsIProject
             
             nRowsComboBox.SelectedIndex = 1;
             nColsComboBox.SelectedIndex = 1;
+
+            foreach(var filter in convolutionFilterList!)
+            {
+                predifinedFilterComboBox!.Items.Add(filter.Name);
+            }
         }
 
-        private void InitGenericConvolutionFilter()
+
+        private void InitConvolutionFilters()
         {
-            genericConvolutioFilter = new GenericFilter();
+            GaussianBlurFilter gaussianBlur = new GaussianBlurFilter();
+
+            gaussianBlur.Kernel = Util.NormalizeKernel(new float[,]
+                                                        {
+                                                            {0, 1, 0},
+                                                            {1, 4, 1},
+                                                            {0, 1, 0}
+                                                        });
+
+            convolutionFilterList = new List<ConvolutionFilterBase>
+            {
+                new GenericFilter(),
+                new BlurFilter(),
+                gaussianBlur,
+                new SharpenFilter(),
+                new EdgeDetectionFilter(),
+                new EmbossFilter()
+            };
+            currentConvolutioFilter = convolutionFilterList[0];
         }
 
         private void ApplyConvolutionFilter()
         {
-            if (genericConvolutioFilter == null)
+            if (currentConvolutioFilter == null)
                 return;
 
             // Call ApplyFilter
-            ConvolutionFilters.ApplyFilter(mainWindow!.ImageSourceBitmap, genericConvolutioFilter);
+            ConvolutionFilters.ApplyFilter(mainWindow!.ImageSourceBitmap, currentConvolutioFilter);
             // To simulate bitmap changes notification
             mainWindow!.ReflectBitmapMemoryChanges();
         }
@@ -147,12 +172,12 @@ namespace ComputerGraphicsIProject
             if (textBox != null && textBox.Tag != null)
             {
                 int index = (int)textBox.Tag;
-                Tuple<int, int> index2D = Util.ConvertTo2DIndex(index, genericConvolutioFilter!.SizeX);
+                Tuple<int, int> index2D = Util.ConvertTo2DIndex(index, currentConvolutioFilter!.SizeX);
                 if (float.TryParse(textBox.Text, out float result))
                 {
-                    float[,]? tmpKernel = genericConvolutioFilter.Kernel.Clone() as float[,];
+                    float[,]? tmpKernel = currentConvolutioFilter.Kernel.Clone() as float[,];
                     tmpKernel![index2D.Item1, index2D.Item2] = result;
-                    genericConvolutioFilter.Kernel = tmpKernel;
+                    currentConvolutioFilter.Kernel = tmpKernel;
                     kernelCoeffTextBoxIndex = 0; // Reset since the textboxes are reloaded
                 }
             }
@@ -166,7 +191,7 @@ namespace ComputerGraphicsIProject
                 return;
             kernelCoeffTextBoxIndex = 0; // Reset TextBoxes index
             int selectedRowSize = (int)nRowsComboBox.SelectedItem;
-            genericConvolutioFilter!.SizeY = selectedRowSize;
+            currentConvolutioFilter!.SizeY = selectedRowSize;
         }
 
         private void NColsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -177,12 +202,41 @@ namespace ComputerGraphicsIProject
                 return;
             kernelCoeffTextBoxIndex = 0; // Reset TextBoxes index
             int selectedColSize = (int)nColsComboBox.SelectedItem;
-            genericConvolutioFilter!.SizeX = selectedColSize;
+            currentConvolutioFilter!.SizeX = selectedColSize;
         }
 
         private void CalculateDivisorButton_Click(object sender, RoutedEventArgs e)
         {
-            genericConvolutioFilter!.CalculateDivisor();
+            currentConvolutioFilter!.CalculateDivisor();
+        }
+
+        private void PredifinedFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+            if (comboBox.SelectedIndex != -1)
+            {
+                int selectedIndex = comboBox.SelectedIndex;
+
+                currentConvolutioFilter = convolutionFilterList!.ElementAt(selectedIndex);
+                this.DataContext = currentConvolutioFilter;
+            }
+        }
+
+        private void RefreshFilterList(ConvolutionFilterBase newFilter)
+        {
+            InitConvolutionFilters();
+            convolutionFilterList!.Add(newFilter);
+            predifinedFilterComboBox!.Items.Clear();
+            foreach (var filter in convolutionFilterList!)
+            {
+                predifinedFilterComboBox!.Items.Add(filter.Name);
+            }
+        }
+
+        private void SaveFilterButton_Click(object sender, RoutedEventArgs e)
+        {
+            currentConvolutioFilter!.Name = currentConvolutioFilter!.Name + " - modified on " + DateTime.Now;
+            RefreshFilterList(currentConvolutioFilter);
         }
     }
 }

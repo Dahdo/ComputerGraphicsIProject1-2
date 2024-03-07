@@ -193,18 +193,6 @@ namespace ComputerGraphicsIProject
 
             ConvolutionFilterBase blur = new BlurFilter();
 
-            float[,] kernel = new float[9,9];
-
-            for (int i = 0; i < 9; i++)
-            {
-                for (int j = 0; j < 9; j++)
-                {
-                    kernel[i, j] = 1.0f;
-                }
-            }
-
-            blur.Kernel = kernel;
-
             // Call ApplyFilter
             ConvolutionFilters.ApplyFilter(ImageSourceBitmap, blur);
 
@@ -224,11 +212,9 @@ namespace ComputerGraphicsIProject
 
             gaussianBlur.Kernel = Util.NormalizeKernel(new float[,] 
                                                         {
-                                                            {0, 1, 2, 1, 0},
-                                                            {1, 4, 8, 4, 1},
-                                                            {2, 8, 16, 8, 2},
-                                                            {1, 4, 8, 4, 1},
-                                                            {0, 1, 2, 1, 0}
+                                                            {0, 1, 0},
+                                                            {1, 4, 1},
+                                                            {0, 1, 0}
                                                         });
 
             // Call ApplyFilter
@@ -302,6 +288,20 @@ namespace ComputerGraphicsIProject
             ConvolutionKernelWindow convolutionKernelWindow = new ConvolutionKernelWindow();
             convolutionKernelWindow.Owner = this;
             convolutionKernelWindow.ShowDialog();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            FunctionalFilters.ApplyFilterLabToHSV(ImageSourceBitmap);
+            // To simulate bitmap changes notification
+            ReflectBitmapMemoryChanges();
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            FunctionalFilters.ApplyFilterLabToRGB(ImageSourceBitmap);
+            // To simulate bitmap changes notification
+            ReflectBitmapMemoryChanges();
         }
     }
 }

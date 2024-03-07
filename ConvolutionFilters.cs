@@ -22,6 +22,7 @@ namespace ComputerGraphicsIProject
         protected int anchorX;
         protected int anchorY;
         protected float sigma;
+        protected string name;
 
         public event PropertyChangedEventHandler? PropertyChanged;
         public virtual void OnPropertyChanged(string propertyName)
@@ -29,6 +30,11 @@ namespace ComputerGraphicsIProject
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        public abstract string Name
+        {
+            get;
+            set;
+        }
         public virtual int SizeX
         {
             get => kernel!.GetLength(1);
@@ -205,6 +211,12 @@ namespace ComputerGraphicsIProject
             anchorY = this.SizeY / 2;
             offset = 0.0f;
         }
+
+        public override string Name
+        {
+            get => "Blur";
+            set => name = value;
+        }
     }
 
     public class GaussianBlurFilter : ConvolutionFilterBase
@@ -246,6 +258,12 @@ namespace ComputerGraphicsIProject
                 }
             }
 
+        }
+
+        public override string Name
+        {
+            get => "Gaussian Blur";
+            set => name = value;
         }
 
         public override float[,] Kernel
@@ -291,6 +309,11 @@ namespace ComputerGraphicsIProject
                 OnPropertyChanged(nameof(Kernel));
             }
         }
+        public override string Name
+        {
+            get => "Sharpen";
+            set => name = value;
+        }
     }
 
     public class EdgeDetectionFilter : ConvolutionFilterBase
@@ -321,6 +344,11 @@ namespace ComputerGraphicsIProject
                 OnPropertyChanged(nameof(Kernel));
             }
         }
+        public override string Name
+        {
+            get => "Edge Detection";
+            set => name = value;
+        }
     }
 
     public class EmbossFilter : ConvolutionFilterBase
@@ -350,6 +378,11 @@ namespace ComputerGraphicsIProject
                 anchorY = SizeY / 2;
                 OnPropertyChanged(nameof(Kernel));
             }
+        }
+        public override string Name
+        {
+            get => "Emboss";
+            set => name = value;
         }
     }
 
@@ -382,6 +415,12 @@ namespace ComputerGraphicsIProject
 
                 OnPropertyChanged(nameof(Kernel));
             }
+        }
+
+        public override string Name
+        {
+            get => "Generic (Netraul by default)";
+            set => name = value;
         }
 
         //public override int AnchorX 
