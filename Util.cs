@@ -84,6 +84,15 @@ namespace ComputerGraphicsIProject
 
             return kernel;
         }
+
+        public static Tuple<int, int> ConvertTo2DIndex(int index, int colCount)
+        {
+            int row = index / colCount;
+            int col = index % colCount;
+
+            return new Tuple<int, int>(row, col);
+        }
+
     }
 
 }

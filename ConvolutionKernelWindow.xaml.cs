@@ -20,6 +20,7 @@ namespace ComputerGraphicsIProject
         private bool isInitializing = false; 
         MainWindow? mainWindow;
         public GenericFilter? genericConvolutioFilter;
+        private int kernelCoeffTextBoxIndex = 0;
 
         // Controls
         ComboBox? predifinedFilterComboBox;
@@ -124,11 +125,29 @@ namespace ComputerGraphicsIProject
             //ApplyConvolutionFilter();
         }
 
+        private void KernelCoefficientTextBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            TextBox? textBox = sender as TextBox;
+            textBox!.Tag = kernelCoeffTextBoxIndex++;
+        }
         private void KernelCoefficientTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (isInitializing) // To prevent firing handling event during initialization
                 return;
-            //ApplyConvolutionFilter();
+
+            TextBox? textBox = (TextBox)sender;
+            if (textBox != null && textBox.Tag != null)
+            {
+                int index = (int)textBox.Tag;
+                Tuple<int, int> index2D = Util.ConvertTo2DIndex(index, genericConvolutioFilter!.SizeX);
+                if (float.TryParse(textBox.Text, out float result))
+                {
+                    float[,]? tmpKernel = genericConvolutioFilter.Kernel.Clone() as float[,];
+                    tmpKernel![index2D.Item1, index2D.Item2] = result;
+                    genericConvolutioFilter.Kernel = tmpKernel;
+                    kernelCoeffTextBoxIndex = 0; // Reset since the textboxes are reloaded
+                }
+            }
         }
 
         private void NRowsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -137,6 +156,7 @@ namespace ComputerGraphicsIProject
                 return;
             if (nRowsComboBox!.SelectedItem == null) 
                 return;
+            kernelCoeffTextBoxIndex = 0; // Reset TextBoxes index
             int selectedRowSize = (int)nRowsComboBox.SelectedItem;
             genericConvolutioFilter!.SizeY = selectedRowSize;
         }
@@ -147,6 +167,7 @@ namespace ComputerGraphicsIProject
                 return;
             if (nColsComboBox!.SelectedItem == null)
                 return;
+            kernelCoeffTextBoxIndex = 0; // Reset TextBoxes index
             int selectedColSize = (int)nColsComboBox.SelectedItem;
             genericConvolutioFilter!.SizeX = selectedColSize;
         }
@@ -154,7 +175,6 @@ namespace ComputerGraphicsIProject
         private void CalculateDivisorButton_Click(object sender, RoutedEventArgs e)
         {
             genericConvolutioFilter!.CalculateDivisor();
-            
         }
     }
 }

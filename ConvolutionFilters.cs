@@ -228,6 +228,7 @@ namespace ComputerGraphicsIProject
             anchorY = this.SizeY / 2;
             offset = 0.0f;
         }
+
         public override float[,] Kernel
         {
             get => kernel!;
@@ -306,18 +307,16 @@ namespace ComputerGraphicsIProject
         {
             kernel = new float[,]
             {
-                {0, -1, 0 },
-                {-1, 5, -1},
-                {0, -1, 0 }
-                //{ 0, 0, 0},
-                //{ 0, 1, 0},
-                //{ 0, 0, 0}
+                { 0, 0, 0},
+                { 0, 1, 0},
+                { 0, 0, 0}
             };
             divisor = 1;
             anchorX = this.SizeX / 2;
             anchorY = this.SizeY / 2;
             offset = 0.0f;
         }
+
         public override float[,] Kernel
         {
             get => kernel!;

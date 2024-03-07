@@ -59,7 +59,7 @@ namespace ComputerGraphicsIProject
 
                     collection.Add(row);
                 }
-
+                
                 return collection;
             }
 
@@ -111,6 +111,4 @@ namespace ComputerGraphicsIProject
             return Binding.DoNothing;
         }
     }
-
-
 }
