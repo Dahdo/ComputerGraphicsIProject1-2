@@ -292,16 +292,26 @@ namespace ComputerGraphicsIProject
             convolutionKernelWindow.ShowDialog();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void RgbToHsvbutton_Click(object sender, RoutedEventArgs e)
         {
-            FunctionalFilters.ApplyFilterLabToHSV(ImageSourceBitmap);
+            if (ImageSourceBitmap == null)
+            {
+                Util.ShowMessageBoxError("Image needs to be loaded first!");
+                return;
+            }
+            FunctionalFilters.ApplyFilterToHSV(ImageSourceBitmap);
             // To simulate bitmap changes notification
             ReflectBitmapMemoryChanges();
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void HsvToRgbbutton_Click(object sender, RoutedEventArgs e)
         {
-            FunctionalFilters.ApplyFilterLabToRGB(ImageSourceBitmap);
+            if (ImageSourceBitmap == null)
+            {
+                Util.ShowMessageBoxError("Image needs to be loaded first!");
+                return;
+            }
+            FunctionalFilters.ApplyFilterToRGB(ImageSourceBitmap);
             // To simulate bitmap changes notification
             ReflectBitmapMemoryChanges();
         }
@@ -332,16 +342,16 @@ namespace ComputerGraphicsIProject
             }
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        private void ChannelSelectionResetButton_Click(object sender, RoutedEventArgs e)
         {
             selectedChannel = -1;
             RadioButton? radio1 =  FindName("radioButton1") as RadioButton;
             RadioButton? radio2 = FindName("radioButton2") as RadioButton;
             RadioButton? radio3 = FindName("radioButton3") as RadioButton;
 
-            radio1.IsChecked = false;
-            radio2.IsChecked = false;
-            radio3.IsChecked = false;
+            radio1!.IsChecked = false;
+            radio2!.IsChecked = false;
+            radio3!.IsChecked = false;
         }
     }
 }

@@ -401,7 +401,7 @@ namespace ComputerGraphicsIProject
         }
     }
 
-    public class GenericFilter : ConvolutionFilterBase /*INotifyPropertyChanged*/
+    public class GenericFilter : ConvolutionFilterBase
     {
         private int size;
         public GenericFilter()

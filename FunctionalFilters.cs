@@ -94,16 +94,10 @@ namespace ComputerGraphicsIProject
         }
 
 
+        //The lab part
 
-
-
-        public static void ApplyFilterLabToHSV(Bitmap? bitmap)
+        public static void ApplyFilterToHSV(Bitmap? bitmap)
         {
-            /*
-             * This implementation makes use these 2 resources to create an improved version
-             * https://www.codeproject.com/Articles/1989/Image-Processing-for-Dummies-with-C-and-GDI-Part-1
-             * https://learn.microsoft.com/en-us/dotnet/api/system.drawing.imaging.bitmapdata.scan0?view=dotnet-plat-ext-8.0#system-drawing-imaging-bitmapdata-scan0
-             */
             if (bitmap == null)
                 throw new ArgumentNullException("input");
 
@@ -125,9 +119,6 @@ namespace ComputerGraphicsIProject
                     {
                         for (int x = 0; x < stride; x += 3)
                         {
-                            //bitmapDataPtr[0] = FilterFunction(bitmapDataPtr[0]); // Blue channel
-                            //bitmapDataPtr[1] = FilterFunction(bitmapDataPtr[1]); // Green channel
-                            //bitmapDataPtr[2] = FilterFunction(bitmapDataPtr[2]); // Red channel
 
                             byte[] hsv = GetHSV(bitmapDataPtr[2], bitmapDataPtr[1], bitmapDataPtr[0]);
 
@@ -147,13 +138,8 @@ namespace ComputerGraphicsIProject
             }
         }
 
-        public static void ApplyFilterLabToRGB(Bitmap? bitmap)
+        public static void ApplyFilterToRGB(Bitmap? bitmap)
         {
-            /*
-             * This implementation makes use these 2 resources to create an improved version
-             * https://www.codeproject.com/Articles/1989/Image-Processing-for-Dummies-with-C-and-GDI-Part-1
-             * https://learn.microsoft.com/en-us/dotnet/api/system.drawing.imaging.bitmapdata.scan0?view=dotnet-plat-ext-8.0#system-drawing-imaging-bitmapdata-scan0
-             */
             if (bitmap == null)
                 throw new ArgumentNullException("input");
 
@@ -175,9 +161,6 @@ namespace ComputerGraphicsIProject
                     {
                         for (int x = 0; x < stride; x += 3)
                         {
-                            //bitmapDataPtr[0] = FilterFunction(bitmapDataPtr[0]); // Blue channel
-                            //bitmapDataPtr[1] = FilterFunction(bitmapDataPtr[1]); // Green channel
-                            //bitmapDataPtr[2] = FilterFunction(bitmapDataPtr[2]); // Red channel
 
                             byte[] rgb = GetRGBFromHSV(bitmapDataPtr[2], bitmapDataPtr[1], bitmapDataPtr[0]);
 
@@ -263,7 +246,5 @@ namespace ComputerGraphicsIProject
             }
         }
 }
-
-    
 
 }
