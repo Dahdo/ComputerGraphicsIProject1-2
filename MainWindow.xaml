@@ -98,10 +98,14 @@
                 </WrapPanel>
                 <UniformGrid Rows="1" Columns="2" DockPanel.Dock="Top">
                     <Border BorderBrush="Black" BorderThickness="1" Margin="5">
-                        <Image Name="RefImage"/>
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                            <Image Stretch="None" SnapsToDevicePixels="True" Name="RefImage"/>
+                        </ScrollViewer>
                     </Border>
                     <Border BorderBrush="Black" BorderThickness="1" Margin="5">
-                        <Image Source="{Binding ImageSourceBitmap, Converter={StaticResource BitmapToBitmapImageConverter}}" />
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                            <Image Stretch="None" SnapsToDevicePixels="True" Source="{Binding ImageSourceBitmap, Converter={StaticResource BitmapToBitmapImageConverter}}" />
+                        </ScrollViewer>
                     </Border>
                 </UniformGrid>
             </DockPanel>

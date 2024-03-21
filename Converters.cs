@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +22,7 @@ namespace ComputerGraphicsIProject
 
                 // Convert System.Drawing.Bitmap to BitmapImage
                 var memoryStream = new System.IO.MemoryStream();
-                bitmap.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Bmp);
+                bitmap.Save(memoryStream, bitmap.RawFormat);
                 memoryStream.Position = 0;
 
                 bitmapImage.BeginInit();
@@ -30,8 +32,9 @@ namespace ComputerGraphicsIProject
 
                 return bitmapImage;
             }
-
             return null;
+
+
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

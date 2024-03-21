@@ -71,8 +71,8 @@ namespace ComputerGraphicsIProject
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 Title = "Open Image File",
-                Filter = "PNG Image (*.png)|*.png|JPEG Image (*.jpg)|*.jpg|BMP Image (*.bmp)|*.bmp"
-        };
+                Filter = "All Image Files|*.png;*.jpg;*.bmp|PNG Image (*.png)|*.png|JPEG Image (*.jpg)|*.jpg|BMP Image (*.bmp)|*.bmp"
+            };
 
             if (openFileDialog.ShowDialog() == true)
             {
