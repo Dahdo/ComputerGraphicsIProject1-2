@@ -110,18 +110,31 @@
                 </UniformGrid>
             </DockPanel>
 
-            <WrapPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="10">
-                <Button Name="RgbToHsvbutton" Content="RGB To HSV" Click="RgbToHsvbutton_Click" Margin="0,0,5,0"/>
-                <Button Name="HsvToRgbbutton" Content="HSV To RGB" Click="HsvToRgbbutton_Click" Margin="0,0,5,0"/>
+            <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Grid.Column="0">
+                    <Button Name="RgbToHsvbutton" Content="RGB To HSV" Click="RgbToHsvbutton_Click" Margin="10 5" Padding="5" HorizontalAlignment="Center"/>
+                    <Button Name="HsvToRgbbutton" Content="HSV To RGB" Click="HsvToRgbbutton_Click" Margin="10 5" Padding="5" HorizontalAlignment="Center"/>
 
-                <StackPanel Orientation="Horizontal" Margin="0,0,5,0">
-                    <RadioButton Name="radioButton1" Content="red" GroupName="Options" Checked="RadioButton_Checked"/>
-                    <RadioButton Name="radioButton2" Content="green" GroupName="Options" Checked="RadioButton_Checked"/>
-                    <RadioButton Name="radioButton3" Content="blue" GroupName="Options" Checked="RadioButton_Checked"/>
+                    <StackPanel Orientation="Horizontal" Margin="10 5" HorizontalAlignment="Center">
+                        <RadioButton Name="radioButton1" Content="red" GroupName="Options" Checked="RadioButton_Checked"/>
+                        <RadioButton Name="radioButton2" Content="green" GroupName="Options" Checked="RadioButton_Checked"/>
+                        <RadioButton Name="radioButton3" Content="blue" GroupName="Options" Checked="RadioButton_Checked"/>
+                    </StackPanel>
+
+                    <Button Name="ChannelSelectionResetButton" Content="Reset Selection" Click="ChannelSelectionResetButton_Click" Margin="10 5" Padding="5" HorizontalAlignment="Center"/>
                 </StackPanel>
-
-                <Button Name="ChannelSelectionResetButton" Content="Reset Selection" Click="ChannelSelectionResetButton_Click" Margin="0,0,0,0"/>
-            </WrapPanel>
+                <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
+                    <Button Name="RGBToGrayscaleButton" Content="RGB to Grayscale" Padding="5" HorizontalAlignment="Center" Click="RGBToGrayscaleButton_Click" />
+                </StackPanel>
+            </Grid>
 
         </Grid>
     </DockPanel>

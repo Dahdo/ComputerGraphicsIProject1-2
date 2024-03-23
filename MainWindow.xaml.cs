@@ -353,5 +353,17 @@ namespace ComputerGraphicsIProject
             radio2!.IsChecked = false;
             radio3!.IsChecked = false;
         }
+
+        private void RGBToGrayscaleButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (ImageSourceBitmap == null)
+            {
+                Util.ShowMessageBoxError("Image needs to be loaded first!");
+                return;
+            }
+            Util.RgbToGrayScale(ImageSourceBitmap);
+            // To simulate bitmap changes notification
+            ReflectBitmapMemoryChanges();
+        }
     }
 }

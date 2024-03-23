@@ -5,6 +5,7 @@ using System.Windows;
 using System.Text;
 using System.Security.Policy;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing.Imaging;
 
 namespace ComputerGraphicsIProject
 {
@@ -91,6 +92,52 @@ namespace ComputerGraphicsIProject
             int col = index % colCount;
 
             return new Tuple<int, int>(row, col);
+        }
+
+
+        public static void RgbToGrayScale(Bitmap? bitmap)
+        {
+            if (bitmap == null)
+                throw new ArgumentNullException("input");
+
+            BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width,
+                bitmap.Height), ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
+
+            // Get the number of bytes in a stride
+            int stride = bitmapData.Stride;
+
+            try
+            {
+                unsafe
+                {
+
+                    // Pointer to the first byte of the pixel data
+                    byte* bitmapDataPtr = (byte*)bitmapData.Scan0;
+
+                    for (int y = 0; y < bitmap.Height; y++)
+                    {
+                        for (int x = 0; x < stride; x += 3)
+                        {
+                            byte b = bitmapDataPtr[0];
+                            byte g = bitmapDataPtr[1];
+                            byte r = bitmapDataPtr[2];
+
+                            byte intensity = (byte)(0.299 * r + 0.587 * g + 0.114 * b);
+
+                            bitmapDataPtr[0] = intensity;
+                            bitmapDataPtr[1] = intensity;
+                            bitmapDataPtr[2] = intensity;
+
+
+                            bitmapDataPtr += 3; // Jump to the next pixel
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                bitmap.UnlockBits(bitmapData);
+            }
         }
 
     }
