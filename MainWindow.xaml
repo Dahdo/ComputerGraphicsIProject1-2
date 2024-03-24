@@ -88,6 +88,24 @@
                         </Button>
                     </StackPanel>
                 </TabItem>
+                <TabItem Header="Dithering and Color Quantization">
+                    <StackPanel>
+                        <Button Name="ErrorDiffusionBtn" Content="Error Diffusion Dithering(default)" Style="{StaticResource ButtonsUnderTabs}"/>
+                        <Button Name="ErrorDiffusion" Content="Edit Dithering Parameters">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background" Value="LightBlue"/>
+                                    <Setter Property="FontSize" Value="20"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="Width" Value="250"/>
+                                    <Setter Property="Height" Value="30"/>
+                                    <Setter Property="Margin" Value="40"/>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <Button Name="ColorQuantizationBtn" Content="Color Quantization" Style="{StaticResource ButtonsUnderTabs}"/>
+                    </StackPanel>
+                </TabItem>
             </TabControl>
             
             <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="True">
