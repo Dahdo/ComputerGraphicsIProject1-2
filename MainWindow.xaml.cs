@@ -375,7 +375,7 @@ namespace ComputerGraphicsIProject
                 Util.ShowMessageBoxError("Image needs to be loaded first!");
                 return;
             }
-            ErrorDiffusionDithering.ApplyErrorDiffusion(ImageSourceBitmap, numColorLevel = 2);
+            ErrorDiffusionDithering.ApplyErrorDiffusion(ImageSourceBitmap, numColorLevel);
             // To simulate bitmap changes notification
             ReflectBitmapMemoryChanges();
         }

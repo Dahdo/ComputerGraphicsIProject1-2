@@ -29,10 +29,21 @@ namespace ComputerGraphicsIProject
                     {
                         for (int x = 0; x < stride; x += 3)
                         {
+                            byte[] pixelErrors = new byte[]
+                            {
+                                bitmapDataPtr[0],
+                                bitmapDataPtr[1],
+                                bitmapDataPtr[2]
+                            };
 
                             bitmapDataPtr[0] = approximateValue(bitmapDataPtr[0], numColorLevels); // Blue channel
                             bitmapDataPtr[1] = approximateValue(bitmapDataPtr[1], numColorLevels); // Green channel
                             bitmapDataPtr[2] = approximateValue(bitmapDataPtr[2], numColorLevels); // Red channel
+
+                            // Calculate the errors
+                            pixelErrors[0] -= bitmapDataPtr[0];
+                            pixelErrors[1] -= bitmapDataPtr[1];
+                            pixelErrors[2] -= bitmapDataPtr[2];
 
                             bitmapDataPtr += 3; // Jump to the next pixel
                         }
@@ -100,8 +111,8 @@ namespace ComputerGraphicsIProject
             }
 
             // Write values to the current pixel
-            outputPtr[0] = (byte)Math.Min(255, Math.Max(0, filter.Offset + sumBlues / filter.Divisor));    // Blue channel
-            outputPtr[1] = (byte)Math.Min(255, Math.Max(0, filter.Offset + sumGreens / filter.Divisor));  // Green channel
+            outputPtr[0] = (byte)Math.Min(255, Math.Max(0, filter.Offset + sumBlues / filter.Divisor));  // Blue channel
+            outputPtr[1] = (byte)Math.Min(255, Math.Max(0, filter.Offset + sumGreens / filter.Divisor)); // Green channel
             outputPtr[2] = (byte)Math.Min(255, Math.Max(0, filter.Offset + sumReds / filter.Divisor));  // Red channel
         }
     }
