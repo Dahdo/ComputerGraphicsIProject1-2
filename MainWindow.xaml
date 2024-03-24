@@ -90,7 +90,7 @@
                 </TabItem>
                 <TabItem Header="Dithering and Color Quantization">
                     <StackPanel>
-                        <Button Name="ErrorDiffusionBtn" Content="Error Diffusion Dithering(default)" Style="{StaticResource ButtonsUnderTabs}"/>
+                        <Button Name="ErrorDiffusionBtn" Content="Error Diffusion Dithering(default)" Style="{StaticResource ButtonsUnderTabs}" Click="ErrorDiffusionBtn_Click"/>
                         <Button Name="ErrorDiffusion" Content="Edit Dithering Parameters">
                             <Button.Style>
                                 <Style TargetType="Button">

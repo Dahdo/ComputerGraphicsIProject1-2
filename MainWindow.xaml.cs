@@ -365,5 +365,17 @@ namespace ComputerGraphicsIProject
             // To simulate bitmap changes notification
             ReflectBitmapMemoryChanges();
         }
+
+        private void ErrorDiffusionBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (ImageSourceBitmap == null)
+            {
+                Util.ShowMessageBoxError("Image needs to be loaded first!");
+                return;
+            }
+            ErrorDiffusionDithering.ApplyErrorDiffusion(ImageSourceBitmap);
+            // To simulate bitmap changes notification
+            ReflectBitmapMemoryChanges();
+        }
     }
 }
