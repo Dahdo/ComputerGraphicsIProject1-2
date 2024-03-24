@@ -18,6 +18,8 @@ namespace ComputerGraphicsIProject
         const float CONTRAST_ENHANCEMENT_PERCENTAGE = 10.0f;
         const float GAMMA_VALUE = 0.9f;
 
+        private byte numColorLevel = 3;
+
         private int selectedChannel = -1;
 
         private Bitmap? _imageSourceBitmap;
@@ -373,7 +375,7 @@ namespace ComputerGraphicsIProject
                 Util.ShowMessageBoxError("Image needs to be loaded first!");
                 return;
             }
-            ErrorDiffusionDithering.ApplyErrorDiffusion(ImageSourceBitmap);
+            ErrorDiffusionDithering.ApplyErrorDiffusion(ImageSourceBitmap, numColorLevel = 2);
             // To simulate bitmap changes notification
             ReflectBitmapMemoryChanges();
         }

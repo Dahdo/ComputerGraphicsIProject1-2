@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ComputerGraphicsIProject
 {
     public static class ErrorDiffusionDithering
     {
-        public static void ApplyErrorDiffusion(Bitmap? bitmap)
+        public static void ApplyErrorDiffusion(Bitmap? bitmap, byte numColorLevels)
         {
             if (bitmap == null)
                 throw new ArgumentNullException("input");
@@ -34,9 +30,9 @@ namespace ComputerGraphicsIProject
                         for (int x = 0; x < stride; x += 3)
                         {
 
-                            bitmapDataPtr[0] = (byte)((bitmapDataPtr[0] < 128) ? 0 : 255); // Blue channel
-                            bitmapDataPtr[1] = (byte)((bitmapDataPtr[1] < 128) ? 0 : 255); // Green channel
-                            bitmapDataPtr[2] = (byte)((bitmapDataPtr[2] < 128) ? 0 : 255); // Red channel
+                            bitmapDataPtr[0] = approximateValue(bitmapDataPtr[0], numColorLevels); // Blue channel
+                            bitmapDataPtr[1] = approximateValue(bitmapDataPtr[1], numColorLevels); // Green channel
+                            bitmapDataPtr[2] = approximateValue(bitmapDataPtr[2], numColorLevels); // Red channel
 
                             bitmapDataPtr += 3; // Jump to the next pixel
                         }
@@ -48,6 +44,39 @@ namespace ComputerGraphicsIProject
                 bitmap.UnlockBits(bitmapData);
             }
         }
+
+        private static byte approximateValue(byte channelValue, byte numColorLevels)
+        {
+            byte[] colorLevels = generateColorLevels(numColorLevels);
+            byte closestLevel = colorLevels[0];
+            int minDifference = Math.Abs(channelValue - closestLevel);
+
+            foreach (byte level in colorLevels)
+            {
+                int difference = Math.Abs(channelValue - level);
+                if (difference < minDifference)
+                {
+                    minDifference = difference;
+                    closestLevel = level;
+                }
+            }
+
+            return closestLevel;
+        }
+
+        private static byte[] generateColorLevels(byte numColorLevels)
+        {
+            byte[] colorLevels = new byte[numColorLevels];
+            float step = 255 / (numColorLevels - 1);
+
+            for (int i = 0; i < numColorLevels; i++)
+            {
+                colorLevels[i] = (byte)(i * step);
+            }
+
+            return colorLevels;
+        }
+        
 
         private static unsafe void ApplyKernel<T>(byte* inputPtr, byte* outputPtr, int x, int y, int stride, int height, T filter)
             where T : ConvolutionFilterBase
