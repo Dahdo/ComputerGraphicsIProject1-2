@@ -10,9 +10,15 @@
     <Compile Update="ConvolutionKernelWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="DitheringWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="ConvolutionKernelWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="DitheringWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="MainWindow.xaml">

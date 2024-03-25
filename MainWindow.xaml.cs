@@ -445,5 +445,18 @@ namespace ComputerGraphicsIProject
             // To simulate bitmap changes notification
             ReflectBitmapMemoryChanges();
         }
+
+        private void ErrorDiffusion_Click(object sender, RoutedEventArgs e)
+        {
+            if (ImageSourceBitmap == null)
+            {
+                Util.ShowMessageBoxError("Image needs to be loaded first!");
+                return;
+            }
+
+            DitheringWindow convolutionKernelWindow = new DitheringWindow();
+            convolutionKernelWindow.Owner = this;
+            convolutionKernelWindow.ShowDialog();
+        }
     }
 }

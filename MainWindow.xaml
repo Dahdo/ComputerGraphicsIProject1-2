@@ -100,7 +100,7 @@
                             <Label Content="Color Levels:" HorizontalAlignment="Left" Margin="0 0 10 0"/>
                             <TextBox Name="colorLevelsTextBox" Text="{Binding numColorLevel, Converter={StaticResource ByteToStringConverter}, Mode=TwoWay}" Width="100" Margin="0 0 10 0" VerticalContentAlignment="Center"  HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
                         </StackPanel>
-                        <Button Name="ErrorDiffusion" Content="Edit Dithering Parameters">
+                        <Button Name="ErrorDiffusion" Content="Edit Dithering Parameters" Click="ErrorDiffusion_Click">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Background" Value="LightBlue"/>

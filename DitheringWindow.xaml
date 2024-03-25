@@ -1,0 +1,82 @@
+﻿<Window x:Class="ComputerGraphicsIProject.DitheringWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ComputerGraphicsIProject"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterOwner"
+        Title="Error Diffusion Edit Window" Height="300" Width="500">
+    <Window.Resources>
+        <local:ByteToStringConverter x:Key="ByteToStringConverter"/>
+        <local:Kernel2DArrayConverter x:Key="Kernel2DArrayConverterKey"/>
+        <local:ElementConverter x:Key="ElementConverterKey"/>
+
+        <Style TargetType="Label">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <DataTemplate x:Key="KernelGridItemsTemplate">
+            <TextBox Text="{Binding Path=., Converter={StaticResource ElementConverterKey}}" Width="50" Height="25" Margin="0.5" TextChanged="KernelCoefficientTextBox_TextChanged" Loaded="KernelCoefficientTextBox_Loaded"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="KernelGridItemsControlTemplate">
+            <ItemsControl ItemsSource="{Binding}" ItemTemplate="{DynamicResource KernelGridItemsTemplate}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </DataTemplate>
+    </Window.Resources>
+    <DockPanel LastChildFill="True">
+        <Grid DockPanel.Dock="Top" Margin="15 10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Label Name="PredifinedFilterLabel" Grid.Column="0" Content="Predefined" Margin="0 0 0 5" HorizontalAlignment="Left"/>
+            <ComboBox Name="PredifinedFilterComboBox"  Grid.Column="1" Grid.ColumnSpan="3" Margin="0 0 0 5" SelectionChanged="PredifinedFilterComboBox_SelectionChanged"/>
+           </Grid>
+        <Grid DockPanel.Dock="Bottom" Margin="15 10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Label Name="DivisorLabel" Grid.Column="0" Content="Divisor"/>
+            <TextBox Grid.Column="1" Name="DivisorTextBox" Width="100" Margin="2.5" Text="{Binding Divisor}" TextChanged="DivisorTextBox_TextChanged"/>
+            <Label Grid.Column="2" Content="Color Levels:" />
+            <TextBox Grid.Column="3" Name="colorLevelsTextBox" Width="100" Margin="2.5" Text="{Binding numColorLevel, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ByteToStringConverter}, Mode=TwoWay}" VerticalContentAlignment="Center"  HorizontalContentAlignment="Center"/>
+            
+            <Button Name="SaveFilterButton" Content="Save" Grid.Row="2" Grid.Column="0" Width="70" HorizontalAlignment="Left"  Margin="0 10 0 0" Height="20" VerticalAlignment="Top" Click="SaveFilterButton_Click"/>
+            <Button Name="ResetButton" Content="Reset" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" Margin="0 10 2.5 0" Width="70" Click="ResetButton_Click"/>
+            <Button Name="ApplyButton" Content="Apply" Grid.Row="2" Grid.Column="2" Margin="0 10 0 0" Click="ApplyButton_Click"/>
+            <Button Name="CancelButton" Content="Cancel" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Right" Margin="0 10 0 0" Width="70" Height="20" VerticalAlignment="Top" Click="CancelButton_Click"/>
+
+        </Grid>
+        <Grid Height="250">
+            <ItemsControl Name="KernelGridItemsControl" ItemsSource="{Binding Kernel, Converter={StaticResource Kernel2DArrayConverterKey}, UpdateSourceTrigger=PropertyChanged}" ItemTemplate="{DynamicResource KernelGridItemsControlTemplate}" />
+        </Grid>
+    </DockPanel>
+</Window>
