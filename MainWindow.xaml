@@ -10,6 +10,7 @@
         Title="Computer Graphics I Project">
     <Window.Resources>
         <local:BitmapToBitmapImageConverter x:Key="BitmapToBitmapImageConverter" />
+        <local:ByteToStringConverter x:Key="ByteToStringConverter"/>
         <Style x:Key="NonFunctionalButtons" TargetType="Button">
             <Setter Property="Width" Value="100"/>
             <Setter Property="Height" Value="30"/>
@@ -90,7 +91,15 @@
                 </TabItem>
                 <TabItem Header="Dithering and Color Quantization">
                     <StackPanel>
-                        <Button Name="ErrorDiffusionBtn" Content="Error Diffusion Dithering(default)" Style="{StaticResource ButtonsUnderTabs}" Click="ErrorDiffusionBtn_Click"/>
+                        <Button Name="FloydAndSteinbergBtn" Content="Floyd and Steinberg Filter" Style="{StaticResource ButtonsUnderTabs}" Click="FloydAndSteinbergBtn_Click"/>
+                        <Button Name="BurkesFilterBtn" Content="Burkes Filter" Style="{StaticResource ButtonsUnderTabs}" Click="BurkesFilterBtn_Click" />
+                        <Button Name="StuckyFilterBtn" Content="Stucky Filter" Style="{StaticResource ButtonsUnderTabs}" Click="StuckyFilterBtn_Click" />
+                        <Button Name="SierraFilterBtn" Content="Sierra Filter" Style="{StaticResource ButtonsUnderTabs}" Click="SierraFilterBtn_Click" />
+                        <Button Name="AtkinsonFilterBtn" Content="Atkinson Filter" Style="{StaticResource ButtonsUnderTabs}" Click="AtkinsonFilterBtn_Click" />
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Label Content="Color Levels:" HorizontalAlignment="Left" Margin="0 0 10 0"/>
+                            <TextBox Name="colorLevelsTextBox" Text="{Binding numColorLevel, Converter={StaticResource ByteToStringConverter}, Mode=TwoWay}" Width="100" Margin="0 0 10 0" VerticalContentAlignment="Center"  HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
+                        </StackPanel>
                         <Button Name="ErrorDiffusion" Content="Edit Dithering Parameters">
                             <Button.Style>
                                 <Style TargetType="Button">

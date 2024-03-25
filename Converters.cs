@@ -114,4 +114,27 @@ namespace ComputerGraphicsIProject
             return Binding.DoNothing;
         }
     }
+
+public class ByteToStringConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is byte)
+            {
+                return ((byte)value).ToString();
+            }
+            return "";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            byte result;
+            if (byte.TryParse(value as string, out result))
+            {
+                return result;
+            }
+            return 0;
+        }
+    }
+
 }

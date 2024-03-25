@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
+using static ComputerGraphicsIProject.ErrorDiffusionDithering;
 
 
 namespace ComputerGraphicsIProject
@@ -18,7 +19,19 @@ namespace ComputerGraphicsIProject
         const float CONTRAST_ENHANCEMENT_PERCENTAGE = 10.0f;
         const float GAMMA_VALUE = 0.9f;
 
-        private byte numColorLevel = 3;
+        private byte _numColorLevel = 2;
+        public byte numColorLevel
+        {
+            get { return _numColorLevel; }
+            set
+            {
+                if (_numColorLevel != value)
+                {
+                    _numColorLevel = value;
+                    OnPropertyChanged(nameof(numColorLevel));
+                }
+            }
+        }
 
         private int selectedChannel = -1;
 
@@ -368,14 +381,67 @@ namespace ComputerGraphicsIProject
             ReflectBitmapMemoryChanges();
         }
 
-        private void ErrorDiffusionBtn_Click(object sender, RoutedEventArgs e)
+        private void FloydAndSteinbergBtn_Click(object sender, RoutedEventArgs e)
         {
             if (ImageSourceBitmap == null)
             {
                 Util.ShowMessageBoxError("Image needs to be loaded first!");
                 return;
             }
-            ErrorDiffusionDithering.ApplyErrorDiffusion(ImageSourceBitmap, numColorLevel);
+            FloydAndSteinbergFilter floydAndSteinbergFilter = new FloydAndSteinbergFilter();
+            ErrorDiffusionDithering.ApplyErrorDiffusion(ImageSourceBitmap, floydAndSteinbergFilter, numColorLevel);
+            // To simulate bitmap changes notification
+            ReflectBitmapMemoryChanges();
+        }
+
+        private void BurkesFilterBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (ImageSourceBitmap == null)
+            {
+                Util.ShowMessageBoxError("Image needs to be loaded first!");
+                return;
+            }
+            BurkesFilter burkesFilter = new BurkesFilter();
+            ErrorDiffusionDithering.ApplyErrorDiffusion(ImageSourceBitmap, burkesFilter, numColorLevel);
+            // To simulate bitmap changes notification
+            ReflectBitmapMemoryChanges();
+        }
+
+        private void StuckyFilterBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (ImageSourceBitmap == null)
+            {
+                Util.ShowMessageBoxError("Image needs to be loaded first!");
+                return;
+            }
+            StuckyFilter stuckyFilter = new StuckyFilter();
+            ErrorDiffusionDithering.ApplyErrorDiffusion(ImageSourceBitmap, stuckyFilter, numColorLevel);
+            // To simulate bitmap changes notification
+            ReflectBitmapMemoryChanges();
+        }
+
+        private void SierraFilterBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (ImageSourceBitmap == null)
+            {
+                Util.ShowMessageBoxError("Image needs to be loaded first!");
+                return;
+            }
+            SierraFilter sierraFilter = new SierraFilter();
+            ErrorDiffusionDithering.ApplyErrorDiffusion(ImageSourceBitmap, sierraFilter, numColorLevel);
+            // To simulate bitmap changes notification
+            ReflectBitmapMemoryChanges();
+        }
+
+        private void AtkinsonFilterBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (ImageSourceBitmap == null)
+            {
+                Util.ShowMessageBoxError("Image needs to be loaded first!");
+                return;
+            }
+            AtkinsonFilter atkinsonFilter = new AtkinsonFilter();
+            ErrorDiffusionDithering.ApplyErrorDiffusion(ImageSourceBitmap, atkinsonFilter, numColorLevel);
             // To simulate bitmap changes notification
             ReflectBitmapMemoryChanges();
         }
