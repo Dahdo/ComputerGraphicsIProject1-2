@@ -112,7 +112,7 @@
                                 </Style>
                             </Button.Style>
                         </Button>
-                        <Button Name="ColorQuantizationBtn" Content="Color Quantization" Style="{StaticResource ButtonsUnderTabs}"/>
+                        <Button Name="ColorQuantizationBtn" Content="Color Quantization" Style="{StaticResource ButtonsUnderTabs}" Click="ColorQuantizationBtn_Click"/>
                     </StackPanel>
                 </TabItem>
             </TabControl>

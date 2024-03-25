@@ -458,5 +458,17 @@ namespace ComputerGraphicsIProject
             convolutionKernelWindow.Owner = this;
             convolutionKernelWindow.ShowDialog();
         }
+
+        private void ColorQuantizationBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (ImageSourceBitmap == null)
+            {
+                Util.ShowMessageBoxError("Image needs to be loaded first!");
+                return;
+            }
+            ColorQuantization.PopularityQuantization(ImageSourceBitmap, 25);
+            // To simulate bitmap changes notification
+            ReflectBitmapMemoryChanges();
+        }
     }
 }
