@@ -11,6 +11,7 @@
     <Window.Resources>
         <local:BitmapToBitmapImageConverter x:Key="BitmapToBitmapImageConverter" />
         <local:ByteToStringConverter x:Key="ByteToStringConverter"/>
+        <local:IntToStringConverter x:Key="IntToStringConverter"/>
         <Style x:Key="NonFunctionalButtons" TargetType="Button">
             <Setter Property="Width" Value="100"/>
             <Setter Property="Height" Value="30"/>
@@ -108,11 +109,15 @@
                                     <Setter Property="FontWeight" Value="Bold"/>
                                     <Setter Property="Width" Value="250"/>
                                     <Setter Property="Height" Value="30"/>
-                                    <Setter Property="Margin" Value="40"/>
+                                    <Setter Property="Margin" Value="40 5 40 60"/>
                                 </Style>
                             </Button.Style>
                         </Button>
-                        <Button Name="ColorQuantizationBtn" Content="Color Quantization" Style="{StaticResource ButtonsUnderTabs}" Click="ColorQuantizationBtn_Click"/>
+                        <Button Name="ColorQuantizationBtn" Content="Color Quantization (Popularity)" Style="{StaticResource ButtonsUnderTabs}" Click="ColorQuantizationBtn_Click"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Label Content="Palette Size:" HorizontalAlignment="Left" Margin="0 0 10 0"/>
+                            <TextBox Name="PaletteSizeTextBox" Text="{Binding paletteSize, Converter={StaticResource IntToStringConverter}, Mode=TwoWay}" Width="100" Margin="0 0 10 0" VerticalContentAlignment="Center"  HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
+                        </StackPanel>
                     </StackPanel>
                 </TabItem>
             </TabControl>

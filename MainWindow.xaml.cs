@@ -33,6 +33,20 @@ namespace ComputerGraphicsIProject
             }
         }
 
+        private int _paletteSize = 10;
+        public int paletteSize
+        {
+            get { return _paletteSize; }
+            set
+            {
+                if (_paletteSize != value)
+                {
+                    _paletteSize = value;
+                    OnPropertyChanged(nameof(paletteSize));
+                }
+            }
+        }
+
         private int selectedChannel = -1;
 
         private Bitmap? _imageSourceBitmap;
@@ -337,7 +351,7 @@ namespace ComputerGraphicsIProject
             // Retrieve the selected radio button
             if (sender is RadioButton radioButton && radioButton.IsChecked == true)
             {
-                string selectedOption = radioButton.Content.ToString();
+                string? selectedOption = radioButton.Content.ToString();
                 switch(selectedOption)
                 {
                     case "red":
@@ -466,7 +480,7 @@ namespace ComputerGraphicsIProject
                 Util.ShowMessageBoxError("Image needs to be loaded first!");
                 return;
             }
-            ColorQuantization.PopularityQuantization(ImageSourceBitmap, 25);
+            ColorQuantization.PopularityQuantization(ImageSourceBitmap, paletteSize);
             // To simulate bitmap changes notification
             ReflectBitmapMemoryChanges();
         }

@@ -93,7 +93,6 @@ namespace ComputerGraphicsIProject
                 int dr = r - palette[i].R;
                 int dg = g - palette[i].G;
                 int db = b - palette[i].B;
-                //MessageBox.Show(palette[i].ToString());
 
                 double distance = Math.Sqrt(dr * dr + dg * dg + db * db);
 
