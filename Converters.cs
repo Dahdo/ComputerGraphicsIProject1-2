@@ -22,7 +22,15 @@ namespace ComputerGraphicsIProject
 
                 // Convert System.Drawing.Bitmap to BitmapImage
                 var memoryStream = new System.IO.MemoryStream();
-                bitmap.Save(memoryStream, ImageFormat.Bmp);
+                try
+                {
+                    bitmap.Save(memoryStream, bitmap.RawFormat);
+                }
+                catch
+                {
+                    bitmap.Save(memoryStream, ImageFormat.Bmp);
+                }
+                
                 memoryStream.Position = 0;
 
                 bitmapImage.BeginInit();
@@ -115,7 +123,7 @@ namespace ComputerGraphicsIProject
         }
     }
 
-public class ByteToStringConverter : IValueConverter
+    public class ByteToStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -156,7 +164,7 @@ public class ByteToStringConverter : IValueConverter
                 return result;
             }
             return 0;
-        }
     }
+}
 
 }
