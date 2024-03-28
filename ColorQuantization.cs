@@ -106,4 +106,91 @@ namespace ComputerGraphicsIProject
             return nearestIndex;
         }
     }
+
+    public static class LabPart
+    {
+        public static void ApplyPixelAverage(Bitmap? bitmap, int gridSize)
+        {
+            if (bitmap == null)
+                throw new ArgumentNullException("input");
+
+            BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width,
+                bitmap.Height), ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
+
+            // Get the number of bytes in a stride
+            int stride = bitmapData.Stride;
+
+            try
+            {
+                unsafe
+                {
+
+                    // Pointer to the first byte of the pixel data
+                    byte* bitmapDataPtr = (byte*)bitmapData.Scan0;
+
+                    // Dictionary of colors
+                    var colorHistogram = new Dictionary<Color, int>();
+
+                    for (int y = 0; y < bitmap.Height; y += gridSize)
+                    {
+                        for (int x = 0; x < stride; x += (3 * gridSize))
+                        {
+                            int blue = 0;
+                            int green = 0;
+                            int red = 0;
+                            for (int s = 0; s < gridSize; s++)
+                            {
+                                for (int k = 0; k < gridSize; k++)
+                                {
+                                    try
+                                    {
+                                        bitmapDataPtr = (byte*)bitmapData.Scan0;
+                                        int index = (stride * (y + s)) + x + k;
+                                        bitmapDataPtr += index;
+                                        blue += bitmapDataPtr[0];
+                                        green += bitmapDataPtr[1];
+                                        red += bitmapDataPtr[2];
+                                    }
+                                    catch
+                                    {
+                                        ;
+                                    }
+                                }
+
+                            }
+                            blue = blue / (gridSize * gridSize);
+                            green = green / (gridSize * gridSize);
+                            red = red / (gridSize * gridSize);
+
+                            for (int s = 0; s < gridSize; s++)
+                            {
+                                for (int k = 0; k < gridSize; k++)
+                                {
+                                    try
+                                    {
+                                        bitmapDataPtr = (byte*)bitmapData.Scan0;
+                                        int index = (stride * (y + s)) + x + k;
+                                        bitmapDataPtr += index;
+                                        bitmapDataPtr[0] = (byte)blue;
+                                        bitmapDataPtr[1] = (byte)green;
+                                        bitmapDataPtr[2] = (byte)red;
+                                    }
+                                    catch
+                                    {
+                                        ;
+                                    }
+                                }
+
+                            }
+
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                bitmap.UnlockBits(bitmapData);
+            }
+        }
+    }
 }

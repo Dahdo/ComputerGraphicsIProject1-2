@@ -165,6 +165,7 @@
                 </StackPanel>
                 <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
                     <Button Name="RGBToGrayscaleButton" Content="RGB to Grayscale" Padding="5" HorizontalAlignment="Center" Click="RGBToGrayscaleButton_Click" />
+                    <Button Name="PixelGridAverage" Content="PixelGridAverage" Padding="5" HorizontalAlignment="Center" Click="PixelGridAverage_Click" />
                 </StackPanel>
             </Grid>
 

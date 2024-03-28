@@ -484,5 +484,17 @@ namespace ComputerGraphicsIProject
             // To simulate bitmap changes notification
             ReflectBitmapMemoryChanges();
         }
+
+        private void PixelGridAverage_Click(object sender, RoutedEventArgs e)
+        {
+            if (ImageSourceBitmap == null)
+            {
+                Util.ShowMessageBoxError("Image needs to be loaded first!");
+                return;
+            }
+            LabPart.ApplyPixelAverage(ImageSourceBitmap, 60);
+            // To simulate bitmap changes notification
+            ReflectBitmapMemoryChanges();
+        }
     }
 }
