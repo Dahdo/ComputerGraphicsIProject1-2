@@ -50,125 +50,159 @@
                 <MenuItem Header="About"/>
             </MenuItem>
         </Menu>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="3*" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="3*" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+        <TabControl>
+            <TabItem Header="Lab 1 - 2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="3*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="3*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
 
-            <TabControl Grid.Row="0" Grid.Column="0" >
-                <TabItem Header="Function Filters">
-                    <StackPanel>
-                        <Button Name="Inversion" Content="Inversion" Style="{StaticResource ButtonsUnderTabs}" Click="Inversion_Click" />
-                        <Button Name="BrightnessCorrection" Content="Brightness Correction" Style="{StaticResource ButtonsUnderTabs}" Click="BrightnessCorrection_Click" />
-                        <Button Name="ContrastEnhancement" Content="Contrast Enhancement" Style="{StaticResource ButtonsUnderTabs}" Click="ContrastEnhancement_Click"/>
-                        <Button Name="GammaCorrection" Content="Gamma Correction" Style="{StaticResource ButtonsUnderTabs}" Click="GammaCorrection_Click"/>
-                    </StackPanel>
-                </TabItem>
-                <TabItem Header="Convolutional Filters">
-                    <StackPanel>
-                        <Button Name="Blur" Content="Blur" Style="{StaticResource ButtonsUnderTabs}" Click="Blur_Click" />
-                        <Button Name="GaussianBlur" Content="Gaussian Blur" Style="{StaticResource ButtonsUnderTabs}" Click="GaussianBlur_Click" />
-                        <Button Name="Sharpen" Content="Sharpen" Style="{StaticResource ButtonsUnderTabs}" Click="Sharpen_Click"/>
-                        <Button Name="EdgeDetection" Content="Edge Detection" Style="{StaticResource ButtonsUnderTabs}" Click="EdgeDetection_Click"/>
-                        <Button Name="Emboss" Content="Emboss" Style="{StaticResource ButtonsUnderTabs}" Click="Emboss_Click"/>
-                        <Button Name="ConvolutionKernel" Content="Edit Convolution Kernel" Click="ConvolutionKernel_Click">
-                            <Button.Style>
-                                <Style TargetType="Button">
-                                    <Setter Property="Background" Value="LightBlue"/>
-                                    <Setter Property="FontSize" Value="20"/>
-                                    <Setter Property="FontWeight" Value="Bold"/>
-                                    <Setter Property="Width" Value="250"/>
-                                    <Setter Property="Height" Value="30"/>
-                                    <Setter Property="Margin" Value="40"/>
-                                </Style>
-                            </Button.Style>
-                        </Button>
-                    </StackPanel>
-                </TabItem>
-                <TabItem Header="Dithering and Color Quantization">
-                    <StackPanel>
-                        <Button Name="FloydAndSteinbergBtn" Content="Floyd and Steinberg Filter" Style="{StaticResource ButtonsUnderTabs}" Click="FloydAndSteinbergBtn_Click"/>
-                        <Button Name="BurkesFilterBtn" Content="Burkes Filter" Style="{StaticResource ButtonsUnderTabs}" Click="BurkesFilterBtn_Click" />
-                        <Button Name="StuckyFilterBtn" Content="Stucky Filter" Style="{StaticResource ButtonsUnderTabs}" Click="StuckyFilterBtn_Click" />
-                        <Button Name="SierraFilterBtn" Content="Sierra Filter" Style="{StaticResource ButtonsUnderTabs}" Click="SierraFilterBtn_Click" />
-                        <Button Name="AtkinsonFilterBtn" Content="Atkinson Filter" Style="{StaticResource ButtonsUnderTabs}" Click="AtkinsonFilterBtn_Click" />
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <Label Content="Color Levels:" HorizontalAlignment="Left" Margin="0 0 10 0"/>
-                            <TextBox Name="colorLevelsTextBox" Text="{Binding numColorLevel, Converter={StaticResource ByteToStringConverter}, Mode=TwoWay}" Width="100" Margin="0 0 10 0" VerticalContentAlignment="Center"  HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
+                    <TabControl Grid.Row="0" Grid.Column="0" >
+                        <TabItem Header="Function Filters">
+                            <StackPanel>
+                                <Button Name="Inversion" Content="Inversion" Style="{StaticResource ButtonsUnderTabs}" Click="Inversion_Click" />
+                                <Button Name="BrightnessCorrection" Content="Brightness Correction" Style="{StaticResource ButtonsUnderTabs}" Click="BrightnessCorrection_Click" />
+                                <Button Name="ContrastEnhancement" Content="Contrast Enhancement" Style="{StaticResource ButtonsUnderTabs}" Click="ContrastEnhancement_Click"/>
+                                <Button Name="GammaCorrection" Content="Gamma Correction" Style="{StaticResource ButtonsUnderTabs}" Click="GammaCorrection_Click"/>
+                            </StackPanel>
+                        </TabItem>
+                        <TabItem Header="Convolutional Filters">
+                            <StackPanel>
+                                <Button Name="Blur" Content="Blur" Style="{StaticResource ButtonsUnderTabs}" Click="Blur_Click" />
+                                <Button Name="GaussianBlur" Content="Gaussian Blur" Style="{StaticResource ButtonsUnderTabs}" Click="GaussianBlur_Click" />
+                                <Button Name="Sharpen" Content="Sharpen" Style="{StaticResource ButtonsUnderTabs}" Click="Sharpen_Click"/>
+                                <Button Name="EdgeDetection" Content="Edge Detection" Style="{StaticResource ButtonsUnderTabs}" Click="EdgeDetection_Click"/>
+                                <Button Name="Emboss" Content="Emboss" Style="{StaticResource ButtonsUnderTabs}" Click="Emboss_Click"/>
+                                <Button Name="ConvolutionKernel" Content="Edit Convolution Kernel" Click="ConvolutionKernel_Click">
+                                    <Button.Style>
+                                        <Style TargetType="Button">
+                                            <Setter Property="Background" Value="LightBlue"/>
+                                            <Setter Property="FontSize" Value="20"/>
+                                            <Setter Property="FontWeight" Value="Bold"/>
+                                            <Setter Property="Width" Value="250"/>
+                                            <Setter Property="Height" Value="30"/>
+                                            <Setter Property="Margin" Value="40"/>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+                            </StackPanel>
+                        </TabItem>
+                        <TabItem Header="Dithering and Color Quantization">
+                            <StackPanel>
+                                <Button Name="FloydAndSteinbergBtn" Content="Floyd and Steinberg Filter" Style="{StaticResource ButtonsUnderTabs}" Click="FloydAndSteinbergBtn_Click"/>
+                                <Button Name="BurkesFilterBtn" Content="Burkes Filter" Style="{StaticResource ButtonsUnderTabs}" Click="BurkesFilterBtn_Click" />
+                                <Button Name="StuckyFilterBtn" Content="Stucky Filter" Style="{StaticResource ButtonsUnderTabs}" Click="StuckyFilterBtn_Click" />
+                                <Button Name="SierraFilterBtn" Content="Sierra Filter" Style="{StaticResource ButtonsUnderTabs}" Click="SierraFilterBtn_Click" />
+                                <Button Name="AtkinsonFilterBtn" Content="Atkinson Filter" Style="{StaticResource ButtonsUnderTabs}" Click="AtkinsonFilterBtn_Click" />
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Label Content="Color Levels:" HorizontalAlignment="Left" Margin="0 0 10 0"/>
+                                    <TextBox Name="colorLevelsTextBox" Text="{Binding numColorLevel, Converter={StaticResource ByteToStringConverter}, Mode=TwoWay}" Width="100" Margin="0 0 10 0" VerticalContentAlignment="Center"  HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                                <Button Name="ErrorDiffusion" Content="Edit Dithering Parameters" Click="ErrorDiffusion_Click">
+                                    <Button.Style>
+                                        <Style TargetType="Button">
+                                            <Setter Property="Background" Value="LightBlue"/>
+                                            <Setter Property="FontSize" Value="20"/>
+                                            <Setter Property="FontWeight" Value="Bold"/>
+                                            <Setter Property="Width" Value="250"/>
+                                            <Setter Property="Height" Value="30"/>
+                                            <Setter Property="Margin" Value="40 5 40 60"/>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+                                <Button Name="ColorQuantizationBtn" Content="Color Quantization (Popularity)" Style="{StaticResource ButtonsUnderTabs}" Click="ColorQuantizationBtn_Click"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Label Content="Palette Size:" HorizontalAlignment="Left" Margin="0 0 10 0"/>
+                                    <TextBox Name="PaletteSizeTextBox" Text="{Binding paletteSize, Converter={StaticResource IntToStringConverter}, Mode=TwoWay}" Width="100" Margin="0 0 10 0" VerticalContentAlignment="Center"  HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </TabItem>
+                    </TabControl>
+
+                    <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="True">
+                        <WrapPanel DockPanel.Dock="Bottom" HorizontalAlignment="Center" Margin="0 5">
+                            <Button Name="Open" Margin="10 0" Content="Open" Click="Open_Click" Style="{StaticResource NonFunctionalButtons}" />
+                            <Button Name="RevertAll" Margin="10 0" Content="Revert All" Click="RevertAll_Click" Style="{StaticResource NonFunctionalButtons}" />
+                            <Button Name="Save" Margin="10 0" Content="Save" Click="Save_Click" Style="{StaticResource NonFunctionalButtons}"/>
+                        </WrapPanel>
+                        <UniformGrid Rows="1" Columns="2" DockPanel.Dock="Top">
+                            <Border BorderBrush="Black" BorderThickness="1" Margin="5">
+                                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                                    <Image Stretch="None" SnapsToDevicePixels="True" Name="RefImage"/>
+                                </ScrollViewer>
+                            </Border>
+                            <Border BorderBrush="Black" BorderThickness="1" Margin="5">
+                                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                                    <Image Stretch="None" SnapsToDevicePixels="True" Source="{Binding ImageSourceBitmap, Converter={StaticResource BitmapToBitmapImageConverter}}" />
+                                </ScrollViewer>
+                            </Border>
+                        </UniformGrid>
+                    </DockPanel>
+
+                    <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Grid.Column="0">
+                            <Button Name="RgbToHsvbutton" Content="RGB To HSV" Click="RgbToHsvbutton_Click" Margin="10 5" Padding="5" HorizontalAlignment="Center"/>
+                            <Button Name="HsvToRgbbutton" Content="HSV To RGB" Click="HsvToRgbbutton_Click" Margin="10 5" Padding="5" HorizontalAlignment="Center"/>
+
+                            <StackPanel Orientation="Horizontal" Margin="10 5" HorizontalAlignment="Center">
+                                <RadioButton Name="radioButton1" Content="red" GroupName="Options" Checked="RadioButton_Checked"/>
+                                <RadioButton Name="radioButton2" Content="green" GroupName="Options" Checked="RadioButton_Checked"/>
+                                <RadioButton Name="radioButton3" Content="blue" GroupName="Options" Checked="RadioButton_Checked"/>
+                            </StackPanel>
+
+                            <Button Name="ChannelSelectionResetButton" Content="Reset Selection" Click="ChannelSelectionResetButton_Click" Margin="10 5" Padding="5" HorizontalAlignment="Center"/>
                         </StackPanel>
-                        <Button Name="ErrorDiffusion" Content="Edit Dithering Parameters" Click="ErrorDiffusion_Click">
-                            <Button.Style>
-                                <Style TargetType="Button">
-                                    <Setter Property="Background" Value="LightBlue"/>
-                                    <Setter Property="FontSize" Value="20"/>
-                                    <Setter Property="FontWeight" Value="Bold"/>
-                                    <Setter Property="Width" Value="250"/>
-                                    <Setter Property="Height" Value="30"/>
-                                    <Setter Property="Margin" Value="40 5 40 60"/>
-                                </Style>
-                            </Button.Style>
-                        </Button>
-                        <Button Name="ColorQuantizationBtn" Content="Color Quantization (Popularity)" Style="{StaticResource ButtonsUnderTabs}" Click="ColorQuantizationBtn_Click"/>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <Label Content="Palette Size:" HorizontalAlignment="Left" Margin="0 0 10 0"/>
-                            <TextBox Name="PaletteSizeTextBox" Text="{Binding paletteSize, Converter={StaticResource IntToStringConverter}, Mode=TwoWay}" Width="100" Margin="0 0 10 0" VerticalContentAlignment="Center"  HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
+                        <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
+                            <Button Name="RGBToGrayscaleButton" Content="RGB to Grayscale" Padding="5" HorizontalAlignment="Center" Click="RGBToGrayscaleButton_Click" />
+                            <Button Name="PixelGridAverage" Content="PixelGridAverage" Padding="5" HorizontalAlignment="Center" Click="PixelGridAverage_Click" />
                         </StackPanel>
-                    </StackPanel>
-                </TabItem>
-            </TabControl>
-            
-            <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="True">
-                <WrapPanel DockPanel.Dock="Bottom" HorizontalAlignment="Center" Margin="0 5">
-                    <Button Name="Open" Margin="10 0" Content="Open" Click="Open_Click" Style="{StaticResource NonFunctionalButtons}" />
-                    <Button Name="RevertAll" Margin="10 0" Content="Revert All" Click="RevertAll_Click" Style="{StaticResource NonFunctionalButtons}" />
-                    <Button Name="Save" Margin="10 0" Content="Save" Click="Save_Click" Style="{StaticResource NonFunctionalButtons}"/>
-                </WrapPanel>
-                <UniformGrid Rows="1" Columns="2" DockPanel.Dock="Top">
-                    <Border BorderBrush="Black" BorderThickness="1" Margin="5">
-                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                            <Image Stretch="None" SnapsToDevicePixels="True" Name="RefImage"/>
-                        </ScrollViewer>
-                    </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Margin="5">
-                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                            <Image Stretch="None" SnapsToDevicePixels="True" Source="{Binding ImageSourceBitmap, Converter={StaticResource BitmapToBitmapImageConverter}}" />
-                        </ScrollViewer>
-                    </Border>
-                </UniformGrid>
-            </DockPanel>
+                    </Grid>
 
-            <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0" Grid.Column="0">
-                    <Button Name="RgbToHsvbutton" Content="RGB To HSV" Click="RgbToHsvbutton_Click" Margin="10 5" Padding="5" HorizontalAlignment="Center"/>
-                    <Button Name="HsvToRgbbutton" Content="HSV To RGB" Click="HsvToRgbbutton_Click" Margin="10 5" Padding="5" HorizontalAlignment="Center"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Lab 3">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="3*" />
+                    </Grid.ColumnDefinitions>
 
-                    <StackPanel Orientation="Horizontal" Margin="10 5" HorizontalAlignment="Center">
-                        <RadioButton Name="radioButton1" Content="red" GroupName="Options" Checked="RadioButton_Checked"/>
-                        <RadioButton Name="radioButton2" Content="green" GroupName="Options" Checked="RadioButton_Checked"/>
-                        <RadioButton Name="radioButton3" Content="blue" GroupName="Options" Checked="RadioButton_Checked"/>
-                    </StackPanel>
-
-                    <Button Name="ChannelSelectionResetButton" Content="Reset Selection" Click="ChannelSelectionResetButton_Click" Margin="10 5" Padding="5" HorizontalAlignment="Center"/>
-                </StackPanel>
-                <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
-                    <Button Name="RGBToGrayscaleButton" Content="RGB to Grayscale" Padding="5" HorizontalAlignment="Center" Click="RGBToGrayscaleButton_Click" />
-                    <Button Name="PixelGridAverage" Content="PixelGridAverage" Padding="5" HorizontalAlignment="Center" Click="PixelGridAverage_Click" />
-                </StackPanel>
-            </Grid>
-
-        </Grid>
+                    <TabControl Grid.Row="0" Grid.Column="0" >
+                        <TabItem Header="Rasterization">
+                            <StackPanel HorizontalAlignment="Center" Margin="0 15">
+                                <RadioButton x:Name="LineCheckBtn"  Content="Line" IsChecked="True" GroupName="ShapeOptions" Margin="0,0,0,5"/>
+                                <RadioButton x:Name="PolygonCheckBtn" Content="Polygon" GroupName="ShapeOptions" Margin="0,0,0,5"/>
+                                <RadioButton x:Name="CircleCheckBtn" Content="Circle" GroupName="ShapeOptions" Margin="0,0,0,5"/>
+                                <CheckBox x:Name="ThickLineCheckBox" Content="Thick Line (Brush)" Margin="0,0,0,5"/>
+                                <CheckBox x:Name="AntiAliasingCheckBox" Content="Anti-aliasing (Xiaolin Wu)" Margin="0,0,0,5"/>
+                            </StackPanel>
+                        </TabItem>
+                    </TabControl>
+                    <DockPanel Grid.Column="1" LastChildFill="True">
+                        <WrapPanel DockPanel.Dock="Bottom"  HorizontalAlignment="Center" Margin="0 5">
+                            <Button Name="OpenShapes" Margin="10 0" Content="Open" Style="{StaticResource NonFunctionalButtons}" />
+                            <Button Name="ClearAllShapes" Margin="10 0" Content="Clear All" Style="{StaticResource NonFunctionalButtons}" />
+                            <Button Name="SaveShapes" Margin="10 0" Content="Save" Style="{StaticResource NonFunctionalButtons}"/>
+                        </WrapPanel>
+                        <Canvas Background="LightGray">
+                            
+                        </Canvas>
+                    </DockPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </DockPanel>
 </Window>
