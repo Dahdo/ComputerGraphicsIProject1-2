@@ -197,7 +197,7 @@
                             <Button Name="ClearAllShapes" Margin="10 0" Content="Clear All" Style="{StaticResource NonFunctionalButtons}" />
                             <Button Name="SaveShapes" Margin="10 0" Content="Save" Style="{StaticResource NonFunctionalButtons}"/>
                         </WrapPanel>
-                        <Canvas Background="LightGray">
+                        <Canvas x:Name="Canvas"  Background="LightGray" MouseLeftButtonDown="Canvas_MouseLeftButtonDown" >
                             
                         </Canvas>
                     </DockPanel>

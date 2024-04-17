@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
+using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -496,5 +497,69 @@ namespace ComputerGraphicsIProject
             // To simulate bitmap changes notification
             ReflectBitmapMemoryChanges();
         }
+
+
+        #region Rasterization
+
+        private System.Windows.Point startPoint;
+        private System.Windows.Point endPoint;
+        private void Canvas_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (startPoint.X == -1) // First click, check if startPoint has been initialized
+            {
+                startPoint = e.GetPosition(Canvas);
+            }
+            else if (endPoint.X == -1) // Second click, check if endPoint has been initialized
+            {
+                endPoint = e.GetPosition(Canvas);
+                DrawLine();
+                startPoint = endPoint = new System.Windows.Point(-1, -1); // Reset points for next line
+            }
+        }
+
+        private void DrawLine()
+        {
+            int x1 = (int)startPoint.X;
+            int y1 = (int)startPoint.Y;
+            int x2 = (int)endPoint.X;
+            int y2 = (int)endPoint.Y;
+
+            int dx = Math.Abs(x2 - x1);
+            int dy = Math.Abs(y2 - y1);
+            int p = 2 * dy - dx;
+            int x = x1;
+            int y = y1;
+
+            while (x <= x2)
+            {
+                // Create a rectangle to represent a pixel
+                System.Windows.Shapes.Rectangle pixel = new System.Windows.Shapes.Rectangle
+                {
+                    Width = 1,
+                    Height = 1,
+                    Fill = System.Windows.Media.Brushes.Black // Set the fill color directly
+                };
+
+                // Set the position of the pixel
+                Canvas.SetLeft(pixel, x);
+                Canvas.SetTop(pixel, y);
+
+                // Add the pixel to the canvas
+                Canvas.Children.Add(pixel);
+
+                if (p >= 0)
+                {
+                    y = y + 1;
+                    p = p + 2 * dy - 2 * dx;
+                }
+                else
+                {
+                    p = p + 2 * dy;
+                }
+
+                x = x + 1;
+            }
+        }
+        #endregion
     }
 }
