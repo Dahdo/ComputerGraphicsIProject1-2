@@ -1,13 +1,17 @@
 ﻿using Microsoft.Win32;
 using System.ComponentModel;
+using System.Data.Common;
 using System.Drawing;
 using System.Globalization;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using static ComputerGraphicsIProject.ErrorDiffusionDithering;
+using static System.Net.Mime.MediaTypeNames;
 
 
 namespace ComputerGraphicsIProject
@@ -74,14 +78,24 @@ namespace ComputerGraphicsIProject
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        
+        // Rasterization
+        private WriteableBitmap imageCanvasBitmap;
+        List<Shape> shapes = new List<Shape>();
+        private Line currentLine;
+        private Circle currentCircle;
+        int mouseDownCount = 0;
+        string selectedShape = "line"; // Line selected by default
+
+
+
         public MainWindow()
         {
             InitializeComponent();
             DataContext = this;
             refImage = FindName("RefImage") as System.Windows.Controls.Image;
+            InitializeRasterizationBitmap();
         }
-
+        #region ImageFiltersGeneralFunctionalities
         public void ReflectBitmapMemoryChanges()
         {
             // Update the bitmap to trigger changes in the view
@@ -89,11 +103,12 @@ namespace ComputerGraphicsIProject
             ImageSourceBitmap = null;
             ImageSourceBitmap = tmpBitmap;
         }
+        #endregion
         #region NonFunction eventhandlers
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            System.Windows.Application.Current.Shutdown();
         }
 
         private void Open_Click(object sender, RoutedEventArgs e)
@@ -307,7 +322,8 @@ namespace ComputerGraphicsIProject
             // To simulate bitmap changes notification
             ReflectBitmapMemoryChanges();
         }
-        #endregion
+        
+
 
         private void ConvolutionKernel_Click(object sender, RoutedEventArgs e)
         {
@@ -321,7 +337,8 @@ namespace ComputerGraphicsIProject
             convolutionKernelWindow.Owner = this;
             convolutionKernelWindow.ShowDialog();
         }
-
+        #endregion
+        #region LabPart#1
         private void RgbToHsvbutton_Click(object sender, RoutedEventArgs e)
         {
             if (ImageSourceBitmap == null)
@@ -395,7 +412,8 @@ namespace ComputerGraphicsIProject
             // To simulate bitmap changes notification
             ReflectBitmapMemoryChanges();
         }
-
+        #endregion
+        #region ColorQuantization
         private void FloydAndSteinbergBtn_Click(object sender, RoutedEventArgs e)
         {
             if (ImageSourceBitmap == null)
@@ -498,68 +516,96 @@ namespace ComputerGraphicsIProject
             ReflectBitmapMemoryChanges();
         }
 
-
-        #region Rasterization
-
-        private System.Windows.Point startPoint;
-        private System.Windows.Point endPoint;
-        private void Canvas_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            if (startPoint.X == -1) // First click, check if startPoint has been initialized
-            {
-                startPoint = e.GetPosition(Canvas);
-            }
-            else if (endPoint.X == -1) // Second click, check if endPoint has been initialized
-            {
-                endPoint = e.GetPosition(Canvas);
-                DrawLine();
-                startPoint = endPoint = new System.Windows.Point(-1, -1); // Reset points for next line
-            }
-        }
-
-        private void DrawLine()
-        {
-            int x1 = (int)startPoint.X;
-            int y1 = (int)startPoint.Y;
-            int x2 = (int)endPoint.X;
-            int y2 = (int)endPoint.Y;
-
-            int dx = Math.Abs(x2 - x1);
-            int dy = Math.Abs(y2 - y1);
-            int p = 2 * dy - dx;
-            int x = x1;
-            int y = y1;
-
-            while (x <= x2)
-            {
-                // Create a rectangle to represent a pixel
-                System.Windows.Shapes.Rectangle pixel = new System.Windows.Shapes.Rectangle
-                {
-                    Width = 1,
-                    Height = 1,
-                    Fill = System.Windows.Media.Brushes.Black // Set the fill color directly
-                };
-
-                // Set the position of the pixel
-                Canvas.SetLeft(pixel, x);
-                Canvas.SetTop(pixel, y);
-
-                // Add the pixel to the canvas
-                Canvas.Children.Add(pixel);
-
-                if (p >= 0)
-                {
-                    y = y + 1;
-                    p = p + 2 * dy - 2 * dx;
-                }
-                else
-                {
-                    p = p + 2 * dy;
-                }
-
-                x = x + 1;
-            }
-        }
         #endregion
+
+        private void InitializeRasterizationBitmap()
+        {
+            int width = (int)ImageCanvas.Width;
+            int height = (int)ImageCanvas.Height;
+            imageCanvasBitmap = new WriteableBitmap(width, height, 96, 96, PixelFormats.Bgr24, null);
+
+            ImageCanvas.Source = imageCanvasBitmap;
+        }
+
+
+        private void ImageCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            switch(selectedShape)
+            {
+                case "line":
+                    ++mouseDownCount;
+                    if (mouseDownCount == 1)
+                    {
+                        currentLine.startPoint.X = (int)e.GetPosition(ImageCanvas).X;
+                        currentLine.startPoint.Y = (int)e.GetPosition(ImageCanvas).Y;
+                    }
+                    if (mouseDownCount == 2)
+                    {
+                        mouseDownCount = 0;
+                        currentLine.endPoint.X = (int)e.GetPosition(ImageCanvas).X;
+                        currentLine.endPoint.Y = (int)e.GetPosition(ImageCanvas).Y;
+                        currentLine.CalculateMidpointLineAlgorithm();
+                        currentLine.Draw(imageCanvasBitmap);
+                    }
+                    break;
+                case "polygon":
+                    break;
+                case "circle":
+                    ++mouseDownCount;
+                    if (mouseDownCount == 1)
+                    {
+                        currentCircle.startPoint.X = (int)e.GetPosition(ImageCanvas).X;
+                        currentCircle.startPoint.Y = (int)e.GetPosition(ImageCanvas).Y;
+                    }
+                    if (mouseDownCount == 2)
+                    {
+                        mouseDownCount = 0;
+                        currentCircle.endPoint.X = (int)e.GetPosition(ImageCanvas).X;
+                        currentCircle.endPoint.Y = (int)e.GetPosition(ImageCanvas).Y;
+                        currentCircle.CalculateMidpointCircleAlgorithm();
+                        currentCircle.Draw(imageCanvasBitmap);
+                    }
+                    break;
+            }
+            
+        }
+
+        private void initNewLine()
+        {
+            currentLine = new Line();
+            shapes.Add(currentLine);
+        }
+        private void initNewCircle()
+        {
+            currentCircle = new Circle();
+            shapes.Add(currentCircle);
+        }
+
+        private void LineCheckBtn_Checked(object sender, RoutedEventArgs e)
+        {
+            selectedShape = "line";
+            initNewLine();
+        }
+
+        private void PolygonCheckBtn_Checked(object sender, RoutedEventArgs e)
+        {
+            selectedShape = "polygon";
+        }
+
+        private void CircleCheckBtn_Checked(object sender, RoutedEventArgs e)
+        {
+            selectedShape = "circle";
+            initNewCircle();
+        }
+
+        private void ThickLineCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void AntiAliasingCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

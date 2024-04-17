@@ -183,23 +183,21 @@
                     <TabControl Grid.Row="0" Grid.Column="0" >
                         <TabItem Header="Rasterization">
                             <StackPanel HorizontalAlignment="Center" Margin="0 15">
-                                <RadioButton x:Name="LineCheckBtn"  Content="Line" IsChecked="True" GroupName="ShapeOptions" Margin="0,0,0,5"/>
-                                <RadioButton x:Name="PolygonCheckBtn" Content="Polygon" GroupName="ShapeOptions" Margin="0,0,0,5"/>
-                                <RadioButton x:Name="CircleCheckBtn" Content="Circle" GroupName="ShapeOptions" Margin="0,0,0,5"/>
-                                <CheckBox x:Name="ThickLineCheckBox" Content="Thick Line (Brush)" Margin="0,0,0,5"/>
-                                <CheckBox x:Name="AntiAliasingCheckBox" Content="Anti-aliasing (Xiaolin Wu)" Margin="0,0,0,5"/>
+                                <RadioButton x:Name="LineCheckBtn"  Content="Line" IsChecked="True" GroupName="ShapeOptions" Margin="0,0,0,5" Checked="LineCheckBtn_Checked"/>
+                                <RadioButton x:Name="PolygonCheckBtn" Content="Polygon" GroupName="ShapeOptions" Margin="0,0,0,5" Checked="PolygonCheckBtn_Checked"/>
+                                <RadioButton x:Name="CircleCheckBtn" Content="Circle" GroupName="ShapeOptions" Margin="0,0,0,5" Checked="CircleCheckBtn_Checked"/>
+                                <CheckBox x:Name="ThickLineCheckBox" Content="Thick Line (Brush)" Margin="0,0,0,5" Checked="ThickLineCheckBox_Checked"/>
+                                <CheckBox x:Name="AntiAliasingCheckBox" Content="Anti-aliasing (Xiaolin Wu)" Margin="0,0,0,5" Checked="AntiAliasingCheckBox_Checked"/>
                             </StackPanel>
                         </TabItem>
                     </TabControl>
-                    <DockPanel Grid.Column="1" LastChildFill="True">
+                    <DockPanel Grid.Column="1">
                         <WrapPanel DockPanel.Dock="Bottom"  HorizontalAlignment="Center" Margin="0 5">
                             <Button Name="OpenShapes" Margin="10 0" Content="Open" Style="{StaticResource NonFunctionalButtons}" />
                             <Button Name="ClearAllShapes" Margin="10 0" Content="Clear All" Style="{StaticResource NonFunctionalButtons}" />
                             <Button Name="SaveShapes" Margin="10 0" Content="Save" Style="{StaticResource NonFunctionalButtons}"/>
                         </WrapPanel>
-                        <Canvas x:Name="Canvas"  Background="LightGray" MouseLeftButtonDown="Canvas_MouseLeftButtonDown" >
-                            
-                        </Canvas>
+                        <Image DockPanel.Dock="Top" x:Name="ImageCanvas" MouseLeftButtonDown="ImageCanvas_MouseLeftButtonDown" Width="1040" Height="640"/>
                     </DockPanel>
                 </Grid>
             </TabItem>
