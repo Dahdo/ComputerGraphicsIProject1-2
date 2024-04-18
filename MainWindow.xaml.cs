@@ -86,6 +86,7 @@ namespace ComputerGraphicsIProject
         private Polygon currentPolygon;
         int mouseDownCount = 0;
         string selectedShape = "line"; // Line selected by default
+        public static int defaultThickness = 1;
 
 
 
@@ -598,6 +599,8 @@ namespace ComputerGraphicsIProject
             currentLine.imageCanvasBitmap = imageCanvasBitmap;
             if(AntiAliasingCheckBox != null)
                 currentLine.Antialiasing = AntiAliasingCheckBox.IsChecked ?? false;
+            if (ThickLineCheckBox != null)
+                currentLine.ThickLine = ThickLineCheckBox.IsChecked ?? false;
             shapes.Add(currentLine);
         }
         private void initNewCircle()
@@ -607,6 +610,8 @@ namespace ComputerGraphicsIProject
             currentCircle.imageCanvasBitmap = imageCanvasBitmap;
             if (AntiAliasingCheckBox != null)
                 currentCircle.Antialiasing = AntiAliasingCheckBox.IsChecked ?? false;
+            if (ThickLineCheckBox != null)
+                currentCircle.ThickLine = ThickLineCheckBox.IsChecked ?? false;
             shapes.Add(currentCircle);
         }
         private void initNewPolygon()
@@ -616,6 +621,8 @@ namespace ComputerGraphicsIProject
             currentPolygon.imageCanvasBitmap = imageCanvasBitmap;
             if (AntiAliasingCheckBox != null)
                 currentPolygon.Antialiasing = AntiAliasingCheckBox.IsChecked ?? false;
+            if (ThickLineCheckBox != null)
+                currentPolygon.ThickLine = ThickLineCheckBox.IsChecked ?? false;
             shapes.Add(currentPolygon);
         }
 
@@ -639,7 +646,23 @@ namespace ComputerGraphicsIProject
 
         private void ThickLineCheckBox_Checked(object sender, RoutedEventArgs e)
         {
+            clearCanvas();
+            foreach (Shape shape in shapes)
+            {
+                shape.ThickLine = true;
+            }
+            foreach (Shape shape in shapes)
+            {
+                shape.Draw();
+            }
+        }
 
+        private void ThickLineCheckBox_UnChecked(object sender, RoutedEventArgs e)
+        {
+            foreach (Shape shape in shapes)
+            {
+                shape.ThickLine = false;
+            }
         }
 
         private void AntiAliasingCheckBox_Checked(object sender, RoutedEventArgs e)
@@ -656,6 +679,30 @@ namespace ComputerGraphicsIProject
             {
                 shape.Antialiasing = false;
             }
+        }
+
+        private void ThickLineTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string text = ThickLineTextBox.Text;
+
+            if (int.TryParse(text, out int thickness))
+            {
+                foreach (Shape shape in shapes)
+                {
+                    shape.Thickness = thickness;
+                    defaultThickness = thickness;
+                }
+            }
+        }
+
+        private void clearCanvas()
+        {
+            InitializeRasterizationBitmap();
+        }
+
+        private void ClearAllShapes_Click(object sender, RoutedEventArgs e)
+        {
+            clearCanvas();
         }
     }
 }

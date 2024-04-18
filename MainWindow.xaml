@@ -176,25 +176,30 @@
             <TabItem Header="Lab 3">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="35*" />
+                        <ColumnDefinition Width="313*"/>
+                        <ColumnDefinition Width="1046*" />
                     </Grid.ColumnDefinitions>
 
-                    <TabControl Grid.Row="0" Grid.Column="0" >
+                    <TabControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" >
                         <TabItem Header="Rasterization">
                             <StackPanel HorizontalAlignment="Center" Margin="0 15">
                                 <RadioButton x:Name="LineRadioBtn"  Content="Line" IsChecked="True" GroupName="ShapeOptions" Margin="0,0,0,5" Checked="LineRadioBtn_Checked"/>
                                 <RadioButton x:Name="PolygonRadioBtn" Content="Polygon" GroupName="ShapeOptions" Margin="0,0,0,5" Checked="PolygonRadioBtn_Checked"/>
                                 <RadioButton x:Name="CircleRadioBtn" Content="Circle" GroupName="ShapeOptions" Margin="0,0,0,5" Checked="CircleRadioBtn_Checked"/>
-                                <CheckBox x:Name="ThickLineCheckBox" Content="Thick Line (Brush)" Margin="0,0,0,5" Checked="ThickLineCheckBox_Checked"/>
                                 <CheckBox x:Name="AntiAliasingCheckBox" Content="Anti-aliasing (Xiaolin Wu)" Margin="0,0,0,5" Checked="AntiAliasingCheckBox_Checked" Unchecked="AntiAliasingCheckBox_UnChecked" />
+                                <CheckBox x:Name="ThickLineCheckBox" Content="Thick Line (Brush)" Margin="0,0,0,5" Checked="ThickLineCheckBox_Checked" Unchecked="ThickLineCheckBox_UnChecked"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Label Content="Thickness" HorizontalAlignment="Left" Margin="0 0 10 0"/>
+                                    <TextBox Name="ThickLineTextBox" Width="90" Margin="0 0 10 0" VerticalContentAlignment="Center"  HorizontalContentAlignment="Center" HorizontalAlignment="Center" TextChanged="ThickLineTextBox_TextChanged"/>
+                                </StackPanel>
                             </StackPanel>
                         </TabItem>
                     </TabControl>
-                    <DockPanel Grid.Column="1">
+                    <DockPanel Grid.Column="1" Grid.ColumnSpan="2" Margin="313,0,0,0">
                         <WrapPanel DockPanel.Dock="Bottom"  HorizontalAlignment="Center" Margin="0 5">
                             <Button Name="OpenShapes" Margin="10 0" Content="Open" Style="{StaticResource NonFunctionalButtons}" />
-                            <Button Name="ClearAllShapes" Margin="10 0" Content="Clear All" Style="{StaticResource NonFunctionalButtons}" />
+                            <Button Name="ClearAllShapes" Margin="10 0" Content="Clear All" Style="{StaticResource NonFunctionalButtons}" Click="ClearAllShapes_Click" />
                             <Button Name="SaveShapes" Margin="10 0" Content="Save" Style="{StaticResource NonFunctionalButtons}"/>
                         </WrapPanel>
                         <Image DockPanel.Dock="Top" x:Name="ImageCanvas" MouseLeftButtonDown="ImageCanvas_MouseLeftButtonDown" Width="1040" Height="640"/>

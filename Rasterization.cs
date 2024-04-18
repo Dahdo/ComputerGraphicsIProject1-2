@@ -35,6 +35,8 @@ namespace ComputerGraphicsIProject
         public int Thickness { get; set; }
         public abstract void Draw();
         public bool Antialiasing { get; set; }
+
+        public bool ThickLine { get; set; }
         public void PutSinglePixel(Point point)
         {
             // source: https://learn.microsoft.com/en-us/dotnet/api/system.windows.media.imaging.writeablebitmap?view=windowsdesktop-8.0
@@ -89,7 +91,7 @@ namespace ComputerGraphicsIProject
         protected void PutPixel(Point point)
         {
             int radius;
-            if(Thickness == 1)
+            if(Thickness == 1 || ThickLine == false)
             {
                 PutSinglePixel(point);
                 return;
@@ -118,9 +120,10 @@ namespace ComputerGraphicsIProject
         public Point startPoint {  get; set; }
         public Point endPoint { get; set; }
 
-        public Line(int thickness = 1, bool antialiasing = false)
+        public Line(bool antialiasing = false)
         {
-            Thickness = thickness;
+            Thickness = MainWindow.defaultThickness;
+            ThickLine = false;
             PixelColor = Colors.Yellow;
             startPoint = new Point(-1, -1, PixelColor);
             endPoint = new Point(-1, -1, PixelColor);
@@ -158,8 +161,8 @@ namespace ComputerGraphicsIProject
             PutPixel(new Point(Math.Abs(x), Math.Abs(y), PixelColor));
 
             // For antialiasing
-            double m = dy / dx;
-            double y_exact = Y1;
+            //double m = dy / dx;
+            //double y_exact = Y1;
             //double x_exact = X1;
 
             if (dy <= dx)
@@ -179,26 +182,26 @@ namespace ComputerGraphicsIProject
                         d += (dy - dx);
                         y++;
                     }
-                    if (Antialiasing)
-                    {
-                        double modf_y_exact = y_exact - Math.Floor(y_exact);
+                    //if (Antialiasing)
+                    //{
+                    //    double modf_y_exact = y_exact - Math.Floor(y_exact);
 
-                        byte r1 = (byte)(PixelColor.R * (1 - modf_y_exact) + BgColor.R * modf_y_exact);
-                        byte g1 = (byte)(PixelColor.G * (1 - modf_y_exact) + BgColor.G * modf_y_exact);
-                        byte b1 = (byte)(PixelColor.B * (1 - modf_y_exact) + BgColor.B * modf_y_exact);
-                        Color c1 = Color.FromRgb(r1, g1, b1);
+                    //    byte r1 = (byte)(PixelColor.R * (1 - modf_y_exact) + BgColor.R * modf_y_exact);
+                    //    byte g1 = (byte)(PixelColor.G * (1 - modf_y_exact) + BgColor.G * modf_y_exact);
+                    //    byte b1 = (byte)(PixelColor.B * (1 - modf_y_exact) + BgColor.B * modf_y_exact);
+                    //    Color c1 = Color.FromRgb(r1, g1, b1);
 
-                        byte r2 = (byte)(PixelColor.R * modf_y_exact + BgColor.R * (1 - modf_y_exact));
-                        byte g2 = (byte)(PixelColor.G * modf_y_exact + BgColor.G * (1 - modf_y_exact));
-                        byte b2 = (byte)(PixelColor.B * modf_y_exact + BgColor.B * (1 - modf_y_exact));
-                        Color c2 = Color.FromRgb(r2, g2, b2);
+                    //    byte r2 = (byte)(PixelColor.R * modf_y_exact + BgColor.R * (1 - modf_y_exact));
+                    //    byte g2 = (byte)(PixelColor.G * modf_y_exact + BgColor.G * (1 - modf_y_exact));
+                    //    byte b2 = (byte)(PixelColor.B * modf_y_exact + BgColor.B * (1 - modf_y_exact));
+                    //    Color c2 = Color.FromRgb(r2, g2, b2);
 
-                        PutPixel(new Point(x, y, c1));
-                        PutPixel(new Point(x, y , c2));
+                    //    PutPixel(new Point(x, y, c1));
+                    //    PutPixel(new Point(x, y , c2));
 
-                        y_exact += m;
-                    }
-                    else
+                    //    y_exact += m;
+                    //}
+                    //else
                         PutPixel(new Point(Math.Abs(x), Math.Abs(y), PixelColor));
                 }
             }
@@ -238,9 +241,10 @@ namespace ComputerGraphicsIProject
         public Point startPoint { get; set; }
         public Point endPoint { get; set; }
 
-        public Circle(int thickness = 5, bool antialiasing = false)
+        public Circle(bool antialiasing = false)
         {
-            Thickness = thickness;
+            Thickness = MainWindow.defaultThickness;
+            ThickLine = false;
             PixelColor = Colors.Yellow;
             startPoint = new Point(-1, -1, PixelColor);
             endPoint = new Point(-1, -1, PixelColor);
@@ -334,9 +338,10 @@ namespace ComputerGraphicsIProject
 
         public List<Line> lineList { get; set; }
 
-        public Polygon(int thickness = 1, bool antialiasing = false)
+        public Polygon(bool antialiasing = false)
         {
-            this.Thickness = thickness;
+            this.Thickness = MainWindow.defaultThickness;
+            this.ThickLine = false;
             this.PixelColor = Colors.Yellow;
             _nextPoint = new Point(-1, -1, PixelColor);
             lineList = new List<Line>();
@@ -349,8 +354,9 @@ namespace ComputerGraphicsIProject
             line = new Line();
             // Assimulate line to our Polygon settings
             line.PixelColor = this.PixelColor;
-            line.Thickness = Thickness;
-            line.Antialiasing = Antialiasing;
+            line.Thickness = this.Thickness;
+            line.ThickLine = this.ThickLine;
+            line.Antialiasing = this.Antialiasing;
             line.imageCanvasBitmap = imageCanvasBitmap;
 
             // Set points
