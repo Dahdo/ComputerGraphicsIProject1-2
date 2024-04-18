@@ -14,21 +14,24 @@ namespace ComputerGraphicsIProject
         public int X { get; set; }
         public int Y { get; set; }
 
-        public Point(int x, int y)
+        public Color PixelColor { get; set; }
+
+        public Point(int x, int y, Color color)
         {
             X = x;
             Y = y;
+            PixelColor = color;
         }
     }
 
     public abstract class Shape
     {
         public List<Point> Points { get; set; }
-        public Color PiexelColor { get; set; }
+        public Color PixelColor { get; set; }
         public void Draw(WriteableBitmap imageCanvasBitmap)
         {
             // source: https://learn.microsoft.com/en-us/dotnet/api/system.windows.media.imaging.writeablebitmap?view=windowsdesktop-8.0
-            System.Windows.Media.Color color = this.PiexelColor;
+            System.Windows.Media.Color color;
 
             try
             {
@@ -45,6 +48,7 @@ namespace ComputerGraphicsIProject
 
                         int column = p.X;
                         int row = p.Y;
+                        color = p.PixelColor;
                         // Find the address of the pixel to draw.
                         pBackBuffer += row * imageCanvasBitmap.BackBufferStride;
                         pBackBuffer += column * 3;
@@ -90,9 +94,9 @@ namespace ComputerGraphicsIProject
         {
             Points = new List<Point>();
             Thickness = thickness;
-            PiexelColor = Colors.Yellow;
-            startPoint = new Point(-1, -1);
-            endPoint = new Point(-1, -1);
+            PixelColor = Colors.Yellow;
+            startPoint = new Point(-1, -1, PixelColor);
+            endPoint = new Point(-1, -1, PixelColor);
         }
 
         public void CalculateMidpointLineAlgorithm1()
@@ -125,7 +129,7 @@ namespace ComputerGraphicsIProject
 
                 while (x < xe)
                 {
-                    this.Points.Add(new Point(x, y));
+                    this.Points.Add(new Point(x, y, PixelColor));
                     x++;
                     if (px < 0)
                     {
@@ -161,7 +165,7 @@ namespace ComputerGraphicsIProject
 
                 while (y < ye)
                 {
-                    this.Points.Add(new Point(x, y));
+                    this.Points.Add(new Point(x, y, PixelColor));
                     y++;
                     if (py <= 0)
                     {
@@ -195,15 +199,28 @@ namespace ComputerGraphicsIProject
             int Y1 = this.startPoint.Y;
             int Y2 = this.endPoint.Y;
 
-            int dx = X2 - X1;
-            int dy = Y2 - Y1;
+            int dx = Math.Abs(X2 - X1);
+            int dy = Math.Abs(Y2 - Y1);
+
+            if (X1 > X2)
+            {
+                X1 = -X1;
+                X2 = -X2;
+            }
+            if (Y1 > Y2)
+            {
+                Y1 = -Y1;
+                Y2 = -Y2;
+            }
+
+
 
             if (dy <= dx)
             {
                 int d = dy - (dx / 2);
                 int x = X1, y = Y1;
 
-                this.Points.Add(new Point(x, y));
+                this.Points.Add(new Point(Math.Abs(x), Math.Abs(y), PixelColor));
                 while (x < X2)
                 {
                     x++;
@@ -217,7 +234,7 @@ namespace ComputerGraphicsIProject
                         d += (dy - dx);
                         y++;
                     }
-                    this.Points.Add(new Point(x, y));
+                    this.Points.Add(new Point(Math.Abs(x), Math.Abs(y), PixelColor));
                 }
             }
             else if (dx < dy)
@@ -225,7 +242,7 @@ namespace ComputerGraphicsIProject
                 int d = dx - (dy / 2);
                 int x = X1, y = Y1;
 
-                this.Points.Add(new Point(x, y));
+                this.Points.Add(new Point(Math.Abs(x), Math.Abs(y), PixelColor));
 
                 while (y < Y2)
                 {
@@ -242,7 +259,89 @@ namespace ComputerGraphicsIProject
                         x++;
                     }
 
-                    this.Points.Add(new Point(x, y));
+                    this.Points.Add(new Point(Math.Abs(x), Math.Abs(y), PixelColor));
+                }
+            }
+        }
+
+        public void CalculateMidpointLineAlgorithm3()
+        {
+            int X1 = this.startPoint.X;
+            int X2 = this.endPoint.X;
+            int Y1 = this.startPoint.Y;
+            int Y2 = this.endPoint.Y;
+
+            int dx = Math.Abs(X2 - X1);
+            int dy = Math.Abs(Y2 - Y1);
+            int sx = (X1 < X2) ? 1 : -1;
+            int sy = (Y1 < Y2) ? 1 : -1;
+            int err = dx - dy;
+
+            int x = X1, y = Y1;
+
+            while (true)
+            {
+                this.Points.Add(new Point(x, y, PixelColor));
+
+                if (x == X2 && y == Y2)
+                    break;
+
+                int e2 = 2 * err;
+                if (e2 > -dy)
+                {
+                    err -= dy;
+                    x += sx;
+                }
+                if (e2 < dx)
+                {
+                    err += dx;
+                    y += sy;
+                }
+            }
+        }
+        public void CalculateMidpointLineAlgorithm4()
+        {
+            int X1 = this.startPoint.X;
+            int X2 = this.endPoint.X;
+            int Y1 = this.startPoint.Y;
+            int Y2 = this.endPoint.Y;
+
+            int dx = X2 - X1;
+            int dy = Y2 - Y1;
+
+            int x = X1, y = Y1;
+            this.Points.Add(new Point(x, y, PixelColor));
+
+            if (Math.Abs(dx) >= Math.Abs(dy))
+            {
+                int d = dy - (dx / 2);
+                while (x != X2)
+                {
+                    x += Math.Sign(dx);
+                    if (d < 0)
+                        d += dy;
+                    else
+                    {
+                        d += (dy - dx);
+                        y += Math.Sign(dy);
+                    }
+                    this.Points.Add(new Point(x, y, PixelColor));
+                }
+            }
+            else
+            {
+                int d = dx - (dy / 2);
+                while (y != Y2)
+                {
+                    y += Math.Sign(dy);
+                    if (d < 0)
+                        d += dx;
+                    else
+                    {
+                        d += (dx - dy);
+                        x += Math.Sign(dx);
+                    }
+                    this.Points.Add(new Point(x, y, PixelColor));
                 }
             }
         }
@@ -260,9 +359,9 @@ namespace ComputerGraphicsIProject
         {
             Points = new List<Point>();
             Thickness = thickness;
-            PiexelColor = Colors.Yellow;
-            startPoint = new Point(-1, -1);
-            endPoint = new Point(-1, -1);
+            PixelColor = Colors.Yellow;
+            startPoint = new Point(-1, -1, PixelColor);
+            endPoint = new Point(-1, -1, PixelColor);
         }
 
         public void CalculateMidpointCircleAlgorithm()
@@ -293,14 +392,14 @@ namespace ComputerGraphicsIProject
 
         private void addPoints(int x, int y)
         {
-            this.Points.Add(new Point(startPoint.X + x, startPoint.Y + y));
-            this.Points.Add(new Point(startPoint.X + y, startPoint.Y + x));
-            this.Points.Add(new Point(startPoint.X - x, startPoint.Y + y));
-            this.Points.Add(new Point(startPoint.X - y, startPoint.Y + x));
-            this.Points.Add(new Point(startPoint.X + x, startPoint.Y - y));
-            this.Points.Add(new Point(startPoint.X + y, startPoint.Y - x));
-            this.Points.Add(new Point(startPoint.X - x, startPoint.Y - y));
-            this.Points.Add(new Point(startPoint.X - y, startPoint.Y - x));
+            this.Points.Add(new Point(startPoint.X + x, startPoint.Y + y, PixelColor));
+            this.Points.Add(new Point(startPoint.X + y, startPoint.Y + x, PixelColor));
+            this.Points.Add(new Point(startPoint.X - x, startPoint.Y + y, PixelColor));
+            this.Points.Add(new Point(startPoint.X - y, startPoint.Y + x, PixelColor));
+            this.Points.Add(new Point(startPoint.X + x, startPoint.Y - y, PixelColor));
+            this.Points.Add(new Point(startPoint.X + y, startPoint.Y - x, PixelColor));
+            this.Points.Add(new Point(startPoint.X - x, startPoint.Y - y, PixelColor));
+            this.Points.Add(new Point(startPoint.X - y, startPoint.Y - x, PixelColor));
         }
     }
 
