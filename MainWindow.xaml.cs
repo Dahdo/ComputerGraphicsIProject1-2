@@ -596,6 +596,8 @@ namespace ComputerGraphicsIProject
             mouseDownCount = 0;
             currentLine = new Line();
             currentLine.imageCanvasBitmap = imageCanvasBitmap;
+            if(AntiAliasingCheckBox != null)
+                currentLine.Antialiasing = AntiAliasingCheckBox.IsChecked ?? false;
             shapes.Add(currentLine);
         }
         private void initNewCircle()
@@ -603,6 +605,8 @@ namespace ComputerGraphicsIProject
             mouseDownCount = 0;
             currentCircle = new Circle();
             currentCircle.imageCanvasBitmap = imageCanvasBitmap;
+            if (AntiAliasingCheckBox != null)
+                currentCircle.Antialiasing = AntiAliasingCheckBox.IsChecked ?? false;
             shapes.Add(currentCircle);
         }
         private void initNewPolygon()
@@ -610,22 +614,24 @@ namespace ComputerGraphicsIProject
             mouseDownCount = 0;
             currentPolygon = new Polygon();
             currentPolygon.imageCanvasBitmap = imageCanvasBitmap;
+            if (AntiAliasingCheckBox != null)
+                currentPolygon.Antialiasing = AntiAliasingCheckBox.IsChecked ?? false;
             shapes.Add(currentPolygon);
         }
 
-        private void LineCheckBtn_Checked(object sender, RoutedEventArgs e)
+        private void LineRadioBtn_Checked(object sender, RoutedEventArgs e)
         {
             selectedShape = "line";
             initNewLine();
         }
 
-        private void PolygonCheckBtn_Checked(object sender, RoutedEventArgs e)
+        private void PolygonRadioBtn_Checked(object sender, RoutedEventArgs e)
         {
             selectedShape = "polygon";
             initNewPolygon();
         }
 
-        private void CircleCheckBtn_Checked(object sender, RoutedEventArgs e)
+        private void CircleRadioBtn_Checked(object sender, RoutedEventArgs e)
         {
             selectedShape = "circle";
             initNewCircle();
@@ -638,7 +644,18 @@ namespace ComputerGraphicsIProject
 
         private void AntiAliasingCheckBox_Checked(object sender, RoutedEventArgs e)
         {
+            foreach(Shape shape in shapes)
+            {
+                shape.Antialiasing = true;
+            }
+        }
 
+        private void AntiAliasingCheckBox_UnChecked(object sender, RoutedEventArgs e)
+        {
+            foreach (Shape shape in shapes)
+            {
+                shape.Antialiasing = false;
+            }
         }
     }
 }
