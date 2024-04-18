@@ -83,6 +83,7 @@ namespace ComputerGraphicsIProject
         List<Shape> shapes = new List<Shape>();
         private Line currentLine;
         private Circle currentCircle;
+        private Polygon currentPolygon;
         int mouseDownCount = 0;
         string selectedShape = "line"; // Line selected by default
 
@@ -541,14 +542,34 @@ namespace ComputerGraphicsIProject
                     }
                     if (mouseDownCount == 2)
                     {
-                        mouseDownCount = 0;
                         currentLine.endPoint.X = (int)e.GetPosition(ImageCanvas).X;
                         currentLine.endPoint.Y = (int)e.GetPosition(ImageCanvas).Y;
                         currentLine.CalculateMidpointLineAlgorithm();
                         currentLine.Draw(imageCanvasBitmap);
+
+                        initNewLine(); // Create new Line object and reset mouseDownCount
                     }
                     break;
                 case "polygon":
+                    ++mouseDownCount;
+                    Point tmpPoint;
+                    if (mouseDownCount > 1)
+                    {
+                        tmpPoint = new Point((int)e.GetPosition(ImageCanvas).X,
+                            (int)e.GetPosition(ImageCanvas).Y, currentPolygon.PixelColor);
+                        currentPolygon.nextPoint = tmpPoint;
+                        currentPolygon.CalculatePolygonPoints(imageCanvasBitmap);
+                    }
+                    else {
+                        tmpPoint = new Point((int)e.GetPosition(ImageCanvas).X,
+                            (int)e.GetPosition(ImageCanvas).Y, currentPolygon.PixelColor);
+                        currentPolygon.nextPoint = tmpPoint;
+                    }
+                    if (currentPolygon.lastEdge(tmpPoint))
+                    {
+                        initNewPolygon(); // Create new Polygon object and reset mouseDownCount
+                    }
+                        
                     break;
                 case "circle":
                     ++mouseDownCount;
@@ -559,11 +580,12 @@ namespace ComputerGraphicsIProject
                     }
                     if (mouseDownCount == 2)
                     {
-                        mouseDownCount = 0;
                         currentCircle.endPoint.X = (int)e.GetPosition(ImageCanvas).X;
                         currentCircle.endPoint.Y = (int)e.GetPosition(ImageCanvas).Y;
                         currentCircle.CalculateMidpointCircleAlgorithm();
                         currentCircle.Draw(imageCanvasBitmap);
+
+                        initNewCircle(); // Create new Circle object and reset mouseDownCount
                     }
                     break;
             }
@@ -572,13 +594,21 @@ namespace ComputerGraphicsIProject
 
         private void initNewLine()
         {
+            mouseDownCount = 0;
             currentLine = new Line();
             shapes.Add(currentLine);
         }
         private void initNewCircle()
         {
+            mouseDownCount = 0;
             currentCircle = new Circle();
             shapes.Add(currentCircle);
+        }
+        private void initNewPolygon()
+        {
+            mouseDownCount = 0;
+            currentPolygon = new Polygon();
+            shapes.Add(currentPolygon);
         }
 
         private void LineCheckBtn_Checked(object sender, RoutedEventArgs e)
@@ -590,6 +620,7 @@ namespace ComputerGraphicsIProject
         private void PolygonCheckBtn_Checked(object sender, RoutedEventArgs e)
         {
             selectedShape = "polygon";
+            initNewPolygon();
         }
 
         private void CircleCheckBtn_Checked(object sender, RoutedEventArgs e)

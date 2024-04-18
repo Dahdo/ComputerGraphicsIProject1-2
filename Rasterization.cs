@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -58,7 +59,6 @@ namespace ComputerGraphicsIProject
                         color_data |= color.G << 8;   // G
                         color_data |= color.B << 0;   // B
 
-
                         try
                         {
                             //Assign the color data to the pixel.
@@ -82,6 +82,13 @@ namespace ComputerGraphicsIProject
                 imageCanvasBitmap.Unlock();
             }
         }
+
+        public void ChangeColor(Color color)
+        {
+            foreach(Point p in this.Points)
+                p.PixelColor = color;
+            this.PixelColor = color;
+        }
     }
 
     public class Line : Shape
@@ -98,96 +105,6 @@ namespace ComputerGraphicsIProject
             startPoint = new Point(-1, -1, PixelColor);
             endPoint = new Point(-1, -1, PixelColor);
         }
-
-        public void CalculateMidpointLineAlgorithm1()
-        {
-            int dx = this.endPoint.X - this.startPoint.X;
-            int dy = this.endPoint.Y - this.startPoint.Y;
-            int x = this.startPoint.X;
-            int y = this.startPoint.Y;
-
-            int dx1 = Math.Abs(dx);
-            int dy1 = Math.Abs(dy);
-            int px = 2 * dy1 - dx1;
-            int py = 2 * dx1 - dy1;
-
-            int xe, ye;
-
-            if (dy1 <= dx1)
-            {
-                if (dx >= 0)
-                {
-                    xe = this.endPoint.X;
-                    ye = this.endPoint.Y;
-                }
-                else
-                {
-                    xe = this.startPoint.X;
-                    ye = this.startPoint.Y;
-                    this.startPoint = this.endPoint; ;
-                }
-
-                while (x < xe)
-                {
-                    this.Points.Add(new Point(x, y, PixelColor));
-                    x++;
-                    if (px < 0)
-                    {
-                        px = px + 2 * dy1;
-                    }
-                    else
-                    {
-                        if ((dx < 0 && dy < 0) || (dx > 0 && dy > 0))
-                        {
-                            y++;
-                        }
-                        else
-                        {
-                            y--;
-                        }
-                        px = px + 2 * (dy1 - dx1);
-                    }
-                }
-            }
-            else
-            {
-                if (dy >= 0)
-                {
-                    xe = this.endPoint.X;
-                    ye = this.endPoint.Y;
-                }
-                else
-                {
-                    xe = this.startPoint.X;
-                    ye = this.startPoint.Y;
-                    this.startPoint = this.startPoint;
-                }
-
-                while (y < ye)
-                {
-                    this.Points.Add(new Point(x, y, PixelColor));
-                    y++;
-                    if (py <= 0)
-                    {
-                        py = py + 2 * dx1;
-                    }
-                    else
-                    {
-                        if ((dx < 0 && dy < 0) || (dx > 0 && dy > 0))
-                        {
-                            x++;
-                        }
-                        else
-                        {
-                            x--;
-                        }
-                        py = py + 2 * (dx1 - dy1);
-                    }
-                }
-            }
-        }
-
-
 
         public void CalculateMidpointLineAlgorithm()
         {
@@ -264,88 +181,6 @@ namespace ComputerGraphicsIProject
             }
         }
 
-        public void CalculateMidpointLineAlgorithm3()
-        {
-            int X1 = this.startPoint.X;
-            int X2 = this.endPoint.X;
-            int Y1 = this.startPoint.Y;
-            int Y2 = this.endPoint.Y;
-
-            int dx = Math.Abs(X2 - X1);
-            int dy = Math.Abs(Y2 - Y1);
-            int sx = (X1 < X2) ? 1 : -1;
-            int sy = (Y1 < Y2) ? 1 : -1;
-            int err = dx - dy;
-
-            int x = X1, y = Y1;
-
-            while (true)
-            {
-                this.Points.Add(new Point(x, y, PixelColor));
-
-                if (x == X2 && y == Y2)
-                    break;
-
-                int e2 = 2 * err;
-                if (e2 > -dy)
-                {
-                    err -= dy;
-                    x += sx;
-                }
-                if (e2 < dx)
-                {
-                    err += dx;
-                    y += sy;
-                }
-            }
-        }
-        public void CalculateMidpointLineAlgorithm4()
-        {
-            int X1 = this.startPoint.X;
-            int X2 = this.endPoint.X;
-            int Y1 = this.startPoint.Y;
-            int Y2 = this.endPoint.Y;
-
-            int dx = X2 - X1;
-            int dy = Y2 - Y1;
-
-            int x = X1, y = Y1;
-            this.Points.Add(new Point(x, y, PixelColor));
-
-            if (Math.Abs(dx) >= Math.Abs(dy))
-            {
-                int d = dy - (dx / 2);
-                while (x != X2)
-                {
-                    x += Math.Sign(dx);
-                    if (d < 0)
-                        d += dy;
-                    else
-                    {
-                        d += (dy - dx);
-                        y += Math.Sign(dy);
-                    }
-                    this.Points.Add(new Point(x, y, PixelColor));
-                }
-            }
-            else
-            {
-                int d = dx - (dy / 2);
-                while (y != Y2)
-                {
-                    y += Math.Sign(dy);
-                    if (d < 0)
-                        d += dx;
-                    else
-                    {
-                        d += (dx - dy);
-                        x += Math.Sign(dx);
-                    }
-                    this.Points.Add(new Point(x, y, PixelColor));
-                }
-            }
-        }
-
     }
 
 
@@ -403,6 +238,63 @@ namespace ComputerGraphicsIProject
         }
     }
 
+    public class Polygon:Shape
+    {
+        private Point _nextPoint;
+        public Point nextPoint { get => _nextPoint; 
+            set
+            {
+                if (prevPoint == null && _nextPoint.X != -1)
+                    prevPoint = _nextPoint; // If prevPoint was never initialized (the frist edge of poygon)
+                _nextPoint = value;
+            }
+        }
+        private Point? prevPoint;
+
+        private Line? line;
+        public int Thickness { get; set; }
+
+        public Polygon(int thickness = 1)
+        {
+            this.Points = new List<Point>();
+            this.Thickness = thickness;
+            this.PixelColor = Colors.Yellow;
+            _nextPoint = new Point(-1, -1, PixelColor);
+        }
+
+        public void CalculatePolygonPoints(WriteableBitmap imageCanvasBitmap)
+        {
+            line = new Line();
+            // Assimulate line to our Polygon settings
+            line.PixelColor = this.PixelColor;
+            line.Thickness = Thickness;
+
+            // Set points
+            line.startPoint = prevPoint!;
+            if (lastEdge(nextPoint))
+                line.endPoint = Points.First();
+            else
+                line.endPoint = nextPoint;
+
+            line.CalculateMidpointLineAlgorithm();
+            line.Draw(imageCanvasBitmap);
+            prevPoint = line.Points.Last(); // Keep the previous edge's endpoint
+
+            Points.AddRange(line.Points); // Possible redrawing duplication of one pixel on edge joints but not an issue
+        }
+
+        public bool lastEdge(Point point)
+        {
+            if(Points.Count >  0)
+                return getDistance(Points.First(), point) <= 10;
+            return false;
+        }
+
+        private int getDistance(Point p1, Point p2)
+        {
+            return (int)Math.Sqrt(Math.Pow(p2.X - p1.X, 2) + Math.Pow(p2.Y - p1.Y, 2));
+        }
+    }
 }
 
 
