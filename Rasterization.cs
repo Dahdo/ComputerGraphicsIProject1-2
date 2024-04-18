@@ -27,12 +27,22 @@ namespace ComputerGraphicsIProject
 
     public abstract class Shape
     {
-        public List<Point> Points { get; set; }
         public Color PixelColor { get; set; }
-        public void Draw(WriteableBitmap imageCanvasBitmap)
+        public WriteableBitmap? imageCanvasBitmap { get; set; }
+
+        public abstract void Draw();
+        public void PutPixel(Point point)
         {
             // source: https://learn.microsoft.com/en-us/dotnet/api/system.windows.media.imaging.writeablebitmap?view=windowsdesktop-8.0
-            System.Windows.Media.Color color;
+            if (imageCanvasBitmap == null)
+            {
+                MessageBox.Show("CanvasBitmap not set");
+                return;
+            }
+
+            int column = point.X;
+            int row = point.Y;
+            Color color = point.PixelColor;
 
             try
             {
@@ -41,15 +51,8 @@ namespace ComputerGraphicsIProject
 
                 unsafe
                 {
-
-                    foreach (Point p in this.Points)
-                    {
                         // Get a pointer to the back buffer.
                         IntPtr pBackBuffer = imageCanvasBitmap.BackBuffer;
-
-                        int column = p.X;
-                        int row = p.Y;
-                        color = p.PixelColor;
                         // Find the address of the pixel to draw.
                         pBackBuffer += row * imageCanvasBitmap.BackBufferStride;
                         pBackBuffer += column * 3;
@@ -69,11 +72,8 @@ namespace ComputerGraphicsIProject
                         catch(Exception e)
                         {
                             MessageBox.Show(e.Message);
-                            this.Points.Clear();
-                            break;
+                            return;
                         }
-                    }
-
                 }
             }
             finally
@@ -81,13 +81,6 @@ namespace ComputerGraphicsIProject
                 // Release the back buffer and make it available for display.
                 imageCanvasBitmap.Unlock();
             }
-        }
-
-        public void ChangeColor(Color color)
-        {
-            foreach(Point p in this.Points)
-                p.PixelColor = color;
-            this.PixelColor = color;
         }
     }
 
@@ -99,14 +92,14 @@ namespace ComputerGraphicsIProject
 
         public Line(int thickness = 1)
         {
-            Points = new List<Point>();
             Thickness = thickness;
             PixelColor = Colors.Yellow;
             startPoint = new Point(-1, -1, PixelColor);
             endPoint = new Point(-1, -1, PixelColor);
         }
 
-        public void CalculateMidpointLineAlgorithm()
+
+        private void CalculateMidpointLineAlgorithm()
         {
 
             // Source: https://www.geeksforgeeks.org/mid-point-line-generation-algorithm/
@@ -137,7 +130,7 @@ namespace ComputerGraphicsIProject
                 int d = dy - (dx / 2);
                 int x = X1, y = Y1;
 
-                this.Points.Add(new Point(Math.Abs(x), Math.Abs(y), PixelColor));
+                PutPixel(new Point(Math.Abs(x), Math.Abs(y), PixelColor));
                 while (x < X2)
                 {
                     x++;
@@ -151,7 +144,7 @@ namespace ComputerGraphicsIProject
                         d += (dy - dx);
                         y++;
                     }
-                    this.Points.Add(new Point(Math.Abs(x), Math.Abs(y), PixelColor));
+                    PutPixel(new Point(Math.Abs(x), Math.Abs(y), PixelColor));
                 }
             }
             else if (dx < dy)
@@ -159,7 +152,7 @@ namespace ComputerGraphicsIProject
                 int d = dx - (dy / 2);
                 int x = X1, y = Y1;
 
-                this.Points.Add(new Point(Math.Abs(x), Math.Abs(y), PixelColor));
+                PutPixel(new Point(Math.Abs(x), Math.Abs(y), PixelColor));
 
                 while (y < Y2)
                 {
@@ -176,11 +169,15 @@ namespace ComputerGraphicsIProject
                         x++;
                     }
 
-                    this.Points.Add(new Point(Math.Abs(x), Math.Abs(y), PixelColor));
+                    PutPixel(new Point(Math.Abs(x), Math.Abs(y), PixelColor));
                 }
             }
         }
 
+        public override void Draw()
+        {
+            CalculateMidpointLineAlgorithm();
+        }
     }
 
 
@@ -192,14 +189,13 @@ namespace ComputerGraphicsIProject
 
         public Circle(int thickness = 1)
         {
-            Points = new List<Point>();
             Thickness = thickness;
             PixelColor = Colors.Yellow;
             startPoint = new Point(-1, -1, PixelColor);
             endPoint = new Point(-1, -1, PixelColor);
         }
 
-        public void CalculateMidpointCircleAlgorithm()
+        private void CalculateMidpointCircleAlgorithm()
         {
             int radius = getRadius();
             int d = 1 - radius;
@@ -227,14 +223,19 @@ namespace ComputerGraphicsIProject
 
         private void addPoints(int x, int y)
         {
-            this.Points.Add(new Point(startPoint.X + x, startPoint.Y + y, PixelColor));
-            this.Points.Add(new Point(startPoint.X + y, startPoint.Y + x, PixelColor));
-            this.Points.Add(new Point(startPoint.X - x, startPoint.Y + y, PixelColor));
-            this.Points.Add(new Point(startPoint.X - y, startPoint.Y + x, PixelColor));
-            this.Points.Add(new Point(startPoint.X + x, startPoint.Y - y, PixelColor));
-            this.Points.Add(new Point(startPoint.X + y, startPoint.Y - x, PixelColor));
-            this.Points.Add(new Point(startPoint.X - x, startPoint.Y - y, PixelColor));
-            this.Points.Add(new Point(startPoint.X - y, startPoint.Y - x, PixelColor));
+            PutPixel(new Point(startPoint.X + x, startPoint.Y + y, PixelColor));
+            PutPixel(new Point(startPoint.X + y, startPoint.Y + x, PixelColor));
+            PutPixel(new Point(startPoint.X - x, startPoint.Y + y, PixelColor));
+            PutPixel(new Point(startPoint.X - y, startPoint.Y + x, PixelColor));
+            PutPixel(new Point(startPoint.X + x, startPoint.Y - y, PixelColor));
+            PutPixel(new Point(startPoint.X + y, startPoint.Y - x, PixelColor));
+            PutPixel(new Point(startPoint.X - x, startPoint.Y - y, PixelColor));
+            PutPixel(new Point(startPoint.X - y, startPoint.Y - x, PixelColor));
+        }
+
+        public override void Draw()
+        {
+            CalculateMidpointCircleAlgorithm();
         }
     }
 
@@ -254,45 +255,58 @@ namespace ComputerGraphicsIProject
         private Line? line;
         public int Thickness { get; set; }
 
+        public List<Line> lineList { get; set; }
+
         public Polygon(int thickness = 1)
         {
-            this.Points = new List<Point>();
             this.Thickness = thickness;
             this.PixelColor = Colors.Yellow;
             _nextPoint = new Point(-1, -1, PixelColor);
+            lineList = new List<Line>();
         }
 
-        public void CalculatePolygonPoints(WriteableBitmap imageCanvasBitmap)
+        private void CalculatePolygonPoints()
         {
             line = new Line();
             // Assimulate line to our Polygon settings
             line.PixelColor = this.PixelColor;
             line.Thickness = Thickness;
+            line.imageCanvasBitmap = imageCanvasBitmap;
 
             // Set points
             line.startPoint = prevPoint!;
             if (lastEdge(nextPoint))
-                line.endPoint = Points.First();
+                line.endPoint = lineList.First().startPoint;
             else
                 line.endPoint = nextPoint;
 
-            line.CalculateMidpointLineAlgorithm();
-            line.Draw(imageCanvasBitmap);
-            prevPoint = line.Points.Last(); // Keep the previous edge's endpoint
+            line.Draw();
+            prevPoint = line.endPoint; // Keep the previous edge's endpoint
 
-            Points.AddRange(line.Points); // Possible redrawing duplication of one pixel on edge joints but not an issue
+            lineList.Add(line); // Possible redrawing duplication of one pixel on edge joints but not an issue
         }
 
         public bool lastEdge(Point point)
         {
-            if(Points.Count >  0)
-                return getDistance(Points.First(), point) <= 10;
+            if(lineList != null && lineList.Count >  0)
+                return getDistance(lineList.First().startPoint, point) <= 10;
             return false;
         }
 
         private int getDistance(Point p1, Point p2)
         {
             return (int)Math.Sqrt(Math.Pow(p2.X - p1.X, 2) + Math.Pow(p2.Y - p1.Y, 2));
+        }
+
+        public override void Draw()
+        {
+            foreach(Line line in lineList)
+                line.Draw();
+        }
+
+        public void LineDraw()
+        {
+            CalculatePolygonPoints();
         }
     }
 }

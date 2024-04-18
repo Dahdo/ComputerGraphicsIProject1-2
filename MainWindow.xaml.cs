@@ -95,6 +95,7 @@ namespace ComputerGraphicsIProject
             DataContext = this;
             refImage = FindName("RefImage") as System.Windows.Controls.Image;
             InitializeRasterizationBitmap();
+            initNewLine(); // Selected by default
         }
         #region ImageFiltersGeneralFunctionalities
         public void ReflectBitmapMemoryChanges()
@@ -544,8 +545,7 @@ namespace ComputerGraphicsIProject
                     {
                         currentLine.endPoint.X = (int)e.GetPosition(ImageCanvas).X;
                         currentLine.endPoint.Y = (int)e.GetPosition(ImageCanvas).Y;
-                        currentLine.CalculateMidpointLineAlgorithm();
-                        currentLine.Draw(imageCanvasBitmap);
+                        currentLine.Draw();
 
                         initNewLine(); // Create new Line object and reset mouseDownCount
                     }
@@ -558,7 +558,7 @@ namespace ComputerGraphicsIProject
                         tmpPoint = new Point((int)e.GetPosition(ImageCanvas).X,
                             (int)e.GetPosition(ImageCanvas).Y, currentPolygon.PixelColor);
                         currentPolygon.nextPoint = tmpPoint;
-                        currentPolygon.CalculatePolygonPoints(imageCanvasBitmap);
+                        currentPolygon.LineDraw();
                     }
                     else {
                         tmpPoint = new Point((int)e.GetPosition(ImageCanvas).X,
@@ -582,8 +582,7 @@ namespace ComputerGraphicsIProject
                     {
                         currentCircle.endPoint.X = (int)e.GetPosition(ImageCanvas).X;
                         currentCircle.endPoint.Y = (int)e.GetPosition(ImageCanvas).Y;
-                        currentCircle.CalculateMidpointCircleAlgorithm();
-                        currentCircle.Draw(imageCanvasBitmap);
+                        currentCircle.Draw();
 
                         initNewCircle(); // Create new Circle object and reset mouseDownCount
                     }
@@ -596,18 +595,21 @@ namespace ComputerGraphicsIProject
         {
             mouseDownCount = 0;
             currentLine = new Line();
+            currentLine.imageCanvasBitmap = imageCanvasBitmap;
             shapes.Add(currentLine);
         }
         private void initNewCircle()
         {
             mouseDownCount = 0;
             currentCircle = new Circle();
+            currentCircle.imageCanvasBitmap = imageCanvasBitmap;
             shapes.Add(currentCircle);
         }
         private void initNewPolygon()
         {
             mouseDownCount = 0;
             currentPolygon = new Polygon();
+            currentPolygon.imageCanvasBitmap = imageCanvasBitmap;
             shapes.Add(currentPolygon);
         }
 
