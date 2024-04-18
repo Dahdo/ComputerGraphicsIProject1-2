@@ -29,9 +29,9 @@ namespace ComputerGraphicsIProject
     {
         public Color PixelColor { get; set; }
         public WriteableBitmap? imageCanvasBitmap { get; set; }
-
+        public int Thickness { get; set; }
         public abstract void Draw();
-        public void PutPixel(Point point)
+        public void PutSinglePixel(Point point)
         {
             // source: https://learn.microsoft.com/en-us/dotnet/api/system.windows.media.imaging.writeablebitmap?view=windowsdesktop-8.0
             if (imageCanvasBitmap == null)
@@ -82,13 +82,37 @@ namespace ComputerGraphicsIProject
                 imageCanvasBitmap.Unlock();
             }
         }
+        protected void PutPixel(Point point)
+        {
+            int radius;
+            if(Thickness == 1)
+            {
+                PutSinglePixel(point);
+                return;
+            }
+
+            if (Thickness % 2 == 0)
+                radius = (++Thickness) / 2;
+            else
+                radius = Thickness / 2;
+
+            double x, y;
+            int numPoints = Thickness * Thickness;
+
+            for (double i = 0; i < numPoints; i ++)
+            {
+                double theta = 2 * Math.PI * i / numPoints;
+                x = radius * Math.Cos(theta);
+                y = radius * Math.Sin(theta);
+                PutSinglePixel(new Point((int)x + point.X, (int)y + point.Y, point.PixelColor));
+            }
+        }
     }
 
     public class Line : Shape
     {
         public Point startPoint {  get; set; }
         public Point endPoint { get; set; }
-        public int Thickness { get; set; }
 
         public Line(int thickness = 1)
         {
@@ -180,12 +204,10 @@ namespace ComputerGraphicsIProject
         }
     }
 
-
     public class Circle : Shape
     {
         public Point startPoint { get; set; }
         public Point endPoint { get; set; }
-        public int Thickness { get; set; }
 
         public Circle(int thickness = 1)
         {
@@ -253,7 +275,6 @@ namespace ComputerGraphicsIProject
         private Point? prevPoint;
 
         private Line? line;
-        public int Thickness { get; set; }
 
         public List<Line> lineList { get; set; }
 
