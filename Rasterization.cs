@@ -68,18 +68,18 @@ namespace ComputerGraphicsIProject
                         color_data |= color.G << 8;   // G
                         color_data |= color.B << 0;   // B
 
-                        try
-                        {
+                        //try
+                        //{
                             //Assign the color data to the pixel.
                             *((int*)pBackBuffer) = color_data;
                             // Specify the area of the bitmap that changed.
                             imageCanvasBitmap.AddDirtyRect(new Int32Rect(column, row, 1, 1));
-                        }
-                        catch(Exception e)
-                        {
-                            MessageBox.Show(e.Message);
-                            return;
-                        }
+                        //}
+                        //catch(Exception e)
+                        //{
+                        //    MessageBox.Show(e.Message);
+                        //    return;
+                        //}
                 }
             }
             finally
@@ -145,25 +145,35 @@ namespace ComputerGraphicsIProject
             int dx = Math.Abs(X2 - X1);
             int dy = Math.Abs(Y2 - Y1);
 
+            bool negativeY = false, negativeX = false;
+
             if (X1 > X2)
             {
                 X1 = -X1;
                 X2 = -X2;
+                negativeX = true;
             }
             if (Y1 > Y2)
             {
                 Y1 = -Y1;
                 Y2 = -Y2;
+                negativeY = true;
             }
             
 
             int x = X1, y = Y1;
             PutPixel(new Point(Math.Abs(x), Math.Abs(y), PixelColor));
 
-            // For antialiasing
-            //double m = dy / dx;
-            //double y_exact = Y1;
-            //double x_exact = X1;
+            //For antialiasing
+            double m;
+            //if (dx == 0)
+            //    m = dy;
+            //else
+            m = (double)dy / dx;
+            double m_inv = (double)dx / dy; // slope inverse
+
+            double y_exact = Y1;
+            double x_exact = X1;
 
             if (dy <= dx)
             {
@@ -182,26 +192,35 @@ namespace ComputerGraphicsIProject
                         d += (dy - dx);
                         y++;
                     }
-                    //if (Antialiasing)
-                    //{
-                    //    double modf_y_exact = y_exact - Math.Floor(y_exact);
+                    if (Antialiasing)
+                    {
+                        double modf_y_exact = y_exact - (int)y_exact;
 
-                    //    byte r1 = (byte)(PixelColor.R * (1 - modf_y_exact) + BgColor.R * modf_y_exact);
-                    //    byte g1 = (byte)(PixelColor.G * (1 - modf_y_exact) + BgColor.G * modf_y_exact);
-                    //    byte b1 = (byte)(PixelColor.B * (1 - modf_y_exact) + BgColor.B * modf_y_exact);
-                    //    Color c1 = Color.FromRgb(r1, g1, b1);
+                        byte r1 = (byte)(PixelColor.R * (1 - modf_y_exact) + BgColor.R * modf_y_exact);
+                        byte g1 = (byte)(PixelColor.G * (1 - modf_y_exact) + BgColor.G * modf_y_exact);
+                        byte b1 = (byte)(PixelColor.B * (1 - modf_y_exact) + BgColor.B * modf_y_exact);
+                        Color c1 = Color.FromRgb(r1, g1, b1);
 
-                    //    byte r2 = (byte)(PixelColor.R * modf_y_exact + BgColor.R * (1 - modf_y_exact));
-                    //    byte g2 = (byte)(PixelColor.G * modf_y_exact + BgColor.G * (1 - modf_y_exact));
-                    //    byte b2 = (byte)(PixelColor.B * modf_y_exact + BgColor.B * (1 - modf_y_exact));
-                    //    Color c2 = Color.FromRgb(r2, g2, b2);
+                        byte r2 = (byte)(PixelColor.R * modf_y_exact + BgColor.R * (1 - modf_y_exact));
+                        byte g2 = (byte)(PixelColor.G * modf_y_exact + BgColor.G * (1 - modf_y_exact));
+                        byte b2 = (byte)(PixelColor.B * modf_y_exact + BgColor.B * (1 - modf_y_exact));
+                        Color c2 = Color.FromRgb(r2, g2, b2);
 
-                    //    PutPixel(new Point(x, y, c1));
-                    //    PutPixel(new Point(x, y , c2));
+                        if (negativeY)
+                        {
+                            PutPixel(new Point(Math.Abs(x), Math.Abs((int)y_exact), c2));
+                            PutPixel(new Point(Math.Abs(x), Math.Abs((int)y_exact) + 1, c1));
+                        }
+                        else
+                        {
+                            PutPixel(new Point(Math.Abs(x), Math.Abs((int)y_exact), c1));
+                            PutPixel(new Point(Math.Abs(x), Math.Abs((int)y_exact) + 1, c2));
+                        }
+                        
 
-                    //    y_exact += m;
-                    //}
-                    //else
+                        y_exact += m;
+                    }
+                    else
                         PutPixel(new Point(Math.Abs(x), Math.Abs(y), PixelColor));
                 }
             }
@@ -223,8 +242,37 @@ namespace ComputerGraphicsIProject
                         d += (dx - dy);
                         x++;
                     }
+                    if (Antialiasing)
+                    {
+                        double modf_x_exact = x_exact - (int)x_exact;
 
-                PutPixel(new Point(Math.Abs(x), Math.Abs(y), PixelColor));
+                        byte r1 = (byte)(PixelColor.R * (1 - modf_x_exact) + BgColor.R * modf_x_exact);
+                        byte g1 = (byte)(PixelColor.G * (1 - modf_x_exact) + BgColor.G * modf_x_exact);
+                        byte b1 = (byte)(PixelColor.B * (1 - modf_x_exact) + BgColor.B * modf_x_exact);
+                        Color c1 = Color.FromRgb(r1, g1, b1);
+
+                        byte r2 = (byte)(PixelColor.R * modf_x_exact + BgColor.R * (1 - modf_x_exact));
+                        byte g2 = (byte)(PixelColor.G * modf_x_exact + BgColor.G * (1 - modf_x_exact));
+                        byte b2 = (byte)(PixelColor.B * modf_x_exact + BgColor.B * (1 - modf_x_exact));
+                        Color c2 = Color.FromRgb(r2, g2, b2);
+                        if (negativeX)
+                        {
+                            PutPixel(new Point(Math.Abs((int)x_exact), Math.Abs(y), c2));
+                            PutPixel(new Point(Math.Abs((int)x_exact) + 1, Math.Abs(y), c1));
+                        }
+                        else
+                        {
+                            PutPixel(new Point(Math.Abs((int)x_exact), Math.Abs(y), c1));
+                            PutPixel(new Point(Math.Abs((int)x_exact) + 1, Math.Abs(y), c2));
+                        }
+                        
+
+                        x_exact += m_inv;
+                    }
+                    else
+                        PutPixel(new Point(Math.Abs(x), Math.Abs(y), PixelColor));
+
+                    //PutPixel(new Point(Math.Abs(x), Math.Abs(y), PixelColor));
 
                 }
             }
@@ -393,6 +441,43 @@ namespace ComputerGraphicsIProject
         public void LineDraw()
         {
             CalculatePolygonPoints();
+        }
+    }
+
+    public class LabPartClass : Shape
+    {
+        public Point point0 { get; set; }
+        public Point point1 { get; set; }
+        public Point point2 { get; set; }
+        public Point point3 { get; set; }
+
+        public LabPartClass(bool antialiasing = false)
+        {
+            Thickness = MainWindow.defaultThickness;
+            ThickLine = false;
+            PixelColor = Colors.Yellow;
+            point0 = new Point(-1, -1, PixelColor);
+            point1 = new Point(-1, -1, PixelColor);
+            point2 = new Point(-1, -1, PixelColor);
+            point3 = new Point(-1, -1, PixelColor);
+
+            Antialiasing = antialiasing;
+            BgColor = Colors.Black;
+        }
+
+        public override void Draw()
+        {
+            InterpolatePoints();
+        }
+        private void InterpolatePoints()
+        {
+            for(double t = 0; t <= 1; t += 0.01)
+            {
+                double x = Math.Pow((1 - t), 3) * point0.X + 3 * Math.Pow((1 - t), 2) * t * point1.X + 3 * (1 - t) * t * t * point2.X + Math.Pow(t, 3) + Math.Pow(t, 3) * point3.X;
+                double y = Math.Pow((1 - t), 3) * point0.Y + 3 * Math.Pow((1 - t), 2) * t * point1.Y + 3 * (1 - t) * t * t * point2.Y + Math.Pow(t, 3) + Math.Pow(t, 3) * point3.Y;
+
+                PutSinglePixel(new Point((int)x, (int)y, PixelColor));
+            }
         }
     }
 }

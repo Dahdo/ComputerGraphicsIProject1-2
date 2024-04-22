@@ -1,12 +1,8 @@
 ﻿using Microsoft.Win32;
 using System.ComponentModel;
-using System.Data.Common;
 using System.Drawing;
-using System.Globalization;
-using System.Net;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -84,6 +80,9 @@ namespace ComputerGraphicsIProject
         private Line currentLine;
         private Circle currentCircle;
         private Polygon currentPolygon;
+        private LabPartClass currentLabPart;
+        private System.Windows.Media.Color defaultBgColor = Colors.Black;
+
         int mouseDownCount = 0;
         string selectedShape = "line"; // Line selected by default
         public static int defaultThickness = 1;
@@ -526,6 +525,7 @@ namespace ComputerGraphicsIProject
             int width = (int)ImageCanvas.Width;
             int height = (int)ImageCanvas.Height;
             imageCanvasBitmap = new WriteableBitmap(width, height, 96, 96, PixelFormats.Bgr24, null);
+            setDefaultBgColor();
 
             ImageCanvas.Source = imageCanvasBitmap;
         }
@@ -588,6 +588,32 @@ namespace ComputerGraphicsIProject
                         initNewCircle(); // Create new Circle object and reset mouseDownCount
                     }
                     break;
+
+                case "labpart":
+                    ++mouseDownCount;
+                    if (mouseDownCount == 1)
+                    {
+                        currentLabPart.point0.X = (int)e.GetPosition(ImageCanvas).X;
+                        currentLabPart.point0.Y = (int)e.GetPosition(ImageCanvas).Y;
+                    }
+                    if (mouseDownCount == 2)
+                    {
+                        currentLabPart.point1.X = (int)e.GetPosition(ImageCanvas).X;
+                        currentLabPart.point1.Y = (int)e.GetPosition(ImageCanvas).Y;
+                    }
+                    if (mouseDownCount == 3)
+                    {
+                        currentLabPart.point2.X = (int)e.GetPosition(ImageCanvas).X;
+                        currentLabPart.point2.Y = (int)e.GetPosition(ImageCanvas).Y;
+                    }
+                    if (mouseDownCount == 4)
+                    {
+                        currentLabPart.point3.X = (int)e.GetPosition(ImageCanvas).X;
+                        currentLabPart.point3.Y = (int)e.GetPosition(ImageCanvas).Y;
+                        currentLabPart.Draw();
+                        initNewLabPart();
+                    }
+                    break;
             }
             
         }
@@ -625,6 +651,18 @@ namespace ComputerGraphicsIProject
                 currentPolygon.ThickLine = ThickLineCheckBox.IsChecked ?? false;
             shapes.Add(currentPolygon);
         }
+        
+        private void initNewLabPart()
+        {
+            mouseDownCount = 0;
+            currentLabPart = new LabPartClass();
+            currentLabPart.imageCanvasBitmap = imageCanvasBitmap;
+            if (AntiAliasingCheckBox != null)
+                currentLabPart.Antialiasing = AntiAliasingCheckBox.IsChecked ?? false;
+            if (ThickLineCheckBox != null)
+                currentLabPart.ThickLine = ThickLineCheckBox.IsChecked ?? false;
+            shapes.Add(currentLabPart);
+        }
 
         private void LineRadioBtn_Checked(object sender, RoutedEventArgs e)
         {
@@ -637,6 +675,12 @@ namespace ComputerGraphicsIProject
             selectedShape = "polygon";
             initNewPolygon();
         }
+        
+        private void LabPart3RadioBtn_Checked(object sender, RoutedEventArgs e)
+        {
+            selectedShape = "labpart";
+            initNewLabPart();
+        }
 
         private void CircleRadioBtn_Checked(object sender, RoutedEventArgs e)
         {
@@ -646,15 +690,14 @@ namespace ComputerGraphicsIProject
 
         private void ThickLineCheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            clearCanvas();
+            setDefaultBgColor();
             foreach (Shape shape in shapes)
             {
                 shape.ThickLine = true;
-            }
-            foreach (Shape shape in shapes)
-            {
+                shape.imageCanvasBitmap = imageCanvasBitmap;
                 shape.Draw();
             }
+
         }
 
         private void ThickLineCheckBox_UnChecked(object sender, RoutedEventArgs e)
@@ -695,14 +738,48 @@ namespace ComputerGraphicsIProject
             }
         }
 
-        private void clearCanvas()
+        private void setDefaultBgColor()
         {
-            InitializeRasterizationBitmap();
+
+            try
+            {
+                imageCanvasBitmap.Lock();
+
+                unsafe
+                {
+                    IntPtr pBackBuffer = imageCanvasBitmap.BackBuffer;
+
+                    int stride = imageCanvasBitmap.BackBufferStride;
+
+                    for (int row = 0; row < imageCanvasBitmap.PixelHeight; row++)
+                    {
+                        for (int column = 0; column < imageCanvasBitmap.PixelWidth; column++)
+                        {
+                            IntPtr pPixel = pBackBuffer + row * stride + column * 3;
+                            System.Windows.Media.Color color = defaultBgColor;
+                            int color_data = color.R << 16 | color.G << 8 | color.B;
+
+                            *((int*)pPixel) = color_data;
+                        }
+                    }
+
+                    imageCanvasBitmap.AddDirtyRect(new Int32Rect(0, 0, imageCanvasBitmap.PixelWidth, imageCanvasBitmap.PixelHeight));
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            finally
+            {
+                imageCanvasBitmap.Unlock();
+            }
+
         }
 
         private void ClearAllShapes_Click(object sender, RoutedEventArgs e)
         {
-            clearCanvas();
+            setDefaultBgColor();
         }
     }
 }
