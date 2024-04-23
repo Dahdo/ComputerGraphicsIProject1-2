@@ -789,13 +789,12 @@ namespace ComputerGraphicsIProject
                 imageCanvasBitmap.Unlock();
             }
 
-            shapes.Clear(); // clear the shapes off the list
-
         }
 
         private void ClearAllShapes_Click(object sender, RoutedEventArgs e)
         {
             setDefaultBgColor();
+            shapes.Clear(); // clear the shapes off the list
         }
 
         private void SaveShapes_Click(object sender, RoutedEventArgs e)
