@@ -3,21 +3,46 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Xml.Serialization;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ComputerGraphicsIProject
 {
+    [Serializable]
     public class Point
     {
         public int X { get; set; }
         public int Y { get; set; }
 
-        public Color PixelColor { get; set; }
+        [NonSerialized]
+        private Color _pixelColor;
+
+        // Serializing Color as ARGB components
+        public byte A { get; set; }
+        public byte R { get; set; }
+        public byte G { get; set; }
+        public byte B { get; set; }
+
+        [XmlIgnore] // Ignoring this property during serialization
+        public Color PixelColor
+        {
+            get { return Color.FromArgb(A, R, G, B); }
+            set
+            {
+                _pixelColor = value;
+                A = value.A;
+                R = value.R;
+                G = value.G;
+                B = value.B;
+            }
+        }
+
 
         public Point(int x, int y, Color color)
         {
@@ -25,12 +50,18 @@ namespace ComputerGraphicsIProject
             Y = y;
             PixelColor = color;
         }
+
+        public override string ToString()
+        {
+            return "(" + this.X + ", " + this.Y + ")";
+        }
     }
 
     public abstract class Shape
     {
         public Color PixelColor { get; set; }
         public Color BgColor { get; set; }
+        [XmlIgnore]
         public WriteableBitmap? imageCanvasBitmap { get; set; }
         public int Thickness { get; set; }
         public abstract void Draw();
@@ -115,19 +146,20 @@ namespace ComputerGraphicsIProject
         }
     }
 
+    [Serializable]
     public class Line : Shape
     {
         public Point startPoint {  get; set; }
         public Point endPoint { get; set; }
 
-        public Line(bool antialiasing = false)
+        public Line()
         {
-            Thickness = MainWindow.defaultThickness;
+            Thickness = 1;
             ThickLine = false;
             PixelColor = Colors.Yellow;
             startPoint = new Point(-1, -1, PixelColor);
             endPoint = new Point(-1, -1, PixelColor);
-            Antialiasing = antialiasing;
+            Antialiasing = false;
             BgColor = Colors.Black;
         }
 
@@ -165,11 +197,7 @@ namespace ComputerGraphicsIProject
             PutPixel(new Point(Math.Abs(x), Math.Abs(y), PixelColor));
 
             //For antialiasing
-            double m;
-            //if (dx == 0)
-            //    m = dy;
-            //else
-            m = (double)dy / dx;
+            double m = (double)dy / dx;
             double m_inv = (double)dx / dy; // slope inverse
 
             double y_exact = Y1;
@@ -284,24 +312,26 @@ namespace ComputerGraphicsIProject
         }
     }
 
+    [Serializable]
     public class Circle : Shape
     {
         public Point startPoint { get; set; }
         public Point endPoint { get; set; }
 
-        public Circle(bool antialiasing = false)
+        public Circle()
         {
-            Thickness = MainWindow.defaultThickness;
+            Thickness = 1;
             ThickLine = false;
             PixelColor = Colors.Yellow;
             startPoint = new Point(-1, -1, PixelColor);
             endPoint = new Point(-1, -1, PixelColor);
-            Antialiasing = antialiasing;
+            Antialiasing = false;
             BgColor = Colors.Black;
         }
 
         private void CalculateMidpointCircleAlgorithm()
         {
+
             int radius = getRadius();
             int d = 1 - radius;
             int x = 0;
@@ -348,27 +378,31 @@ namespace ComputerGraphicsIProject
 
         private int getRadius()
         {
-            return (int)Math.Sqrt(Math.Pow(endPoint.X - startPoint.X, 2) + Math.Pow(endPoint.Y - startPoint.Y, 2));
+            return (int)Math.Sqrt(Math.Pow(this.endPoint.X - this.startPoint.X, 2) + Math.Pow(this.endPoint.Y - this.startPoint.Y, 2));
         }
 
         private void putPoints(int x, int y, Color pixelColor)
         {
-            PutPixel(new Point(startPoint.X + x, startPoint.Y + y, pixelColor));
-            PutPixel(new Point(startPoint.X + y, startPoint.Y + x, pixelColor));
-            PutPixel(new Point(startPoint.X - x, startPoint.Y + y, pixelColor));
-            PutPixel(new Point(startPoint.X - y, startPoint.Y + x, pixelColor));
-            PutPixel(new Point(startPoint.X + x, startPoint.Y - y, pixelColor));
-            PutPixel(new Point(startPoint.X + y, startPoint.Y - x, pixelColor));
-            PutPixel(new Point(startPoint.X - x, startPoint.Y - y, pixelColor));
-            PutPixel(new Point(startPoint.X - y, startPoint.Y - x, pixelColor));
+            PutPixel(new Point(this.startPoint.X + x, this.startPoint.Y + y, pixelColor));
+            PutPixel(new Point(this.startPoint.X + y, this.startPoint.Y + x, pixelColor));
+            PutPixel(new Point(this.startPoint.X - x, this.startPoint.Y + y, pixelColor));
+            PutPixel(new Point(this.startPoint.X - y, this.startPoint.Y + x, pixelColor));
+            PutPixel(new Point(this.startPoint.X + x, this.startPoint.Y - y, pixelColor));
+            PutPixel(new Point(this.startPoint.X + y, this.startPoint.Y - x, pixelColor));
+            PutPixel(new Point(this.startPoint.X - x, this.startPoint.Y - y, pixelColor));
+            PutPixel(new Point(this.startPoint.X - y, this.startPoint.Y - x, pixelColor));
         }
 
         public override void Draw()
         {
-            CalculateMidpointCircleAlgorithm();
+            if(this.startPoint.X != -1 && this.endPoint.Y != -1)
+            {
+                CalculateMidpointCircleAlgorithm();
+            }
         }
     }
 
+    [Serializable]
     public class Polygon:Shape
     {
         private Point _nextPoint;
@@ -386,14 +420,14 @@ namespace ComputerGraphicsIProject
 
         public List<Line> lineList { get; set; }
 
-        public Polygon(bool antialiasing = false)
+        public Polygon()
         {
-            this.Thickness = MainWindow.defaultThickness;
+            this.Thickness = 1;
             this.ThickLine = false;
             this.PixelColor = Colors.Yellow;
             _nextPoint = new Point(-1, -1, PixelColor);
             lineList = new List<Line>();
-            Antialiasing = antialiasing;
+            Antialiasing = false;
             BgColor = Colors.Black;
         }
 
@@ -435,7 +469,13 @@ namespace ComputerGraphicsIProject
         public override void Draw()
         {
             foreach(Line line in lineList)
+            {
+                line.Antialiasing = this.Antialiasing;
+                line.ThickLine = this.ThickLine;
+                line.Thickness = this.Thickness;
                 line.Draw();
+            }
+
         }
 
         public void LineDraw()
@@ -453,7 +493,7 @@ namespace ComputerGraphicsIProject
 
         public LabPartClass(bool antialiasing = false)
         {
-            Thickness = MainWindow.defaultThickness;
+            Thickness = 1;
             ThickLine = false;
             PixelColor = Colors.Yellow;
             point0 = new Point(-1, -1, PixelColor);

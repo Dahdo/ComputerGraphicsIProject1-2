@@ -1,11 +1,13 @@
 ﻿using Microsoft.Win32;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Xml.Serialization;
 using static ComputerGraphicsIProject.ErrorDiffusionDithering;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -85,7 +87,7 @@ namespace ComputerGraphicsIProject
 
         int mouseDownCount = 0;
         string selectedShape = "line"; // Line selected by default
-        public static int defaultThickness = 1;
+        private static int shapeThickness = 1;
 
 
 
@@ -627,6 +629,7 @@ namespace ComputerGraphicsIProject
                 currentLine.Antialiasing = AntiAliasingCheckBox.IsChecked ?? false;
             if (ThickLineCheckBox != null)
                 currentLine.ThickLine = ThickLineCheckBox.IsChecked ?? false;
+            currentLine.Thickness = shapeThickness;
             shapes.Add(currentLine);
         }
         private void initNewCircle()
@@ -638,6 +641,7 @@ namespace ComputerGraphicsIProject
                 currentCircle.Antialiasing = AntiAliasingCheckBox.IsChecked ?? false;
             if (ThickLineCheckBox != null)
                 currentCircle.ThickLine = ThickLineCheckBox.IsChecked ?? false;
+            currentCircle.Thickness = shapeThickness;
             shapes.Add(currentCircle);
         }
         private void initNewPolygon()
@@ -649,6 +653,7 @@ namespace ComputerGraphicsIProject
                 currentPolygon.Antialiasing = AntiAliasingCheckBox.IsChecked ?? false;
             if (ThickLineCheckBox != null)
                 currentPolygon.ThickLine = ThickLineCheckBox.IsChecked ?? false;
+            currentPolygon.Thickness = shapeThickness;
             shapes.Add(currentPolygon);
         }
         
@@ -694,6 +699,7 @@ namespace ComputerGraphicsIProject
             foreach (Shape shape in shapes)
             {
                 shape.ThickLine = true;
+                shape.Thickness = shapeThickness;
                 shape.imageCanvasBitmap = imageCanvasBitmap;
                 shape.Draw();
             }
@@ -702,25 +708,13 @@ namespace ComputerGraphicsIProject
 
         private void ThickLineCheckBox_UnChecked(object sender, RoutedEventArgs e)
         {
+            setDefaultBgColor();
             foreach (Shape shape in shapes)
             {
                 shape.ThickLine = false;
-            }
-        }
-
-        private void AntiAliasingCheckBox_Checked(object sender, RoutedEventArgs e)
-        {
-            foreach(Shape shape in shapes)
-            {
-                shape.Antialiasing = true;
-            }
-        }
-
-        private void AntiAliasingCheckBox_UnChecked(object sender, RoutedEventArgs e)
-        {
-            foreach (Shape shape in shapes)
-            {
-                shape.Antialiasing = false;
+                shape.Thickness = 1; // defaut thickness
+                shape.imageCanvasBitmap = imageCanvasBitmap;
+                shape.Draw();
             }
         }
 
@@ -730,13 +724,33 @@ namespace ComputerGraphicsIProject
 
             if (int.TryParse(text, out int thickness))
             {
-                foreach (Shape shape in shapes)
-                {
-                    shape.Thickness = thickness;
-                    defaultThickness = thickness;
-                }
+                shapeThickness = thickness;
             }
         }
+
+        private void AntiAliasingCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            setDefaultBgColor();
+            foreach(Shape shape in shapes)
+            {
+                shape.Antialiasing = true;
+                shape.imageCanvasBitmap = imageCanvasBitmap;
+                shape.Draw();
+            }
+        }
+
+        private void AntiAliasingCheckBox_UnChecked(object sender, RoutedEventArgs e)
+        {
+            setDefaultBgColor();
+            foreach (Shape shape in shapes)
+            {
+                shape.Antialiasing = false;
+                shape.imageCanvasBitmap = imageCanvasBitmap;
+                shape.Draw();
+            }
+        }
+
+        
 
         private void setDefaultBgColor()
         {
@@ -775,11 +789,23 @@ namespace ComputerGraphicsIProject
                 imageCanvasBitmap.Unlock();
             }
 
+            shapes.Clear(); // clear the shapes off the list
+
         }
 
         private void ClearAllShapes_Click(object sender, RoutedEventArgs e)
         {
             setDefaultBgColor();
+        }
+
+        private void SaveShapes_Click(object sender, RoutedEventArgs e)
+        {
+            // Serialize the list of shapes
+            XmlSerializer serializer = new XmlSerializer(typeof(List<Shape>));
+            using (FileStream stream = new FileStream("shapes.xml", FileMode.Create))
+            {
+                serializer.Serialize(stream, shapes);
+            }
         }
     }
 }
