@@ -144,6 +144,7 @@ namespace ComputerGraphicsIProject
                 PutSinglePixel(new Point((int)x + point.X, (int)y + point.Y, point.PixelColor));
             }
         }
+        public abstract bool IsSelected(int x, int y);
     }
 
     [Serializable]
@@ -160,7 +161,7 @@ namespace ComputerGraphicsIProject
             startPoint = new Point(-1, -1, PixelColor);
             endPoint = new Point(-1, -1, PixelColor);
             Antialiasing = false;
-            BgColor = Colors.Black;
+            BgColor = MainWindow.defaultBgColor;
         }
 
 
@@ -310,6 +311,16 @@ namespace ComputerGraphicsIProject
         {
             CalculateMidpointLineAlgorithm();
         }
+
+        public override bool IsSelected(int x, int y)
+        {
+            int proximity = 10;
+            int x1 = this.startPoint.X, x2 = this.endPoint.X, y1 = this.startPoint.Y, y2 = this.endPoint.Y;
+            double lineLength = Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
+            double distance = Math.Abs((x - x1) * (y2 - y1) - (y - y1) * (x2 - x1)) / lineLength;
+
+            return distance <= proximity;
+        }
     }
 
     [Serializable]
@@ -326,7 +337,8 @@ namespace ComputerGraphicsIProject
             startPoint = new Point(-1, -1, PixelColor);
             endPoint = new Point(-1, -1, PixelColor);
             Antialiasing = false;
-            BgColor = Colors.Black;
+            BgColor = MainWindow.defaultBgColor;
+            ;
         }
 
         private void CalculateMidpointCircleAlgorithm()
@@ -400,6 +412,15 @@ namespace ComputerGraphicsIProject
                 CalculateMidpointCircleAlgorithm();
             }
         }
+
+        public override bool IsSelected(int x, int y)
+        {
+            int radius = getRadius();
+            int centerX = this.startPoint.X, centerY = this.startPoint.Y;
+            double distance = Math.Sqrt(Math.Pow(x - centerX, 2) + Math.Pow(y - centerY, 2));
+
+            return distance <= radius;
+        }
     }
 
     [Serializable]
@@ -428,7 +449,7 @@ namespace ComputerGraphicsIProject
             _nextPoint = new Point(-1, -1, PixelColor);
             lineList = new List<Line>();
             Antialiasing = false;
-            BgColor = Colors.Black;
+            BgColor = MainWindow.defaultBgColor;
         }
 
         private void CalculatePolygonPoints()
@@ -473,6 +494,7 @@ namespace ComputerGraphicsIProject
                 line.Antialiasing = this.Antialiasing;
                 line.ThickLine = this.ThickLine;
                 line.Thickness = this.Thickness;
+                line.PixelColor = this.PixelColor;
                 line.Draw();
             }
 
@@ -481,6 +503,16 @@ namespace ComputerGraphicsIProject
         public void LineDraw()
         {
             CalculatePolygonPoints();
+        }
+
+        public override bool IsSelected(int x, int y)
+        {
+            foreach(Line line in lineList)
+            {
+                if(line.IsSelected(x, y)) 
+                    return true;
+            }
+            return false;
         }
     }
 
@@ -518,6 +550,11 @@ namespace ComputerGraphicsIProject
 
                 PutSinglePixel(new Point((int)x, (int)y, PixelColor));
             }
+        }
+
+        public override bool IsSelected(int x, int y)
+        {
+            throw new NotImplementedException();
         }
     }
 }

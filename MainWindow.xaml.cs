@@ -9,7 +9,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
 using static ComputerGraphicsIProject.ErrorDiffusionDithering;
-using static System.Net.Mime.MediaTypeNames;
 
 
 namespace ComputerGraphicsIProject
@@ -83,11 +82,12 @@ namespace ComputerGraphicsIProject
         private Circle currentCircle;
         private Polygon currentPolygon;
         private LabPartClass currentLabPart;
-        private System.Windows.Media.Color defaultBgColor = Colors.Black;
+        public static System.Windows.Media.Color defaultBgColor = Colors.Black;
 
         int mouseDownCount = 0;
         string selectedShape = "line"; // Line selected by default
         private static int shapeThickness = 1;
+        private Point rightClickedPoint;
 
 
 
@@ -804,6 +804,89 @@ namespace ComputerGraphicsIProject
             using (FileStream stream = new FileStream("shapes.xml", FileMode.Create))
             {
                 serializer.Serialize(stream, shapes);
+            }
+        }
+
+        private void ImageCanvas_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            int x = (int)e.GetPosition(ImageCanvas).X;
+            int y = (int)e.GetPosition(ImageCanvas).Y;
+            rightClickedPoint = new Point(x, y, Colors.Black);
+            //foreach(Shape shape in shapes)
+            //{
+            //    MessageBox.Show(shape.IsSelected(x, y).ToString());
+            //}
+            e.Handled = true;
+        }
+        private void ShapeDelete_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (Shape shape in shapes)
+            {
+                if(shape.IsSelected(rightClickedPoint.X, rightClickedPoint.Y))
+                {
+                    shape.PixelColor = shape.BgColor;
+                    shape.imageCanvasBitmap = imageCanvasBitmap;
+                    shape.Draw();
+                    shapes.Remove(shape);
+                    break;
+                }
+
+            }
+        }
+        private void ShapeChangeColor_Click(object sender, RoutedEventArgs e)
+        {
+            if (int.TryParse(txtRed.Text, out int red) &&
+                int.TryParse(txtGreen.Text, out int green) &&
+                int.TryParse(txtBlue.Text, out int blue))
+            {
+                // Check if the values are within the valid range (0-255)
+                if (red >= 0 && red <= 255 &&
+                    green >= 0 && green <= 255 &&
+                    blue >= 0 && blue <= 255)
+                {
+                    System.Windows.Media.Color newColor = System.Windows.Media.Color.FromRgb((byte)red, (byte)green, (byte)blue);
+                    foreach (Shape shape in shapes)
+                    {
+                        if (shape.IsSelected(rightClickedPoint.X, rightClickedPoint.Y))
+                        {
+                            shape.PixelColor = newColor;
+                            shape.imageCanvasBitmap = imageCanvasBitmap;
+                            shape.Draw();
+                            break;
+                        }
+
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Please enter valid RGB values (0-255).", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please enter numeric values for RGB.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        private void ShapeChangeThickness_Click(object sender, RoutedEventArgs e)
+        {
+            if (int.TryParse(txtThickness.Text, out int thickness))
+            {
+                foreach (Shape shape in shapes)
+                {
+                    if (shape.IsSelected(rightClickedPoint.X, rightClickedPoint.Y))
+                    {
+                        shape.Thickness = thickness;
+                        shape.ThickLine = true;
+                        shape.imageCanvasBitmap = imageCanvasBitmap;
+                        shape.Draw();
+                        break;
+                    }
+
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please enter a valid thickness values.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

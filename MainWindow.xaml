@@ -203,7 +203,27 @@
                             <Button Name="ClearAllShapes" Margin="10 0" Content="Clear All" Style="{StaticResource NonFunctionalButtons}" Click="ClearAllShapes_Click" />
                             <Button Name="SaveShapes" Margin="10 0" Content="Save" Style="{StaticResource NonFunctionalButtons}" Click="SaveShapes_Click"/>
                         </WrapPanel>
-                        <Image DockPanel.Dock="Top" x:Name="ImageCanvas" MouseLeftButtonDown="ImageCanvas_MouseLeftButtonDown" Width="1040" Height="640"/>
+                        <Image DockPanel.Dock="Top" x:Name="ImageCanvas" MouseLeftButtonDown="ImageCanvas_MouseLeftButtonDown" MouseRightButtonDown="ImageCanvas_MouseRightButtonDown" Width="1040" Height="640">
+                            <Image.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Delete" Click="ShapeDelete_Click"/>
+                                    <MenuItem Header="ChangeColor" Click="ShapeChangeColor_Click"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="R:" Margin="5"/>
+                                        <TextBox x:Name="txtRed" Width="50" Margin="5"/>
+                                        <TextBlock Text="G:" Margin="5"/>
+                                        <TextBox x:Name="txtGreen" Width="50" Margin="5"/>
+                                        <TextBlock Text="B:" Margin="5"/>
+                                        <TextBox x:Name="txtBlue" Width="50" Margin="5"/>
+                                    </StackPanel>
+                                    <MenuItem Header="ChangeThickness" Click="ShapeChangeThickness_Click"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Thickness:" Margin="5"/>
+                                        <TextBox x:Name="txtThickness" Width="50" Margin="5"/>
+                                    </StackPanel>
+                                </ContextMenu>
+                            </Image.ContextMenu>
+                        </Image>
                     </DockPanel>
                 </Grid>
             </TabItem>
